@@ -29,7 +29,7 @@ class Board:
         self.width = width
         self.height = height
         self.board = [[None] * width for _ in range(height)]
-        self.cell_size = 68
+        self.cell_size = 34
 
     def set_view(self, cell_size):
         self.cell_size = cell_size
@@ -65,30 +65,49 @@ class Unit(pygame.sprite.Sprite):
                                load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_right[self.count // 3 - 1]
             self.rect.x += speed
-
         elif move[0] == -1:
             list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
-                               load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
+                              load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_left[self.count // 3 - 1]
             self.rect.x -= speed
 
         elif move[1] == 1:
-            list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
-                            load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
-            self.image = list_anim_down[self.count // 3 - 1]
+            list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
+                            load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_up[self.count // 3 - 1]
             self.rect.y += speed
             # тут очень нам надо чтобы вы сделали анимацию похода вниз
 
         elif move[1] == -1:
-            list_anim_up = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
+            list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
                               load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
-            self.image = list_anim_up[self.count // 3 - 1]
+            self.image = list_anim_down[self.count // 3 - 1]
             self.rect.y -= speed
 
-    def static_animation(self):
-        # тоже делайте на подобие анимации у меня времени нету
-        # я еще жить хочу и всет видеть
-        pass
+    def static_animation(self, move):
+        if self.count == 6:
+            self.count = 0
+        self.count += 1
+        if move[0] == 1:
+            list_anim_right = [load_image('right_anim/right_stoit_1.png', colorkey=colorkey),
+                               load_image('right_anim/right_stoit_2.png', colorkey=colorkey)]
+            self.image = list_anim_right[self.count // 3 - 1]
+
+        elif move[0] == -1:
+            list_anim_left = [load_image('left_anim/left_stoit_1.png', colorkey=colorkey),
+                              load_image('left_anim/left_stoit_2.png', colorkey=colorkey)]
+            self.image = list_anim_left[self.count // 3 - 1]
+
+        elif move[1] == 1:
+            list_anim_down = [load_image('front_anim/front_stoit_1.png', colorkey=colorkey),
+                              load_image('front_anim/front_stoit_2.png', colorkey=colorkey)]
+            self.image = list_anim_down[self.count // 3 - 1]
+
+        elif move[1] == -1:
+            list_anim_up = [load_image('back_anim/back_stoit_1.png', colorkey=colorkey),
+                            load_image('back_anim/back_stoit_2.png', colorkey=colorkey)]
+            self.image = list_anim_up[self.count // 3 - 1]
+
 
 
 if __name__ == '__main__':
@@ -96,7 +115,7 @@ if __name__ == '__main__':
 
     size = wight, height = 68 * 12, 68 * 12
     screen = pygame.display.set_mode(size)
-    board = Board(12, 12)
+    board = Board(12 * 2, 12 * 2)
     pygame.display.set_caption('Фруктозавр')
     running = True
 
@@ -105,9 +124,10 @@ if __name__ == '__main__':
     sprite_hero.init('hero', 'right_anim/right_stoit_1.png')
 
     fps = 30
-    v = 60
+    v = 100
     speed = v // fps
     clock = pygame.time.Clock()
+    smotrit = 1, 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -117,8 +137,9 @@ if __name__ == '__main__':
         move = sprite_hero.get_move()
         if move:
             sprite_hero.animation(move)
+            smotrit = move
         else:
-            sprite_hero.static_animation()
+            sprite_hero.static_animation(smotrit)
         clock.tick(fps)
         screen.fill((0, 0, 0))
         board.render(screen)
