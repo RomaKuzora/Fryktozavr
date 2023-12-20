@@ -17,12 +17,19 @@ def load_image(name, colorkey=None):
     return image
 
 
+move_map = {pygame.K_w: (0, -1),
+            pygame.K_s: (0, 1),
+            pygame.K_a: (-1, 0),
+            pygame.K_d: (1, 0)}
+colorkey = (255, 255, 255)
+
+
 class Board:
     def __init__(self, width, height):
         self.width = width
         self.height = height
         self.board = [[None] * width for _ in range(height)]
-        self.cell_size = 50
+        self.cell_size = 68
 
     def set_view(self, cell_size):
         self.cell_size = cell_size
@@ -33,74 +40,86 @@ class Board:
                 if self.board[x][y] is None:
                     pygame.draw.rect(screen, (255, 255, 255),
                                      (x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size), width=1)
-                elif self.board[x][y].name == 'hero':
-                    self.board[x][y].rect.x, self.board[x][
-                        y].rect.y = x * self.cell_size, y * self.cell_size
 
 
 class Unit(pygame.sprite.Sprite):
-    def init(self, name_person, name_sprite, x, y):
+    def init(self, name_person, name_sprite):
         super().__init__(all_sprites)
-        self.image = load_image(name_sprite)
-        self.rect = sprite_hero.image.get_rect()
-        self.x, self.y = x, y
+        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.rect = self.image.get_rect()
         self.name = name_person
+        self.count = 0
 
-    def go_down(self, board):
-        if self.y + 1 < board.height:
-            board.board[self.x][self.y + 1] = board.board[self.x][self.y]
-            board.board[self.x][self.y] = None
-            self.y += 1
+    def get_move(self):
+        for key in move_map:
+            if keys[key]:
+                move = move_map[key]
+                return move
 
-    def go_up(self, board):
-        if self.y - 1 >= 0:
-            board.board[self.x][self.y - 1] = board.board[self.x][self.y]
-            board.board[self.x][self.y] = None
-            self.y -= 1
+    def animation(self, move):
+        if self.count == 6:
+            self.count = 0
+        self.count += 1
+        if move[0] == 1:
+            list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
+                               load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_right[self.count // 3 - 1]
+            self.rect.x += speed
 
-    def go_left(self, board):
-        if self.x - 1 >= 0:
-            board.board[self.x - 1][self.y] = board.board[self.x][self.y]
-            board.board[self.x][self.y] = None
-            self.x -= 1
+        elif move[0] == -1:
+            list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
+                               load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_left[self.count // 3 - 1]
+            self.rect.x -= speed
 
-    def go_right(self, board):
-        if self.x + 1 < board.width:
-            board.board[self.x + 1][self.y] = board.board[self.x][self.y]
-            board.board[self.x][self.y] = None
-            self.x += 1
+        elif move[1] == 1:
+            list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
+                            load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_down[self.count // 3 - 1]
+            self.rect.y += speed
+            # тут очень нам надо чтобы вы сделали анимацию похода вниз
+
+        elif move[1] == -1:
+            list_anim_up = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
+                              load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_up[self.count // 3 - 1]
+            self.rect.y -= speed
+
+    def static_animation(self):
+        # тоже делайте на подобие анимации у меня времени нету
+        # я еще жить хочу и всет видеть
+        pass
 
 
 if __name__ == '__main__':
     pygame.init()
 
-    size = wight, height = 800, 800
+    size = wight, height = 68 * 12, 68 * 12
     screen = pygame.display.set_mode(size)
-    board = Board(16, 16)
+    board = Board(12, 12)
     pygame.display.set_caption('Фруктозавр')
     running = True
 
     all_sprites = pygame.sprite.Group()
     sprite_hero = Unit()
-    board.board[0][0] = sprite_hero
-    sprite_hero.init('hero', 'shag_levo.png', 0, 0)
+    sprite_hero.init('hero', 'right_anim/right_stoit_1.png')
 
+    fps = 30
+    v = 60
+    speed = v // fps
     clock = pygame.time.Clock()
     while running:
         for event in pygame.event.get():
-            keys = pygame.key.get_pressed()
             if event.type == pygame.QUIT:
                 running = False
-            if keys[115]:
-                sprite_hero.go_down(board)
-            if keys[119]:
-                sprite_hero.go_up(board)
-            if keys[97]:
-                sprite_hero.go_left(board)
-            if keys[100]:
-                sprite_hero.go_right(board)
 
-        clock.tick(30)
+        keys = pygame.key.get_pressed()
+        move = sprite_hero.get_move()
+        if move:
+            sprite_hero.animation(move)
+        else:
+            sprite_hero.static_animation()
+        clock.tick(fps)
         screen.fill((0, 0, 0))
         board.render(screen)
         all_sprites.draw(screen)
