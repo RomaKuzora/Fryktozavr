@@ -43,11 +43,12 @@ class Board:
 
 
 class Unit(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self):  # нужный init для отсутсвия ошибок по PEP 8
         super().__init__()
         self.image = str()
         self.rect = str()
         self.name = str()
+        self.count = 0
 
     def init(self, name_person, name_sprite):
         super().__init__(all_sprites)
@@ -113,26 +114,65 @@ class Unit(pygame.sprite.Sprite):
             self.image = list_anim_up[self.count // 3 - 1]
 
 
+class Fruit(pygame.sprite.Sprite):
+    def __init__(self):  # нужный init для отсутсвия ошибок по PEP 8
+        super().__init__()
+        self.image = str()
+        self.rect = str()
+        self.name = str()
+        self.count = 0
+
+    def init(self, name_person, name_sprite):
+        super().__init__(all_sprites)
+        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.rect = self.image.get_rect()
+        self.name = name_person
+
+    def banan_static_animation(self):  # банан двигается
+        if self.count == 6:
+            self.count = 0
+        self.count += 1
+
+        list_anim_right = [load_image('fruct/banana.png', colorkey=colorkey),
+                           load_image('fruct/banana2.png', colorkey=colorkey)]
+        self.image = list_anim_right[self.count // 3 - 1]
+
+    def possition(self, mouse_pos):  # определяем позицию спавна банана в клетке(он жирненький, но это нас не волнует)
+        x, y = mouse_pos
+        return (x - 0) // 34, (y - 0) // 34
+
+
 if __name__ == '__main__':
     pygame.init()
 
-    size = wight, height = 68 * 12, 68 * 12
+    size = wight, height = 68 * 20, 68 * 12
     screen = pygame.display.set_mode(size)
-    board = Board(12 * 2, 12 * 2)
+    board = Board(24, 40)
     pygame.display.set_caption('Фруктозавр')
     running = True
     all_sprites = pygame.sprite.Group()
     sprite_hero = Unit()
     sprite_hero.init('hero', 'right_anim/right_stoit_1.png')
+
     fps = 30
     v = 100
     speed = v // fps
     clock = pygame.time.Clock()
     smotrit = 1, 0
+    bananchik = []
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:  # спавн бананчика
+                sprite_banan = Fruit()
+                sprite_banan.init('banan', 'fruct/banana.png')
+                f = sprite_banan.possition(event.pos)
+                sprite_banan.rect.right += f[0] * 34
+                sprite_banan.rect.bottom += f[1] * 34
+                bananchik.append(sprite_banan)
+        for i in bananchik:  # перебираем бананы для анимации
+            i.banan_static_animation()
 
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
