@@ -43,12 +43,17 @@ class Board:
 
 
 class Unit(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = str()
+        self.rect = str()
+        self.name = str()
+
     def init(self, name_person, name_sprite):
         super().__init__(all_sprites)
         self.image = load_image(name_sprite, colorkey=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.name = name_person
-        self.count = 0
 
     def get_move(self):
         for key in move_map:
@@ -76,7 +81,6 @@ class Unit(pygame.sprite.Sprite):
                             load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_up[self.count // 3 - 1]
             self.rect.y += speed
-            # тут очень нам надо чтобы вы сделали анимацию похода вниз
 
         elif move[1] == -1:
             list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
@@ -109,7 +113,6 @@ class Unit(pygame.sprite.Sprite):
             self.image = list_anim_up[self.count // 3 - 1]
 
 
-
 if __name__ == '__main__':
     pygame.init()
 
@@ -118,11 +121,9 @@ if __name__ == '__main__':
     board = Board(12 * 2, 12 * 2)
     pygame.display.set_caption('Фруктозавр')
     running = True
-
     all_sprites = pygame.sprite.Group()
     sprite_hero = Unit()
     sprite_hero.init('hero', 'right_anim/right_stoit_1.png')
-
     fps = 30
     v = 100
     speed = v // fps
