@@ -43,18 +43,12 @@ class Board:
 
 
 class Unit(pygame.sprite.Sprite):
-    def __init__(self):  # нужный init для отсутсвия ошибок по PEP 8
-        super().__init__()
-        self.image = str()
-        self.rect = str()
-        self.name = str()
-        self.count = 0
-
-    def init(self, name_person, name_sprite):
+    def __init__(self, name_person, name_sprite):  # нужный init для отсутсвия ошибок по PEP 8
         super().__init__(all_sprites)
         self.image = load_image(name_sprite, colorkey=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.name = name_person
+        self.count = 0
 
     def get_move(self):
         for key in move_map:
@@ -119,15 +113,9 @@ class Unit(pygame.sprite.Sprite):
 
 
 class Fruit(pygame.sprite.Sprite):
-    def __init__(self):  # нужный init для отсутсвия ошибок по PEP 8
-        super().__init__()
-        self.image = str()
-        self.rect = str()
-        self.name = str()
-        self.count = 0
-
-    def init(self, name_person, name_sprite):
+    def __init__(self, name_person, name_sprite):  # нужный init для отсутсвия ошибок по PEP 8
         super().__init__(all_sprites)
+        self.count = 0
         self.image = load_image(name_sprite, colorkey=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.name = name_person
@@ -158,8 +146,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('Фруктозавр')
     running = True
     all_sprites = pygame.sprite.Group()
-    sprite_hero = Unit()
-    sprite_hero.init('hero', 'right_anim/right_stoit_1.png')
+    sprite_hero = Unit('hero', 'right_anim/right_stoit_1.png')
 
     fps = 30
     v = 100
@@ -172,8 +159,7 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:  # спавн бананчика
-                sprite_banan = Fruit()
-                sprite_banan.init('banan', 'fruct/banana.png')
+                sprite_banan = Fruit('banan', 'fruct/banana.png')
                 f = sprite_banan.possition(event.pos)
                 sprite_banan.rect.right += f[0] * 34
                 sprite_banan.rect.bottom += f[1] * 34
