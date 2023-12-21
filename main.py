@@ -142,6 +142,27 @@ class Fruit(pygame.sprite.Sprite):
         return mouse_pos[0] // 34, mouse_pos[1] // 34
 
 
+class Ice(pygame.sprite.Sprite):
+    def __init__(self, name_person, name_sprite, event_pos):
+        super().__init__(all_sprites)
+        self.count = 0
+        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.rect = self.image.get_rect()
+        self.name = name_person
+        self.rect.x, self.rect.y = event_pos
+
+    def ice_animation(self):  # лёдик появляется(не точно)
+        if self.count == 12:
+            self.count = 0
+        self.count += 1
+        list_anim_right = [load_image('ice/ice.png', colorkey=colorkey),
+                           load_image('ice/ice.png', colorkey=colorkey)]
+        self.image = list_anim_right[self.count // 6 - 1]
+
+    def possition(self, mouse_pos):
+        return mouse_pos[0] // 34, mouse_pos[1] // 34
+
+
 if __name__ == '__main__':
     pygame.init()
 
@@ -165,13 +186,22 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
     smotrit = 1, 0
     banana_list = []
+    ice_list = []
     while running:
         for event in pygame.event.get():
+            pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:  # спавн бананчика
+            if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:  # спавн бананчика
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
                 banana_list.append(sprite_banan)
+            if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:  # проверка нажатия ПКМ
+                sprite_ice = Ice('ice', 'ice/ice.png', event.pos)
+                ice_list.append(sprite_ice)
+
+        for ice in ice_list:
+            if sprite_hero.rect.colliderect(ice):  # проверка столкновения, но увы фруктозавра не остановить
+                print("печаль")
 
         for banana in banana_list:  # перебираем бананы для анимации
             banana.banan_static_animation()
