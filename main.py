@@ -70,24 +70,28 @@ class Unit(pygame.sprite.Sprite):
             list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
                                load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_right[self.count // 3 - 1]
-            self.rect.x += speed
+            if self.rect.right < 1360:  # для того чтобы не выходил за границы
+                self.rect.x += speed
         elif move[0] == -1:
             list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
                               load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_left[self.count // 3 - 1]
-            self.rect.x -= speed
+            if self.rect.left > 0:
+                self.rect.x -= speed
 
         elif move[1] == 1:
             list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
                             load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_up[self.count // 3 - 1]
-            self.rect.y += speed
+            if self.rect.bottom < 818:
+                self.rect.y += speed
 
         elif move[1] == -1:
             list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
                               load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_down[self.count // 3 - 1]
-            self.rect.y -= speed
+            if self.rect.top > 0:
+                self.rect.y -= speed
 
     def static_animation(self, move):
         if self.count == 6:
@@ -137,6 +141,9 @@ class Fruit(pygame.sprite.Sprite):
                            load_image('fruct/banana2.png', colorkey=colorkey)]
         self.image = list_anim_right[self.count // 3 - 1]
 
+    def kill_banana(self):
+        self.image = load_image('fruct/banana_eat.png', colorkey=colorkey)
+
     def possition(self, mouse_pos):  # определяем позицию спавна банана в клетке(он жирненький, но это нас не волнует)
         x, y = mouse_pos
         return (x - 0) // 34, (y - 0) // 34
@@ -173,7 +180,11 @@ if __name__ == '__main__':
                 bananchik.append(sprite_banan)
         for i in bananchik:  # перебираем бананы для анимации
             i.banan_static_animation()
-
+            if sprite_hero.rect.colliderect(i):  # отслеживаем столкновение дино с фруктом
+                count = 6
+                bananchik.remove(i)  # бананчикиии
+                i.kill_banana()  # анимации при поедании бананчика(т.к. один кадр, то анимацию не видно:С)
+                i.kill()
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
         if move:
