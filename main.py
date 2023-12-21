@@ -148,6 +148,11 @@ if __name__ == '__main__':
     all_sprites = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'right_anim/right_stoit_1.png')
 
+    volume = 1 # значение от 0 до 1
+    pygame.mixer.music.load('Звук в уровне.mp3') # загрузили
+    pygame.mixer.music.play(-1) # бесконечное повторение мелодии
+    pygame.mixer.music.set_volume(volume) # изменить громкость
+
     fps = 30
     v = 100
     speed = v // fps
