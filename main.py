@@ -49,6 +49,7 @@ class Unit(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.name = name_person
         self.count = 0
+        self.count_static = 0
 
     def get_move(self):
         for key in move_map:
@@ -88,53 +89,57 @@ class Unit(pygame.sprite.Sprite):
                 self.rect.y -= speed
 
     def static_animation(self, move):
-        if self.count == 6:
-            self.count = 0
-        self.count += 1
+        if self.count_static == 12:
+            self.count_static = 0
+        self.count_static += 1
         if move[0] == 1:
             list_anim_right = [load_image('right_anim/right_stoit_1.png', colorkey=colorkey),
                                load_image('right_anim/right_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_right[self.count // 3 - 1]
+            self.image = list_anim_right[self.count_static // 6 - 1]
 
         elif move[0] == -1:
             list_anim_left = [load_image('left_anim/left_stoit_1.png', colorkey=colorkey),
                               load_image('left_anim/left_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_left[self.count // 3 - 1]
+            self.image = list_anim_left[self.count_static // 6 - 1]
 
         elif move[1] == 1:
             list_anim_down = [load_image('front_anim/front_stoit_1.png', colorkey=colorkey),
                               load_image('front_anim/front_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_down[self.count // 3 - 1]
+            self.image = list_anim_down[self.count_static // 6 - 1]
 
         elif move[1] == -1:
             list_anim_up = [load_image('back_anim/back_stoit_1.png', colorkey=colorkey),
                             load_image('back_anim/back_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_up[self.count // 3 - 1]
+            self.image = list_anim_up[self.count_static // 6 - 1]
 
 
 class Fruit(pygame.sprite.Sprite):
-    def __init__(self, name_person, name_sprite):  # нужный init для отсутсвия ошибок по PEP 8
+    def __init__(self, name_person, name_sprite, event_pos):  # нужный init для отсутсвия ошибок по PEP 8
         super().__init__(all_sprites)
         self.count = 0
         self.image = load_image(name_sprite, colorkey=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.name = name_person
+        self.eat_fruct = pygame.mixer.Sound('звук поедания фрукта.mpeg')
+        self.eat_fruct.set_volume(0.3)
+        self.rect.x, self.rect.y = event_pos
 
     def banan_static_animation(self):  # банан двигается
-        if self.count == 6:
+        if self.count == 12:
             self.count = 0
         self.count += 1
-
         list_anim_right = [load_image('fruct/banana.png', colorkey=colorkey),
                            load_image('fruct/banana2.png', colorkey=colorkey)]
-        self.image = list_anim_right[self.count // 3 - 1]
+        self.image = list_anim_right[self.count // 6 - 1]
 
     def kill_banana(self):
-        self.image = load_image('fruct/banana_eat.png', colorkey=colorkey)
+        all_sprites.remove(
+            self)  # просто убрать изображение не убирает спрайт и звук будет если проходить там где спрайт
+        # поэтому нужно убирать его их списка всех спрайтов
+        self.eat_fruct.play()
 
     def possition(self, mouse_pos):  # определяем позицию спавна банана в клетке(он жирненький, но это нас не волнует)
-        x, y = mouse_pos
-        return (x - 0) // 34, (y - 0) // 34
+        return mouse_pos[0] // 34, mouse_pos[1] // 34
 
 
 if __name__ == '__main__':
@@ -145,44 +150,44 @@ if __name__ == '__main__':
     board = Board(24, 40)
     pygame.display.set_caption('Фруктозавр')
     running = True
+
     all_sprites = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'right_anim/right_stoit_1.png')
 
-    volume = 1 # значение от 0 до 1
-    pygame.mixer.music.load('Звук в уровне.mp3') # загрузили
-    pygame.mixer.music.play(-1) # бесконечное повторение мелодии
-    pygame.mixer.music.set_volume(volume) # изменить громкость
+    volume = 1  # значение от 0 до 1
+    pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
+    pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
+    pygame.mixer.music.set_volume(volume)  # изменить громкость
 
     fps = 30
     v = 100
     speed = v // fps
     clock = pygame.time.Clock()
     smotrit = 1, 0
-    bananchik = []
+    banana_list = []
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:  # спавн бананчика
-                sprite_banan = Fruit('banan', 'fruct/banana.png')
-                f = sprite_banan.possition(event.pos)
-                sprite_banan.rect.right += f[0] * 34
-                sprite_banan.rect.bottom += f[1] * 34
-                bananchik.append(sprite_banan)
-        for i in bananchik:  # перебираем бананы для анимации
-            i.banan_static_animation()
-            if sprite_hero.rect.colliderect(i):  # отслеживаем столкновение дино с фруктом
-                count = 6
-                bananchik.remove(i)  # бананчикиии
-                i.kill_banana()  # анимации при поедании бананчика(т.к. один кадр, то анимацию не видно:С)
-                i.kill()
+                sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
+                banana_list.append(sprite_banan)
+
+        for banana in banana_list:  # перебираем бананы для анимации
+            banana.banan_static_animation()
+            if sprite_hero.rect.colliderect(banana):  # отслеживаем столкновение дино с фруктом
+                banana_list.remove(banana)  # бананчикиии
+                banana.kill_banana()  # анимации при поедании бананчика(т.к. один кадр, то анимацию не видно:С)
+
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
+
         if move:
             sprite_hero.animation(move)
             smotrit = move
         else:
             sprite_hero.static_animation(smotrit)
+
         clock.tick(fps)
         screen.fill((0, 0, 0))
         board.render(screen)
