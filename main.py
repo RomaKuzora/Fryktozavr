@@ -72,7 +72,6 @@ class Unit(pygame.sprite.Sprite):
             else:
                 fruit.static_animation()
 
-
         if move[0] == 1:
             list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
                                load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
@@ -131,7 +130,6 @@ class Unit(pygame.sprite.Sprite):
             self.image = list_anim_up[self.count_static // 6 - 1]
 
 
-
 class Fruit(pygame.sprite.Sprite):
     def __init__(self, name_person, name_sprite, event_pos):  # нужный init для отсутсвия ошибок по PEP 8
         super().__init__(fruit_sprites)
@@ -166,12 +164,12 @@ class Ice(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
 
     def spawn_ice(self, move):
-        if move[0] == 1: # определяем куда смотрел дино последний раз
-            x = (sprite_hero.rect.x // cell_size) # смотрим на какой клетке стоял дино
+        if move[0] == 1:  # определяем куда смотрел дино последний раз
+            x = (sprite_hero.rect.x // cell_size)  # смотрим на какой клетке стоял дино
             y = (sprite_hero.rect.y // cell_size)
             for i in range(x + 4, 40):
-                sprite_ice = Ice('ice', 'ice/ice.png', (i * 34, y * 34)) # размещаем лёд
-                ice_list.append(sprite_ice) # добавляем в список
+                sprite_ice = Ice('ice', 'ice/ice.png', (i * 34, y * 34))  # размещаем лёд
+                ice_list.append(sprite_ice)  # добавляем в список
         elif move[0] == -1:
             x = (sprite_hero.rect.x // cell_size)
             y = (sprite_hero.rect.y // cell_size)
@@ -227,7 +225,6 @@ if __name__ == '__main__':
     speed = v // fps
     clock = pygame.time.Clock()
     smotrit = 1, 0
-    banana_list = []
     ice_list = []
     while running:
         keys = pygame.key.get_pressed()
@@ -238,21 +235,10 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:  # спавн бананчика
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
-                banana_list.append(sprite_banan)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:  # проверка нажатия ПКМ
-                sprite_ice = Ice('ice', 'ice/ice.png', event.pos) # из-за того что надо иницилизировать
+                sprite_ice = Ice('ice', 'ice/ice.png', event.pos)  # из-за того что надо иницилизировать
                 # класс, лёд спавнится на той клетке, где мы нажали
                 sprite_ice.spawn_ice(smotrit)
-
-        # for ice in ice_list:
-        # if sprite_hero.rect.colliderect(ice):  # проверка столкновения, но увы фруктозавра не остановить
-        #  speed = 0
-
-        for banana in banana_list:  # перебираем бананы для анимации
-            banana.static_animation()
-            if sprite_hero.rect.colliderect(banana):  # отслеживаем столкновение дино с фруктом
-                banana_list.remove(banana)  # бананчикиии
-                banana.kill_fruit()
         if move:
             sprite_hero.animation(move)
             smotrit = move
