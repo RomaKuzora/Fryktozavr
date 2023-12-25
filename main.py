@@ -72,32 +72,44 @@ class Unit(pygame.sprite.Sprite):
             else:
                 fruit.static_animation()
 
-        if move[0] == 1:
-            list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
-                               load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
-            self.image = list_anim_right[self.count // 3 - 1]
-            if self.rect.right < board.height * board.cell_size:  # для того чтобы не выходил за границы
-                self.rect.x += speed
-        elif move[0] == -1:
-            list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
-                              load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
-            self.image = list_anim_left[self.count // 3 - 1]
-            if self.rect.left > 0:
-                self.rect.x -= speed
+        go = True
 
-        elif move[1] == 1:
-            list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
-                            load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
-            self.image = list_anim_up[self.count // 3 - 1]
-            if self.rect.bottom < board.width * board.cell_size:
-                self.rect.y += speed
+        for ice in ice_sprites:
+            first = ice.rect.x < self.rect.x + move[0] * 2 < ice.rect.x + ice.rect.width and ice.rect.y < self.rect.y + \
+                    move[1] * 2 < ice.rect.y + ice.rect.height
+            second = ice.rect.x < self.rect.x + self.rect.width + move[
+                0] * 2 < ice.rect.x + ice.rect.width and ice.rect.y < self.rect.y + self.rect.height + move[
+                         1] * 2 < ice.rect.y + ice.rect.height
+            if first or second:
+                go = False
 
-        elif move[1] == -1:
-            list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
-                              load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
-            self.image = list_anim_down[self.count // 3 - 1]
-            if self.rect.top > 0:
-                self.rect.y -= speed
+        if go:
+            if move[0] == 1:
+                list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
+                                   load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
+                self.image = list_anim_right[self.count // 3 - 1]
+                if self.rect.right < board.height * board.cell_size:  # для того чтобы не выходил за границы
+                    self.rect.x += speed
+            elif move[0] == -1:
+                list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
+                                  load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
+                self.image = list_anim_left[self.count // 3 - 1]
+                if self.rect.left > 0:
+                    self.rect.x -= speed
+
+            elif move[1] == 1:
+                list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
+                                load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
+                self.image = list_anim_up[self.count // 3 - 1]
+                if self.rect.bottom < board.width * board.cell_size:
+                    self.rect.y += speed
+
+            elif move[1] == -1:
+                list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
+                                  load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
+                self.image = list_anim_down[self.count // 3 - 1]
+                if self.rect.top > 0:
+                    self.rect.y -= speed
 
     def static_animation(self, move):
         if self.count_static == 12:
@@ -158,6 +170,7 @@ class Ice(pygame.sprite.Sprite):
     def __init__(self, name_person, name_sprite, event_pos):
         super().__init__(ice_sprites)
         self.count = 0
+        self.flag = False
         self.image = load_image(name_sprite, colorkey=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.name = name_person
@@ -169,19 +182,38 @@ class Ice(pygame.sprite.Sprite):
             y = (sprite_hero.rect.y // cell_size)
             for i in range(x + 4, 20):
                 sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))  # размещаем лёд
+                for ice in ice_list:
+                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
+                        self.flag = True
+                        break
+                if self.flag:
+                    break
                 ice_list.append(sprite_ice)  # добавляем в список
+
         elif move[0] == -1:
             x = (sprite_hero.rect.x // cell_size)
             y = (sprite_hero.rect.y // cell_size)
-            for i in range(0, x):
+            for i in range(x - 1, -1, -1):
                 sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
+                for ice in ice_list:
+                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
+                        self.flag = True
+                        break
+                if self.flag:
+                    break
                 ice_list.append(sprite_ice)
 
         elif move[1] == -1:
             x = (sprite_hero.rect.x // cell_size)
             y = (sprite_hero.rect.y // cell_size)
-            for i in range(0, y):
+            for i in range(y - 1, -1, -1):
                 sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
+                for ice in ice_list:
+                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
+                        self.flag = True
+                        break
+                if self.flag:
+                    break
                 ice_list.append(sprite_ice)
 
         elif move[1] == 1:
@@ -189,6 +221,12 @@ class Ice(pygame.sprite.Sprite):
             y = (sprite_hero.rect.y // cell_size)
             for i in range(y + 3, 12):
                 sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
+                for ice in ice_list:
+                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
+                        self.flag = True
+                        break
+                if self.flag:
+                    break
                 ice_list.append(sprite_ice)
 
     def ice_animation(self):  # сделайте анимацию появления я хз как
@@ -237,7 +275,10 @@ if __name__ == '__main__':
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:  # проверка нажатия ПКМ
                 sprite_ice = Ice('ice', 'ice/ice.png', event.pos)  # из-за того что надо иницилизировать
+                ice_list.append(sprite_ice)
                 # класс, лёд спавнится на той клетке, где мы нажали
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # Спавн льда на пробел
+                sprite_ice = Ice('ice', 'ice/ice.png', (-1, 0))
                 sprite_ice.spawn_ice(smotrit)
         if move:
             sprite_hero.animation(move)
