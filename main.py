@@ -180,7 +180,7 @@ class Ice(pygame.sprite.Sprite):
         if move[0] == 1:  # определяем куда смотрел дино последний раз
             x = (sprite_hero.rect.x // cell_size)  # смотрим на какой клетке стоял дино
             y = (sprite_hero.rect.y // cell_size)
-            for i in range(x + 4, 20):
+            for i in range(x + 1, 20):
                 sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))  # размещаем лёд
                 for ice in ice_list:
                     if sprite_ice.rect.colliderect(ice):  # столкновение льда
@@ -219,7 +219,7 @@ class Ice(pygame.sprite.Sprite):
         elif move[1] == 1:
             x = (sprite_hero.rect.x // cell_size)
             y = (sprite_hero.rect.y // cell_size)
-            for i in range(y + 3, 12):
+            for i in range(y + 1, 12):
                 sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
                 for ice in ice_list:
                     if sprite_ice.rect.colliderect(ice):  # столкновение льда
@@ -262,8 +262,10 @@ if __name__ == '__main__':
     v = 250
     speed = v // fps
     clock = pygame.time.Clock()
-    smotrit = 1, 0
+    smotrit = (1, 0)
     ice_list = []
+    smotrit_y = (1, 0)
+    smotrit_x = (1, 0)
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -273,19 +275,24 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:  # спавн бананчика
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
-            if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:  # проверка нажатия ПКМ
-                sprite_ice = Ice('ice', 'ice/ice.png', event.pos)  # из-за того что надо иницилизировать
-                ice_list.append(sprite_ice)
-                # класс, лёд спавнится на той клетке, где мы нажали
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # Спавн льда на пробел
                 sprite_ice = Ice('ice', 'ice/ice.png', (-1, 0))
                 sprite_ice.spawn_ice(smotrit)
         if move:
             sprite_hero.animation(move)
             smotrit = move
+            if move[0] != 0:
+                smotrit_x = move
+            if move[1] != 0:
+                smotrit_y = move
         else:
+            x = sprite_hero.rect.x // cell_size
+            y = sprite_hero.rect.y // cell_size
+            if sprite_hero.rect.x % cell_size > 4:
+                sprite_hero.animation(smotrit_x)
+            if sprite_hero.rect.y % cell_size > 4:
+                sprite_hero.animation(smotrit_y)
             sprite_hero.static_animation(smotrit)
-
         clock.tick(fps)
         screen.fill((0, 0, 0))
         board.render(screen)
