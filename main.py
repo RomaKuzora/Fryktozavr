@@ -3,8 +3,59 @@ import os
 import pygame
 
 
-def possition(mouse_pos):
-    return mouse_pos[0] // board.cell_size, mouse_pos[1] // board.cell_size
+def spawn_ice(move):  # перенес функцию т.к. она созадвала экземпляры класса в котором
+    # находилась и добавляла в левый список так не надо делать
+    # у нас есть ice_sprites это группа спрайтов льда и еще добавил чтобы на доске клетка менялась с None на 'ice'
+    # чтобы проверять потом по клеткам куда можно идти но что-то пошло не по плану и делайте дальше сами короче
+    x = sprite_hero.rect.x // board.cell_size  # смотрим на какой клетке стоял дино
+    y = sprite_hero.rect.y // board.cell_size
+    if move[0] == 1:  # определяем куда смотрел дино последний раз
+        for i in range(x + 1, 20):
+            sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
+            board.board[y][i] = 'ice'
+            for ice in ice_sprites:
+                if sprite_ice.rect.colliderect(ice) and sprite_ice.rect.x != ice.rect.x:  # столкновение льда
+                    sprite_ice.flag = True
+                    break
+            if sprite_ice.flag:
+                break
+
+    elif move[0] == -1:
+        for i in range(x - 1, -1, -1):
+            sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
+            board.board[y][i] = 'ice'
+            for ice in ice_sprites:
+                if sprite_ice.rect.colliderect(ice) and sprite_ice.rect.x != ice.rect.x:  # столкновение льда
+                    sprite_ice.flag = True
+                    break
+            if sprite_ice.flag:
+                break
+
+    elif move[1] == -1:
+        for i in range(y - 1, -1, -1):
+            sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
+            board.board[i][x] = 'ice'
+            for ice in ice_sprites:
+                if sprite_ice.rect.colliderect(ice) and sprite_ice.rect.x != ice.rect.x:  # столкновение льда
+                    sprite_ice.flag = True
+                    break
+            if sprite_ice.flag:
+                break
+
+    elif move[1] == 1:
+        for i in range(y + 1, 12):
+            sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
+            board.board[i][x] = 'ice'
+            for ice in ice_sprites:
+                if sprite_ice.rect.colliderect(ice) and sprite_ice.rect.x != ice.rect.x:  # столкновение льда
+                    sprite_ice.flag = True
+                    break
+            if sprite_ice.flag:
+                break
+
+
+def possition(event_pos):
+    return event_pos[0] // board.cell_size, event_pos[1] // board.cell_size
 
 
 def load_image(name, colorkey=None):
@@ -39,9 +90,9 @@ class Board:
         self.cell_size = cell_size
 
     def render(self, screen):
-        for x in range(len(self.board)):
-            for y in range(len(self.board[x])):
-                if self.board[x][y] is None:
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                if self.board[y][x] is None:
                     pygame.draw.rect(screen, (255, 255, 255),
                                      (x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size), width=1)
 
@@ -73,15 +124,9 @@ class Unit(pygame.sprite.Sprite):
                 fruit.static_animation()
 
         go = True
-
-        for ice in ice_sprites:
-            first = ice.rect.x < self.rect.x + move[0] * 2 < ice.rect.x + ice.rect.width and ice.rect.y < self.rect.y + \
-                    move[1] * 2 < ice.rect.y + ice.rect.height
-            second = ice.rect.x < self.rect.x + self.rect.width + move[
-                0] * 2 < ice.rect.x + ice.rect.width and ice.rect.y < self.rect.y + self.rect.height + move[
-                         1] * 2 < ice.rect.y + ice.rect.height
-            if first or second:
-                go = False
+        x, y = possition((self.rect.x, self.rect.y))  # позиция дино
+        if board.board[x + move[0]][y + move[1]] == 'ice':  # проверка на то что клетка в которую он хочет идти не лед
+            go = False
 
         if go:
             if move[0] == 1:
@@ -176,59 +221,6 @@ class Ice(pygame.sprite.Sprite):
         self.name = name_person
         self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
 
-    def spawn_ice(self, move):
-        if move[0] == 1:  # определяем куда смотрел дино последний раз
-            x = (sprite_hero.rect.x // cell_size)  # смотрим на какой клетке стоял дино
-            y = (sprite_hero.rect.y // cell_size)
-            for i in range(x + 1, 20):
-                sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))  # размещаем лёд
-                for ice in ice_list:
-                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
-                        self.flag = True
-                        break
-                if self.flag:
-                    break
-                ice_list.append(sprite_ice)  # добавляем в список
-
-        elif move[0] == -1:
-            x = (sprite_hero.rect.x // cell_size)
-            y = (sprite_hero.rect.y // cell_size)
-            for i in range(x - 1, -1, -1):
-                sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
-                for ice in ice_list:
-                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
-                        self.flag = True
-                        break
-                if self.flag:
-                    break
-                ice_list.append(sprite_ice)
-
-        elif move[1] == -1:
-            x = (sprite_hero.rect.x // cell_size)
-            y = (sprite_hero.rect.y // cell_size)
-            for i in range(y - 1, -1, -1):
-                sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
-                for ice in ice_list:
-                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
-                        self.flag = True
-                        break
-                if self.flag:
-                    break
-                ice_list.append(sprite_ice)
-
-        elif move[1] == 1:
-            x = (sprite_hero.rect.x // cell_size)
-            y = (sprite_hero.rect.y // cell_size)
-            for i in range(y + 1, 12):
-                sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
-                for ice in ice_list:
-                    if sprite_ice.rect.colliderect(ice):  # столкновение льда
-                        self.flag = True
-                        break
-                if self.flag:
-                    break
-                ice_list.append(sprite_ice)
-
     def ice_animation(self):  # сделайте анимацию появления я хз как
         if self.count == 12:
             self.count = 0
@@ -240,10 +232,9 @@ class Ice(pygame.sprite.Sprite):
 
 if __name__ == '__main__':
     pygame.init()
-    cell_size = 68
-    size = wight, height = 68 * 20, 68 * 12
+    size = wight, height = 20 * 68, 12 * 68
     screen = pygame.display.set_mode(size)
-    board = Board(12, 20)
+    board = Board(20, 12)
     pygame.display.set_caption('Фруктозавр')
     running = True
 
@@ -276,8 +267,7 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:  # спавн бананчика
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # Спавн льда на пробел
-                sprite_ice = Ice('ice', 'ice/ice.png', (-1, 0))
-                sprite_ice.spawn_ice(smotrit)
+                spawn_ice(smotrit)
         if move:
             sprite_hero.animation(move)
             smotrit = move
@@ -286,11 +276,9 @@ if __name__ == '__main__':
             if move[1] != 0:
                 smotrit_y = move
         else:
-            x = sprite_hero.rect.x // cell_size
-            y = sprite_hero.rect.y // cell_size
-            if sprite_hero.rect.x % cell_size > 4:
+            if sprite_hero.rect.x % board.cell_size > 4:
                 sprite_hero.animation(smotrit_x)
-            if sprite_hero.rect.y % cell_size > 4:
+            if sprite_hero.rect.y % board.cell_size > 4:
                 sprite_hero.animation(smotrit_y)
             sprite_hero.static_animation(smotrit)
         clock.tick(fps)
