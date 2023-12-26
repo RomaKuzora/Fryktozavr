@@ -55,7 +55,7 @@ def spawn_ice(move):  # перенес функцию т.к. она созадв
 
 
 def possition(mouse_pos):
-    return mouse_pos[0] // board.cell_size, mouse_pos[1] // board.cell_size
+    return (mouse_pos[0] + 1) // board.cell_size, (mouse_pos[1] + 1) // board.cell_size
 
 
 def load_image(name, colorkey=None):
@@ -124,15 +124,16 @@ class Unit(pygame.sprite.Sprite):
                 fruit.static_animation()
 
         go = True
+        # тут нужно сделать проверку на то что куда идет дино нету льда, через board.board там есть по клеткам где лед
+        #pos_dino = list(possition((self.rect.x, self.rect.y)))
+        #pos_dino[0] += move[0]
+        #pos_dino[1] += move[1]
 
-        for ice in ice_sprites:
-            first = ice.rect.x < self.rect.x + move[0] * 2 < ice.rect.x + ice.rect.width and ice.rect.y < self.rect.y + \
-                    move[1] * 2 < ice.rect.y + ice.rect.height
-            second = ice.rect.x < self.rect.x + self.rect.width + move[
-                0] * 2 < ice.rect.x + ice.rect.width and ice.rect.y < self.rect.y + self.rect.height + move[
-                         1] * 2 < ice.rect.y + ice.rect.height
-            if first or second:
-                go = True
+        #if board.board[pos_dino[0]][pos_dino[1]] == 'ice':
+         #   print(pos_dino)
+         #   go = False
+         #  print(*board.board, sep='\n')
+          #  print('\n\n')
 
         if go:
             if move[0] == 1:
@@ -236,7 +237,6 @@ class Ice(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.name = name_person
         self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
-
 
     def ice_animation(self):  # сделайте анимацию появления я хз как
         if self.count == 12:
