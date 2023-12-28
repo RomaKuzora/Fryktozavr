@@ -10,7 +10,7 @@ def spawn_ice(move):  # перенес функцию т.к. она созадв
     x = sprite_hero.rect.x // board.cell_size  # смотрим на какой клетке стоял дино
     y = sprite_hero.rect.y // board.cell_size
     if move[0] == 1:  # определяем куда смотрел дино последний раз
-        for i in range(x + 1, 20):
+        for i in range(x + shagg + 1, 20):
             sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
             board.board[y][i] = 'ice'
             for ice in ice_sprites:
@@ -43,7 +43,7 @@ def spawn_ice(move):  # перенес функцию т.к. она созадв
                 break
 
     elif move[1] == 1:
-        for i in range(y + 1, 12):
+        for i in range(y + shagg + 1, 12):
             sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
             board.board[i][x] = 'ice'
             for ice in ice_sprites:
@@ -275,6 +275,7 @@ if __name__ == '__main__':
     smotrit_y = (1, 0)
     smotrit_x = (1, 0)
     count = 0
+    flag_of_move = False
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -286,7 +287,7 @@ if __name__ == '__main__':
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # Спавн льда на пробел
                 count = 10
-                if move:
+                if move or flag_of_move:
                     shagg = 1
                 else:
                     shagg = 0
@@ -312,8 +313,12 @@ if __name__ == '__main__':
             y = sprite_hero.rect.y // cell_size
             if sprite_hero.rect.x % cell_size > 4:
                 sprite_hero.animation(smotrit_x)
-            if sprite_hero.rect.y % cell_size > 4:
+                flag_of_move = True
+            elif sprite_hero.rect.y % cell_size > 4:
                 sprite_hero.animation(smotrit_y)
+                flag_of_move = True
+            else:
+                flag_of_move = False
             if count != 0:
                 sprite_hero.spawn_ice_dino(smotrit)
             else:
