@@ -19,12 +19,6 @@ def spawn_ice(move):  # перенес функцию т.к. она созадв
     elif move[1] == -1:
         for i in range(y - 1, -1, -1):
             ice_list.append((i, x))
-            """for ice in ice_sprites:
-                if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice:  # столкновение льда
-                    sprite_ice.flag = True
-                    break
-            if sprite_ice.flag:
-                break"""
 
     elif move[1] == 1:
         for i in range(y + shagg + 1, 12):
@@ -265,20 +259,26 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:  # спавн бананчика
                 sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:  # Спавн льда на пробел
-                count = 10
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
+                ice_list = []
                 if move or flag_of_move:
                     shagg = 1
                 else:
                     shagg = 0
                 spawn_ice(smotrit)
-                dlina_ice_list = len(ice_list)
+                count = dlina_ice_list = len(ice_list)
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
-            sprite_ice = Ice('ice', 'ice/ice.png', (ice_list[len(ice_list) - dlina_ice_list][1] * 68, ice_list[len(ice_list) - dlina_ice_list][0] * 68))
+            sprite_ice = Ice('ice', 'ice/ice.png', (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
+                                                    ice_list[len(ice_list) - dlina_ice_list][0] * 68))
+            """for ice in ice_sprites:
+                if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice and ice.rect.x < sprite_hero.rect.x:  # столкновение льда
+                    dlina_ice_list = 1
+                    break"""
             dlina_ice_list -= 1
         if count != 0:
+            move = None
             sprite_hero.spawn_ice_dino(smotrit)
             speed = 0
             count -= 1
