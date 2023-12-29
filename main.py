@@ -11,47 +11,24 @@ def spawn_ice(move):  # перенес функцию т.к. она созадв
     y = sprite_hero.rect.y // board.cell_size
     if move[0] == 1:  # определяем куда смотрел дино последний раз
         for i in range(x + shagg + 1, 20):
-            sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
-            board.board[y][i] = 'ice'
-            for ice in ice_sprites:
-                if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice:  # столкновение льда
-                    sprite_ice.flag = True
-                    break
-            if sprite_ice.flag:
-                break
-
+            ice_list.append((y, i))  # запоминаем на каих координатах ставим  лёд
     elif move[0] == -1:
         for i in range(x - 1, -1, -1):
-            sprite_ice = Ice('ice', 'ice/ice.png', (i * 68, y * 68))
-            board.board[y][i] = 'ice'
-            for ice in ice_sprites:
-                if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice:  # столкновение льда
-                    sprite_ice.flag = True
-                    break
-            if sprite_ice.flag:
-                break
+            ice_list.append((y, i))
 
     elif move[1] == -1:
         for i in range(y - 1, -1, -1):
-            sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
-            board.board[i][x] = 'ice'
-            for ice in ice_sprites:
+            ice_list.append((i, x))
+            """for ice in ice_sprites:
                 if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice:  # столкновение льда
                     sprite_ice.flag = True
                     break
             if sprite_ice.flag:
-                break
+                break"""
 
     elif move[1] == 1:
         for i in range(y + shagg + 1, 12):
-            sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, i * 68))
-            board.board[i][x] = 'ice'
-            for ice in ice_sprites:
-                if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice:  # столкновение льда
-                    sprite_ice.flag = True
-                    break
-            if sprite_ice.flag:
-                break
+            ice_list.append((i, x))
 
 
 def possition(mouse_pos):
@@ -95,6 +72,8 @@ class Board:
                 if self.board[y][x] is None:
                     pygame.draw.rect(screen, (255, 255, 255),
                                      (x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size), width=1)
+                if self.board[y][x] == 'ice':
+                    sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, y * 68))
 
 
 class Unit(pygame.sprite.Sprite):
@@ -125,15 +104,15 @@ class Unit(pygame.sprite.Sprite):
 
         go = True
         # тут нужно сделать проверку на то что куда идет дино нету льда, через board.board там есть по клеткам где лед
-        #pos_dino = list(possition((self.rect.x, self.rect.y)))
-        #pos_dino[0] += move[0]
-        #pos_dino[1] += move[1]
+        # pos_dino = list(possition((self.rect.x, self.rect.y)))
+        # pos_dino[0] += move[0]
+        # pos_dino[1] += move[1]
 
-        #if board.board[pos_dino[0]][pos_dino[1]] == 'ice':
-         #   print(pos_dino)
-         #   go = False
-         #  print(*board.board, sep='\n')
-          #  print('\n\n')
+        # if board.board[pos_dino[0]][pos_dino[1]] == 'ice':
+        #   print(pos_dino)
+        #   go = False
+        #  print(*board.board, sep='\n')
+        #  print('\n\n')
 
         if go:
             if move[0] == 1:
@@ -262,7 +241,7 @@ if __name__ == '__main__':
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
 
-    volume = 1  # значение от 0 до 1
+    volume = 0  # значение от 0 до 1
     pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
     pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
     pygame.mixer.music.set_volume(volume)  # изменить громкость
@@ -275,7 +254,9 @@ if __name__ == '__main__':
     smotrit_y = (1, 0)
     smotrit_x = (1, 0)
     count = 0
+    ice_list = []
     flag_of_move = False
+    dlina_ice_list = 0
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -292,6 +273,11 @@ if __name__ == '__main__':
                 else:
                     shagg = 0
                 spawn_ice(smotrit)
+                dlina_ice_list = len(ice_list)
+        if dlina_ice_list != 0:
+            board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
+                = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
+            dlina_ice_list -= 1
         if count != 0:
             sprite_hero.spawn_ice_dino(smotrit)
             speed = 0
