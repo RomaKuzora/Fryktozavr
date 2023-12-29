@@ -72,8 +72,7 @@ class Board:
                 if self.board[y][x] is None:
                     pygame.draw.rect(screen, (255, 255, 255),
                                      (x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size), width=1)
-                if self.board[y][x] == 'ice':
-                    sprite_ice = Ice('ice', 'ice/ice.png', (x * 68, y * 68))
+
 
 
 class Unit(pygame.sprite.Sprite):
@@ -277,6 +276,7 @@ if __name__ == '__main__':
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
+            sprite_ice = Ice('ice', 'ice/ice.png', (ice_list[len(ice_list) - dlina_ice_list][1] * 68, ice_list[len(ice_list) - dlina_ice_list][0] * 68))
             dlina_ice_list -= 1
         if count != 0:
             sprite_hero.spawn_ice_dino(smotrit)
