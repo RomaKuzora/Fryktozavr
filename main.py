@@ -59,16 +59,19 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
         for i in range(yy + shagg + 1, 12):
             if board.board[yy + shagg + 1][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
-            # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice':
-                break
-            if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
-                ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[i][xx] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:
-                    if xx == (ices.rect.x // 68) and i == (ices.rect.y // 68):
-                        board.board[i][xx] = None
-                        ices.kill_ice()
+            try:
+                # проверка столкновения льда и столкновения ломания (жесть какая-то)
+                if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice':
+                    break
+                if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
+                    ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
+                elif board.board[i][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+                    for ices in ice_sprites:
+                        if xx == (ices.rect.x // 68) and i == (ices.rect.y // 68):
+                            board.board[i][xx] = None
+                            ices.kill_ice()
+            except IndexError:
+                pass
 
 
 def possition(mouse_pos):
@@ -110,13 +113,14 @@ class Board:
         for yy in range(len(self.board)):
             for xx in range(len(self.board[y])):
                 if self.board[yy][xx] is None:
-                    pygame.draw.rect(screen_1, (255, 255, 255),
-                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size, self.cell_size),
+                    pygame.draw.rect(screen_1, (0, 0, 0),
+                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size,
+                                      self.cell_size),
                                      width=1)
 
 
 class Unit(pygame.sprite.Sprite):
-    def __init__(self, name_person, name_sprite):  # нужный init для отсутсвия ошибок по PEP 8
+    def __init__(self, name_person, name_sprite):
         super().__init__(all_sprites)
         self.image = load_image(name_sprite, colorkey=(255, 255, 255))
         self.rect = self.image.get_rect()
@@ -223,7 +227,7 @@ class Unit(pygame.sprite.Sprite):
 
 
 class Fruit(pygame.sprite.Sprite):
-    def __init__(self, name_person, name_sprite, event_pos):  # нужный init для отсутсвия ошибок по PEP 8
+    def __init__(self, name_person, name_sprite, event_pos, can_eat):
         super().__init__(fruit_sprites)
         self.count = 0
         self.image = load_image(name_sprite, colorkey=colorkey)
@@ -232,18 +236,24 @@ class Fruit(pygame.sprite.Sprite):
         self.eat_fruct = pygame.mixer.Sound('звук поедания фрукта.mpeg')
         self.eat_fruct.set_volume(0.3)
         self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
+        self.can_eat = can_eat
 
     def static_animation(self):  # банан двигается
         if self.count == 12:
             self.count = 0
         self.count += 1
-        list_anim_right = [load_image('fruct/banana.png', colorkey=colorkey),
-                           load_image('fruct/banana2.png', colorkey=colorkey)]
+        if self.name == 'banana':
+            list_anim_right = [load_image('fruct/banana.png', colorkey=colorkey),
+                               load_image('fruct/banana2.png', colorkey=colorkey)]
+        elif self.name == 'cherry':
+            list_anim_right = [load_image('fruct/cherry.png', colorkey=colorkey),
+                               load_image('fruct/cherry2.png', colorkey=colorkey)]
         self.image = list_anim_right[self.count // 6 - 1]
 
     def kill_fruit(self):
-        fruit_sprites.remove(self)
-        self.eat_fruct.play()
+        if self.can_eat:
+            fruit_sprites.remove(self)
+            self.eat_fruct.play()
 
 
 class Ice(pygame.sprite.Sprite):
@@ -271,9 +281,9 @@ class Ice(pygame.sprite.Sprite):
 if __name__ == '__main__':
     pygame.init()
     cell_size = 68
-    size = wight, height = 68 * 20, 68 * 12
+    size = wight, height = 68 * 20, 68 * 10 + 80
     screen = pygame.display.set_mode(size)
-    board = Board(20, 12)
+    board = Board(20, 10)
     pygame.display.set_caption('Фруктозавр')
     running = True
 
@@ -299,6 +309,11 @@ if __name__ == '__main__':
     ice_list = []
     flag_of_move = False
     dlina_ice_list = 0
+
+    sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+    sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
+    sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
+
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -306,8 +321,20 @@ if __name__ == '__main__':
             pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:  # спавн бананчика
-                sprite_banan = Fruit('banan', 'fruct/banana.png', event.pos)
+            if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
+                if possition(event.pos) == possition((sprite_banana.rect.x, sprite_banana.rect.y)):
+                    flag = 'banana'
+                elif possition(event.pos) == possition((sprite_ice.rect.x, sprite_ice.rect.y)):
+                    flag = 'ice'
+                elif possition(event.pos) == possition((sprite_cherry.rect.x, sprite_cherry.rect.y)):
+                    flag = 'cherry'
+            if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
+                if flag == 'banana':
+                    Fruit('banana', 'fruct/banana.png', event.pos, True)
+                elif flag == 'cherry':
+                    Fruit('cherry', 'fruct/cherry.png', event.pos, True)
+                elif flag == 'ice':
+                    Ice('ice', 'ice/ice.png', event.pos)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
                 ice_list = []
                 if move or flag_of_move:
@@ -316,6 +343,7 @@ if __name__ == '__main__':
                     shagg = 0
                 spawn_ice(smotrit)
                 count = dlina_ice_list = len(ice_list)
+
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
@@ -359,7 +387,7 @@ if __name__ == '__main__':
             else:
                 sprite_hero.static_animation(smotrit)
         clock.tick(fps)
-        screen.fill((0, 0, 0))
+        screen.fill((255, 255, 255))
         board.render(screen)
         all_sprites.draw(screen)
         ice_sprites.draw(screen)
