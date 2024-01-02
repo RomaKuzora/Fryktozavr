@@ -3,6 +3,40 @@ import os
 import pygame
 
 
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+
+def start_screen():
+    intro_text = ['Заставка',
+                  'Вывод построчно',
+                  "здесь нужно писать правила игры и тд",
+                  'нажмите любую кнопку чтобы начать игру']
+    fon = pygame.transform.scale(load_image('ice/ice.png'), (68*20, 68*10+80))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return  # начинаем игру
+        pygame.display.flip()
+        clock.tick(fps)
+
+
 def spawn_ice(last_move):  # перенес функцию т.к. она созадвала экземпляры класса в котором
     break_ice_flag = False
     # находилась и добавляла в левый список так не надо делать
@@ -313,7 +347,7 @@ if __name__ == '__main__':
     sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
     sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
     sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
-
+    start_screen()
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
