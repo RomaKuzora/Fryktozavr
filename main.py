@@ -13,7 +13,7 @@ def start_screen():
                   'Вывод построчно',
                   "здесь нужно писать правила игры и тд",
                   'нажмите любую кнопку чтобы начать игру']
-    fon = pygame.transform.scale(load_image('ice/ice.png'), (68*20, 68*10+80))
+    fon = pygame.transform.scale(load_image('ice/ice.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -145,7 +145,7 @@ class Board:
 
     def render(self, screen_1):
         for yy in range(len(self.board)):
-            for xx in range(len(self.board[y])):
+            for xx in range(len(self.board[yy])):
                 if self.board[yy][xx] is None:
                     pygame.draw.rect(screen_1, (0, 0, 0),
                                      (xx * self.cell_size, yy * self.cell_size, self.cell_size,
@@ -169,7 +169,7 @@ class Unit(pygame.sprite.Sprite):
                 return move_last
 
     def animation(self, last_move):
-        if self.count == 6:
+        if self.count == 12:
             self.count = 0
         self.count += 1
 
@@ -195,32 +195,32 @@ class Unit(pygame.sprite.Sprite):
             if last_move[0] == 1:
                 list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
                                    load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_right[self.count // 3 - 1]
+                self.image = list_anim_right[self.count // 6 - 1]
                 if self.rect.right < board.width * board.cell_size:  # для того чтобы не выходил за границы
                     self.rect.x += speed
             elif last_move[0] == -1:
                 list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
                                   load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_left[self.count // 3 - 1]
+                self.image = list_anim_left[self.count // 6 - 1]
                 if self.rect.left > 0:
                     self.rect.x -= speed
 
             elif last_move[1] == 1:
                 list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
                                 load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_up[self.count // 3 - 1]
+                self.image = list_anim_up[self.count // 6 - 1]
                 if self.rect.bottom < board.height * board.cell_size:
                     self.rect.y += speed
 
             elif last_move[1] == -1:
                 list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
                                   load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_down[self.count // 3 - 1]
+                self.image = list_anim_down[self.count // 6 - 1]
                 if self.rect.top > 0:
                     self.rect.y -= speed
 
     def static_animation(self, last_move):
-        if self.count_static == 12:
+        if self.count_static == 24:
             self.count_static = 0
 
         for fruit in fruit_sprites:
@@ -232,22 +232,22 @@ class Unit(pygame.sprite.Sprite):
         if last_move[0] == 1:
             list_anim_right = [load_image('right_anim/right_stoit_1.png', colorkey=colorkey),
                                load_image('right_anim/right_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_right[self.count_static // 6 - 1]
+            self.image = list_anim_right[self.count_static // 12 - 1]
 
         elif last_move[0] == -1:
             list_anim_left = [load_image('left_anim/left_stoit_1.png', colorkey=colorkey),
                               load_image('left_anim/left_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_left[self.count_static // 6 - 1]
+            self.image = list_anim_left[self.count_static // 12 - 1]
 
         elif last_move[1] == 1:
             list_anim_down = [load_image('front_anim/front_stoit_1.png', colorkey=colorkey),
                               load_image('front_anim/front_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_down[self.count_static // 6 - 1]
+            self.image = list_anim_down[self.count_static // 12 - 1]
 
         elif last_move[1] == -1:
             list_anim_up = [load_image('back_anim/back_stoit_1.png', colorkey=colorkey),
                             load_image('back_anim/back_stoit_2.png', colorkey=colorkey)]
-            self.image = list_anim_up[self.count_static // 6 - 1]
+            self.image = list_anim_up[self.count_static // 12 - 1]
 
     def spawn_ice_dino(self, last_move):
         if last_move[0] == 1:
@@ -273,7 +273,7 @@ class Fruit(pygame.sprite.Sprite):
         self.can_eat = can_eat
 
     def static_animation(self):  # банан двигается
-        if self.count == 12:
+        if self.count == 24:
             self.count = 0
         self.count += 1
         if self.name == 'banana':
@@ -282,7 +282,7 @@ class Fruit(pygame.sprite.Sprite):
         elif self.name == 'cherry':
             list_anim_right = [load_image('fruct/cherry.png', colorkey=colorkey),
                                load_image('fruct/cherry2.png', colorkey=colorkey)]
-        self.image = list_anim_right[self.count // 6 - 1]
+        self.image = list_anim_right[self.count // 12 - 1]
 
     def kill_fruit(self):
         if self.can_eat:
@@ -295,7 +295,7 @@ class Ice(pygame.sprite.Sprite):
         super().__init__(ice_sprites)
         self.count = 0
         self.flag = False
-        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.image = load_image(name_sprite, colorkey=colorkey)
         self.rect = self.image.get_rect()
         self.name = name_person
         self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
@@ -312,6 +312,15 @@ class Ice(pygame.sprite.Sprite):
         ice_sprites.remove(self)
 
 
+class IronBlock(pygame.sprite.Sprite):
+    def __init__(self, name_sprite, event_pos):
+        super().__init__(iron_block_sprites)
+        self.image = load_image(name_sprite, colorkey=colorkey)
+        self.rect = self.image.get_rect()
+        self.name = 'block'
+        self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
+
+
 if __name__ == '__main__':
     pygame.init()
     cell_size = 68
@@ -326,14 +335,15 @@ if __name__ == '__main__':
 
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
+    iron_block_sprites = pygame.sprite.Group()
 
     volume = 0.5  # значение от 0 до 1
     pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
     pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
     pygame.mixer.music.set_volume(volume)  # изменить громкость
 
-    fps = 30
-    v = 250
+    fps = 60
+    v = 160
     speed = v // fps
     clock = pygame.time.Clock()
     smotrit = (1, 0)
@@ -348,6 +358,7 @@ if __name__ == '__main__':
     sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
     sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
     sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
+    sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
     start_screen()
     while running:
         keys = pygame.key.get_pressed()
@@ -363,6 +374,8 @@ if __name__ == '__main__':
                     flag = 'ice'
                 elif possition(event.pos) == possition((sprite_cherry.rect.x, sprite_cherry.rect.y)):
                     flag = 'cherry'
+                elif possition(event.pos) == possition((sprite_iron_block.rect.x, sprite_iron_block.rect.y)):
+                    flag = 'block'
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
                 if flag == 'banana':
                     Fruit('banana', 'fruct/banana.png', event.pos, True)
@@ -370,6 +383,8 @@ if __name__ == '__main__':
                     Fruit('cherry', 'fruct/cherry.png', event.pos, True)
                 elif flag == 'ice':
                     Ice('ice', 'ice/ice.png', event.pos)
+                elif flag == 'block':
+                    IronBlock('block/block.png', event.pos)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
                 ice_list = []
                 if move or flag_of_move:
@@ -427,4 +442,5 @@ if __name__ == '__main__':
         all_sprites.draw(screen)
         ice_sprites.draw(screen)
         fruit_sprites.draw(screen)
+        iron_block_sprites.draw(screen)
         pygame.display.flip()
