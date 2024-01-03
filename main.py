@@ -343,6 +343,7 @@ if __name__ == '__main__':
     ice_list = []
     flag_of_move = False
     dlina_ice_list = 0
+    flag = False
 
     sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
     sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
