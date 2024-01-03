@@ -49,7 +49,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
             if board.board[yy][xx + shagg + 1] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[yy][i] or not break_ice_flag and board.board[yy][i] == 'ice':
+            if break_ice_flag and not board.board[yy][i] or not break_ice_flag and board.board[yy][i] == 'ice' \
+                    or board.board[yy][i] == 'block':
                 break
             if board.board[yy][i] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
@@ -64,7 +65,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
             if board.board[yy][xx - 1] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[yy][i] or not break_ice_flag and board.board[yy][i] == 'ice':
+            if break_ice_flag and not board.board[yy][i] or not break_ice_flag and board.board[yy][i] == 'ice' \
+                    or board.board[yy][i] == 'block':
                 break
             if board.board[yy][i] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
@@ -79,7 +81,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
             if board.board[yy - 1][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice':
+            if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice' \
+                    or board.board[i][xx] == 'block':
                 break
             if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                 ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
@@ -91,11 +94,14 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
 
     elif last_move[1] == 1:
         for i in range(yy + shagg + 1, 12):
+            if yy == 9:
+                break
             if board.board[yy + shagg + 1][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             try:
                 # проверка столкновения льда и столкновения ломания (жесть какая-то)
-                if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice':
+                if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice' \
+                        or board.board[i][xx] == 'block':
                     break
                 if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                     ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
@@ -179,7 +185,6 @@ class Unit(pygame.sprite.Sprite):
             else:
                 fruit.static_animation()
 
-        go = True
         # тут нужно сделать проверку на то что куда идет дино нету льда, через board.board там есть по клеткам где лед
         # pos_dino = list(possition((self.rect.x, self.rect.y)))
         # pos_dino[0] += move[0]
@@ -191,33 +196,32 @@ class Unit(pygame.sprite.Sprite):
         #  print(*board.board, sep='\n')
         #  print('\n\n')
 
-        if go:
-            if last_move[0] == 1:
-                list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
-                                   load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_right[self.count // 6 - 1]
-                if self.rect.right < board.width * board.cell_size:  # для того чтобы не выходил за границы
-                    self.rect.x += speed
-            elif last_move[0] == -1:
-                list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
-                                  load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_left[self.count // 6 - 1]
-                if self.rect.left > 0:
-                    self.rect.x -= speed
+        if last_move[0] == 1:
+            list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
+                               load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_right[self.count // 6 - 1]
+            if self.rect.right < board.width * board.cell_size:  # для того чтобы не выходил за границы
+                self.rect.x += speed
+        elif last_move[0] == -1:
+            list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
+                              load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_left[self.count // 6 - 1]
+            if self.rect.left > 0:
+                self.rect.x -= speed
 
-            elif last_move[1] == 1:
-                list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
-                                load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_up[self.count // 6 - 1]
-                if self.rect.bottom < board.height * board.cell_size:
-                    self.rect.y += speed
+        elif last_move[1] == 1:
+            list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
+                            load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_up[self.count // 6 - 1]
+            if self.rect.bottom < (board.height * board.cell_size):
+                self.rect.y += speed
 
-            elif last_move[1] == -1:
-                list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
-                                  load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
-                self.image = list_anim_down[self.count // 6 - 1]
-                if self.rect.top > 0:
-                    self.rect.y -= speed
+        elif last_move[1] == -1:
+            list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
+                              load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
+            self.image = list_anim_down[self.count // 6 - 1]
+            if self.rect.top > 0:
+                self.rect.y -= speed
 
     def static_animation(self, last_move):
         if self.count_static == 24:
@@ -382,9 +386,19 @@ if __name__ == '__main__':
                 elif flag == 'cherry':
                     Fruit('cherry', 'fruct/cherry.png', event.pos, True)
                 elif flag == 'ice':
-                    Ice('ice', 'ice/ice.png', event.pos)
+                    try:
+                        if not board.board[event.pos[1] // 68][event.pos[0] // 68]:
+                            Ice('ice', 'ice/ice.png', event.pos)
+                            board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
+                    except IndexError:
+                        pass
                 elif flag == 'block':
-                    IronBlock('block/block.png', event.pos)
+                    try:
+                        if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
+                            IronBlock('block/block.png', event.pos)
+                            board.board[event.pos[1] // 68][event.pos[0] // 68] = 'block'
+                    except IndexError:
+                        pass
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
                 ice_list = []
                 if move or flag_of_move:
