@@ -231,9 +231,9 @@ class Unit(pygame.sprite.Sprite):
             if self.rect.top > 0:
                 self.rect.y -= speeda
         if speeda != 0:
-            return last_pos
+            return last_pos, flag1
         else:
-            return last_pos_dino
+            return last_pos_dino, flag1
 
     def static_animation(self, last_move):
         if self.count_static == 24:
@@ -289,6 +289,7 @@ class Fruit(pygame.sprite.Sprite):
         self.can_eat = can_eat
 
     def static_animation(self):  # банан двигается
+        list_anim_right = list()
         if self.count == 24:
             self.count = 0
         self.count += 1
@@ -376,6 +377,7 @@ if __name__ == '__main__':
     sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
     sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
     start_screen()
+    flaag = True
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -398,23 +400,30 @@ if __name__ == '__main__':
                 elif flag == 'cherry':
                     Fruit('cherry', 'fruct/cherry.png', event.pos, True)
                 elif flag == 'ice':
-                    try:
-                        if not board.board[event.pos[1] // 68][event.pos[0] // 68]:
-                            Ice('ice', 'ice/ice.png', event.pos)
-                            board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
-                    except IndexError:
-                        pass
+                    if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size)  \
+                            or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
+                        try:
+                            if not board.board[event.pos[1] // 68][event.pos[0] // 68]:
+                                Ice('ice', 'ice/ice.png', event.pos)
+                                board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
+                        except IndexError:
+                            pass
                 elif flag == 'block':
-                    try:
-                        if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
-                            IronBlock('block/block.png', event.pos)
-                            board.board[event.pos[1] // 68][event.pos[0] // 68] = 'block'
-                    except IndexError:
-                        pass
+                    if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
+                            or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
+                        try:
+                            if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
+                                IronBlock('block/block.png', event.pos)
+                                board.board[event.pos[1] // 68][event.pos[0] // 68] = 'block'
+                        except IndexError:
+                            pass
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
                 ice_list = []
                 if move or flag_of_move:
-                    shagg = 1
+                    if flaag:
+                        shagg = 1
+                    else:
+                        shagg = 0
                 else:
                     shagg = 0
                 spawn_ice(smotrit)
@@ -441,7 +450,7 @@ if __name__ == '__main__':
             if count != 0:
                 sprite_hero.spawn_ice_dino(smotrit)
             else:
-                last_pos_dino = sprite_hero.animation(move)
+                last_pos_dino, flaag = sprite_hero.animation(move)
             smotrit = move
             if move[0] != 0:
                 smotrit_x = move
@@ -450,13 +459,18 @@ if __name__ == '__main__':
         else:
             x = sprite_hero.rect.x // cell_size
             y = sprite_hero.rect.y // cell_size
-            if sprite_hero.rect.x % cell_size > 4:
-                last_pos_dino = sprite_hero.animation(smotrit_x)
+            if sprite_hero.rect.x % cell_size != 0:
+                if sprite_hero.rect.x % cell_size == 1:
+                    speed = 1
+                last_pos_dino, flaag = sprite_hero.animation(smotrit_x)
                 flag_of_move = True
-            elif sprite_hero.rect.y % cell_size > 4:
-                last_pos_dino = sprite_hero.animation(smotrit_y)
+            elif sprite_hero.rect.y % cell_size != 0:
+                if sprite_hero.rect.x % cell_size == 1:
+                    speed = 1
+                last_pos_dino, flaag = sprite_hero.animation(smotrit_y)
                 flag_of_move = True
             else:
+                speed = v // fps
                 flag_of_move = False
             if count != 0:
                 sprite_hero.spawn_ice_dino(smotrit)
