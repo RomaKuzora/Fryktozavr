@@ -9,29 +9,19 @@ def terminate():
 
 
 def start_screen():
-    intro_text = ['Заставка',
-                  'Вывод построчно',
-                  "здесь нужно писать правила игры и тд",
-                  'нажмите любую кнопку чтобы начать игру']
-    fon = pygame.transform.scale(load_image('ice/ice.png'), (68 * 20, 68 * 10 + 80))
+    fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-
+    volum = 0.5
+    pygame.mixer.music.load('Start_menu_music.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(volum)
     while True:
         for event1 in pygame.event.get():
             if event1.type == pygame.QUIT:
                 terminate()
             elif event1.type == pygame.KEYDOWN or \
                     event1.type == pygame.MOUSEBUTTONDOWN:
+                pygame.mixer.music.stop()
                 return  # начинаем игру
         pygame.display.flip()
         clock.tick(fps)
@@ -94,7 +84,7 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
 
     elif last_move[1] == 1:
         for i in range(yy + shagg + 1, 12):
-            if yy == 9:
+            if yy == 9 or yy == 8 and move:
                 break
             if board.board[yy + shagg + 1][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
@@ -353,11 +343,7 @@ if __name__ == '__main__':
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
-
-    volume = 0.5  # значение от 0 до 1
-    pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
-    pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
-    pygame.mixer.music.set_volume(volume)  # изменить громкость
+    cursor = pygame.sprite.Group()
 
     fps = 60
     v = 160
@@ -377,6 +363,10 @@ if __name__ == '__main__':
     sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
     sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
     start_screen()
+    volume = 0.5  # значение от 0 до 1
+    pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
+    pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
+    pygame.mixer.music.set_volume(volume)  # изменить громкость
     flaag = True
     while running:
         keys = pygame.key.get_pressed()
@@ -385,6 +375,15 @@ if __name__ == '__main__':
             pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEMOTION:  # нужно релаизовать чтобы за мышкой следовал спрай, который мы выбрали
+                if flag == 'banana':
+                    pass
+                elif flag == 'cherry':
+                    pass
+                elif flag == 'ice':
+                    pass
+                elif flag == 'block':
+                    pass
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if possition(event.pos) == possition((sprite_banana.rect.x, sprite_banana.rect.y)):
                     flag = 'banana'
@@ -400,7 +399,7 @@ if __name__ == '__main__':
                 elif flag == 'cherry':
                     Fruit('cherry', 'fruct/cherry.png', event.pos, True)
                 elif flag == 'ice':
-                    if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size)  \
+                    if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
                             or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
                         try:
                             if not board.board[event.pos[1] // 68][event.pos[0] // 68]:
@@ -460,7 +459,7 @@ if __name__ == '__main__':
             x = sprite_hero.rect.x // cell_size
             y = sprite_hero.rect.y // cell_size
             if sprite_hero.rect.x % cell_size != 0:
-                if sprite_hero.rect.x % cell_size == 1:
+                if sprite_hero.rect.x % cell_size == speed // 2:
                     speed = 1
                 last_pos_dino, flaag = sprite_hero.animation(smotrit_x)
                 flag_of_move = True
