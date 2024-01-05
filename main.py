@@ -17,12 +17,38 @@ def start_screen():
     pygame.mixer.music.set_volume(volum)
     while True:
         for event1 in pygame.event.get():
+            pressed1 = pygame.mouse.get_pressed()
             if event1.type == pygame.QUIT:
                 terminate()
-            elif event1.type == pygame.KEYDOWN or \
-                    event1.type == pygame.MOUSEBUTTONDOWN:
+            if event1.type == pygame.MOUSEMOTION:
+                if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
+                    fon = pygame.transform.scale(load_image('start_okno_play.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323:
+                    fon = pygame.transform.scale(load_image('start_okno_redactor.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
+                    fon = pygame.transform.scale(load_image('start_okno_person.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
+                    fon = pygame.transform.scale(load_image('start_okno_setting.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                else:
+                    fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
+                    and 126 < event1.pos[1] < 217:
+                pass
+            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
+                    and 236 < event1.pos[1] < 323:
                 pygame.mixer.music.stop()
                 return  # начинаем игру
+            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
+                    and 342 < event1.pos[1] < 400:
+                pass
+            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
+                    and 386 < event1.pos[1] < 441:
+                pass
         pygame.display.flip()
         clock.tick(fps)
 
@@ -435,6 +461,7 @@ if __name__ == '__main__':
                 ice_list = []
                 if move or flag_of_move:
                     if flaag:
+
                         shagg = 1
                     else:
                         shagg = 0
