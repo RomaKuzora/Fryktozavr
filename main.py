@@ -23,28 +23,34 @@ def start_screen():
     settings.rect.x += 300
     settings.rect.y -= 750
     flaa = False
-    flag_1, flag_2, flag_3, flag_4 = True, True, True, True
+    flag_1, flag_2, flag_3, flag_4, flag_5 = True, True, True, True, True
     while True:
         if flaa:
             fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
             screen.blit(fon, (0, 0))
             if flaa and settings.rect.y != -150:
                 settings.rect.y += 25
-            for event1 in pygame.event.get():
-                pressed1 = pygame.mouse.get_pressed()
-                if event1.type == pygame.QUIT:
-                    terminate()
-                if event1.type == pygame.MOUSEMOTION:
-                    if 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
-                        setting = load_image("settings_close.png", colorkey=(255, 255, 255))
-                        settings.image = setting
-                    else:
-                        setting = load_image("settings.png", colorkey=(255, 255, 255))
-                        settings.image = setting
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
-                    flaa = False
-                    pygame.mixer.Sound('zvuk_settings_close.mp3').play()
-                    break
+            else:
+                for event1 in pygame.event.get():
+                    pressed1 = pygame.mouse.get_pressed()
+                    if event1.type == pygame.QUIT:
+                        terminate()
+                    if event1.type == pygame.MOUSEMOTION:
+                        if 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
+                            setting = load_image("settings_close.png", colorkey=(255, 255, 255))
+                            settings.image = setting
+                            if flag_5:
+                                pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                                flag_5 = False
+                        else:
+                            setting = load_image("settings.png", colorkey=(255, 255, 255))
+                            settings.image = setting
+                            flag_5 = True
+                    if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1030 > event1.pos[0] > 980 and 150 > \
+                            event1.pos[1] > 100:
+                        flaa = False
+                        pygame.mixer.Sound('zvuk_settings_close.mp3').play()
+                        break
         if flaa is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
@@ -104,76 +110,97 @@ def start_screen():
 
 def spawn_ice(last_move):  # перенес функцию т.к. она созадвала экземпляры класса в котором
     break_ice_flag = False
-    # находилась и добавляла в левый список так не надо делать
-    # у нас есть ice_sprites это группа спрайтов льда и еще добавил чтобы на доске клетка менялась с None на 'ice'
-    # чтобы проверять потом по клеткам куда можно идти но что-то пошло не по плану и делайте дальше сами короче
     xx = sprite_hero.rect.x // board.cell_size  # смотрим на какой клетке стоял дино
     yy = sprite_hero.rect.y // board.cell_size
     if last_move[0] == 1:  # определяем куда смотрел дино последний раз
         for i in range(xx + shagg + 1, 20):
-            if board.board[yy][xx + shagg + 1] == 'ice':  # проверка что хотим ломать
+            if board.board[yy][xx + shagg + 1] == 'ice' or \
+                    board.board[yy][xx + shagg] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[yy][i] or not break_ice_flag and board.board[yy][i] == 'ice' \
-                    or board.board[yy][i] == 'block':
+            if break_ice_flag and (not board.board[yy][i] and not board.board[yy][i - 1]) \
+                    or not break_ice_flag and board.board[yy][i] == 'ice' \
+                    or board.board[yy][i] == 'block' or (move and board.board[yy][i - 1] == 'block'):
                 break
             if board.board[yy][i] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[yy][i] == 'ice' and break_ice_flag:  # проверка на ломание
+            elif board.board[yy][i] == 'ice' and break_ice_flag or \
+                    board.board[yy][i - 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:
                     if i == (ices.rect.x // 68) and yy == (ices.rect.y // 68):
                         board.board[yy][i] = None
+                        ices.kill_ice()
+                    if i - 1 == (ices.rect.x // 68) and yy == (ices.rect.y // 68) and move:
+                        board.board[yy][i - 1] = None
                         ices.kill_ice()
 
     elif last_move[0] == -1:
         for i in range(xx - 1, -1, -1):
-            if board.board[yy][xx - 1] == 'ice':  # проверка что хотим ломать
+            if board.board[yy][xx - 1] == 'ice' or \
+                    board.board[yy][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[yy][i] or not break_ice_flag and board.board[yy][i] == 'ice' \
-                    or board.board[yy][i] == 'block':
+            if break_ice_flag and (not board.board[yy][i] and not board.board[yy][i + 1]) \
+                    or not break_ice_flag and board.board[yy][i] == 'ice' \
+                    or board.board[yy][i] == 'block' or (move and board.board[yy][i + 1] == 'block'):
                 break
             if board.board[yy][i] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[yy][i] == 'ice' and break_ice_flag:  # проверка на ломание
+            elif board.board[yy][i] == 'ice' and break_ice_flag or \
+                    board.board[yy][i + 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:
                     if i == (ices.rect.x // 68) and yy == (ices.rect.y // 68):
                         board.board[yy][i] = None
                         ices.kill_ice()
+                    if i + 1 == (ices.rect.x // 68) and yy == (ices.rect.y // 68) and move:
+                        board.board[yy][i + 1] = None
+                        ices.kill_ice()
 
     elif last_move[1] == -1:
         for i in range(yy - 1, -1, -1):
-            if board.board[yy - 1][xx] == 'ice':  # проверка что хотим ломать
+            if board.board[yy - 1][xx] == 'ice' or \
+                    board.board[yy][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice' \
-                    or board.board[i][xx] == 'block':
+            if break_ice_flag and (not board.board[i][xx] and not board.board[i + 1][xx]) \
+                    or not break_ice_flag and board.board[i][xx] == 'ice' \
+                    or board.board[i][xx] == 'block' or (move and board.board[i + 1][xx] == 'block'):
                 break
             if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                 ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[i][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+            elif board.board[i][xx] == 'ice' and break_ice_flag or \
+                    board.board[i + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:
                     if xx == (ices.rect.x // 68) and i == (ices.rect.y // 68):
                         board.board[i][xx] = None
+                        ices.kill_ice()
+                    if xx == (ices.rect.x // 68) and i + 1 == (ices.rect.y // 68) and move:
+                        board.board[i + 1][xx] = None
                         ices.kill_ice()
 
     elif last_move[1] == 1:
         for i in range(yy + shagg + 1, 12):
             if yy == 9 or yy == 8 and move:
                 break
-            if board.board[yy + shagg + 1][xx] == 'ice':  # проверка что хотим ломать
+            if board.board[yy + shagg + 1][xx] == 'ice' or \
+                    board.board[yy + shagg][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             try:
                 # проверка столкновения льда и столкновения ломания (жесть какая-то)
-                if break_ice_flag and not board.board[i][xx] or not break_ice_flag and board.board[i][xx] == 'ice' \
-                        or board.board[i][xx] == 'block':
+                if break_ice_flag and (not board.board[i][xx] and not board.board[i - 1][xx]) \
+                        or not break_ice_flag and board.board[i][xx] == 'ice' \
+                        or board.board[i][xx] == 'block' or (move and board.board[i - 1][xx] == 'block'):
                     break
                 if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
                     ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
-                elif board.board[i][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+                elif board.board[i][xx] == 'ice' and break_ice_flag or \
+                        board.board[i - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                     for ices in ice_sprites:
                         if xx == (ices.rect.x // 68) and i == (ices.rect.y // 68):
                             board.board[i][xx] = None
+                            ices.kill_ice()
+                        if xx == (ices.rect.x // 68) and i - 1 == (ices.rect.y // 68):
+                            board.board[i - 1][xx] = None
                             ices.kill_ice()
             except IndexError:
                 pass
@@ -426,6 +453,7 @@ if __name__ == '__main__':
     fps = 60
     v = 160
     speed = v // fps
+
     clock = pygame.time.Clock()
     smotrit = (1, 0)
     smotrit_y = (1, 0)
