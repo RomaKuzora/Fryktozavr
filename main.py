@@ -327,6 +327,9 @@ class IronBlock(pygame.sprite.Sprite):
         self.name = 'block'
         self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
 
+    def kill_block(self):
+        iron_block_sprites.remove(self)
+
 
 if __name__ == '__main__':
     pygame.init()
@@ -405,6 +408,12 @@ if __name__ == '__main__':
                             if not board.board[event.pos[1] // 68][event.pos[0] // 68]:
                                 Ice('ice', 'ice/ice.png', event.pos)
                                 board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
+                            else:
+                                for ice in ice_sprites:
+                                    if event.pos[1] // 68 == (ice.rect.y // 68) and \
+                                            event.pos[0] // 68 == (ice.rect.x // 68):
+                                        board.board[event.pos[1] // 68][event.pos[0] // 68] = None
+                                        ice.kill_ice()
                         except IndexError:
                             pass
                 elif flag == 'block':
@@ -414,6 +423,12 @@ if __name__ == '__main__':
                             if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
                                 IronBlock('block/block.png', event.pos)
                                 board.board[event.pos[1] // 68][event.pos[0] // 68] = 'block'
+                            else:
+                                for block in iron_block_sprites:
+                                    if event.pos[1] // 68 == (block.rect.y // 68) and \
+                                            event.pos[0] // 68 == (block.rect.x // 68):
+                                        board.board[event.pos[1] // 68][event.pos[0] // 68] = None
+                                        block.kill_block()
                         except IndexError:
                             pass
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
