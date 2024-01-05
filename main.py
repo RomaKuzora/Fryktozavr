@@ -15,40 +15,89 @@ def start_screen():
     pygame.mixer.music.load('Start_menu_music.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
+    all_sett = pygame.sprite.Group()
+    setting = load_image("settings.png", colorkey=(255, 255, 255))
+    settings = pygame.sprite.Sprite(all_sett)
+    settings.image = setting
+    settings.rect = settings.image.get_rect()
+    settings.rect.x += 300
+    settings.rect.y -= 750
+    flaa = False
+    flag_1, flag_2, flag_3, flag_4 = True, True, True, True
     while True:
-        for event1 in pygame.event.get():
-            pressed1 = pygame.mouse.get_pressed()
-            if event1.type == pygame.QUIT:
-                terminate()
-            if event1.type == pygame.MOUSEMOTION:
-                if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
-                    fon = pygame.transform.scale(load_image('start_okno_play.png'), (68 * 20, 68 * 10 + 80))
-                    screen.blit(fon, (0, 0))
-                elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323:
-                    fon = pygame.transform.scale(load_image('start_okno_redactor.png'), (68 * 20, 68 * 10 + 80))
-                    screen.blit(fon, (0, 0))
-                elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
-                    fon = pygame.transform.scale(load_image('start_okno_person.png'), (68 * 20, 68 * 10 + 80))
-                    screen.blit(fon, (0, 0))
-                elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
-                    fon = pygame.transform.scale(load_image('start_okno_setting.png'), (68 * 20, 68 * 10 + 80))
-                    screen.blit(fon, (0, 0))
-                else:
-                    fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
-                    screen.blit(fon, (0, 0))
-            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
-                    and 126 < event1.pos[1] < 217:
-                pass
-            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
-                    and 236 < event1.pos[1] < 323:
-                pygame.mixer.music.stop()
-                return  # начинаем игру
-            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
-                    and 342 < event1.pos[1] < 400:
-                pass
-            if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
-                    and 386 < event1.pos[1] < 441:
-                pass
+        if flaa:
+            fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
+            screen.blit(fon, (0, 0))
+            if flaa and settings.rect.y != -150:
+                settings.rect.y += 25
+            for event1 in pygame.event.get():
+                pressed1 = pygame.mouse.get_pressed()
+                if event1.type == pygame.QUIT:
+                    terminate()
+                if event1.type == pygame.MOUSEMOTION:
+                    if 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
+                        setting = load_image("settings_close.png", colorkey=(255, 255, 255))
+                        settings.image = setting
+                    else:
+                        setting = load_image("settings.png", colorkey=(255, 255, 255))
+                        settings.image = setting
+                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
+                    flaa = False
+                    pygame.mixer.Sound('zvuk_settings_close.mp3').play()
+                    break
+        if flaa is False:
+            if flaa is False and settings.rect.y != -750:
+                settings.rect.y -= 600
+            for event1 in pygame.event.get():
+                pressed1 = pygame.mouse.get_pressed()
+                if event1.type == pygame.QUIT:
+                    terminate()
+                if event1.type == pygame.MOUSEMOTION:
+                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
+                        fon = pygame.transform.scale(load_image('start_okno_play.png'), (68 * 20, 68 * 10 + 80))
+                        if flag_1:
+                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                        flag_1, flag_2, flag_3, flag_4 = False, True, True, True
+                        screen.blit(fon, (0, 0))
+                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323:
+                        if flag_2:
+                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                        flag_1, flag_2, flag_3, flag_4 = True, False, True, True
+                        fon = pygame.transform.scale(load_image('start_okno_redactor.png'), (68 * 20, 68 * 10 + 80))
+                        screen.blit(fon, (0, 0))
+                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
+                        if flag_3:
+                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                        flag_1, flag_2, flag_3, flag_4 = True, True, False, True
+                        fon = pygame.transform.scale(load_image('start_okno_person.png'), (68 * 20, 68 * 10 + 80))
+                        screen.blit(fon, (0, 0))
+                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
+                        if flag_4:
+                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                        flag_1, flag_2, flag_3, flag_4 = True, True, True, False
+                        fon = pygame.transform.scale(load_image('start_okno_setting.png'), (68 * 20, 68 * 10 + 80))
+                        screen.blit(fon, (0, 0))
+                    else:
+                        flag_1, flag_2, flag_3, flag_4 = True, True, True, True
+                        fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
+                        screen.blit(fon, (0, 0))
+                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
+                        and 126 < event1.pos[1] < 217:
+                    pygame.mixer.Sound('zvuk_click.mp3').play()
+                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
+                        and 236 < event1.pos[1] < 323:
+                    pygame.mixer.Sound('zvuk_click.mp3').play()
+                    pygame.mixer.music.stop()
+                    return  # начинаем игру
+                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
+                        and 342 < event1.pos[1] < 400:
+                    pygame.mixer.Sound('zvuk_click.mp3').play()
+                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
+                        and 386 < event1.pos[1] < 441 and flaa is False:
+                    if flaa is False:
+                        pygame.mixer.Sound('zvuk_settings.mp3').play()
+                        flaa = True
+        all_sett.draw(screen)
         pygame.display.flip()
         clock.tick(fps)
 
