@@ -60,7 +60,8 @@ def start_screen():
                     terminate()
                 if event1.type == pygame.MOUSEMOTION:
                     if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
-                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'),
+                                                     (68 * 20, 68 * 10 + 80))
                         if flag_1:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = False, True, True, True
@@ -69,23 +70,27 @@ def start_screen():
                         if flag_2:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = True, False, True, True
-                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'),
+                                                     (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
                         if flag_3:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, False, True
-                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'),
+                                                     (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
                         if flag_4:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, True, False
-                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_setting.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_setting.png'),
+                                                     (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     else:
                         flag_1, flag_2, flag_3, flag_4 = True, True, True, True
-                        fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'),
+                                                     (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
                         and 126 < event1.pos[1] < 217:
@@ -242,13 +247,22 @@ class Board:
         self.cell_size = cell_cize
 
     def render(self, screen_1):
-        for yy in range(len(self.board)):
-            for xx in range(len(self.board[yy])):
-                if self.board[yy][xx] is None:
+        for y in range(len(self.board)):
+            for x in range(len(self.board[0])):
+                if self.board[y][x] is None:
                     pygame.draw.rect(screen_1, (0, 0, 0),
-                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size,
+                                     (x * self.cell_size, y * self.cell_size, self.cell_size,
                                       self.cell_size),
                                      width=1)
+                if self.board[y][x] == 'route':
+                    pygame.draw.rect(screen_1, pygame.Color('red'),
+                                     (x * self.cell_size, y * self.cell_size, self.cell_size,
+                                      self.cell_size),
+                                     width=10)
+                    #my_font = pygame.font.SysFont('Times New Roman', 25)
+                    #text_surface = my_font.render(f'{x},{y}', False, pygame.Color('black'))
+                    #screen.blit(text_surface, (x * cell_size, y * cell_size))
+
 
 
 class Unit(pygame.sprite.Sprite):
@@ -368,6 +382,73 @@ class Unit(pygame.sprite.Sprite):
             self.image = load_image('default_dino/back_anim/back_break_or_place_ice.png', colorkey=colorkey)
 
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, name_sprite):
+        super().__init__(enemy_sprites)
+        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.rect = self.image.get_rect()
+        self.count = 0
+        self.count_static = 0
+        self.route = []
+        self.index = 0
+
+    def set_posittion(self, event_pos):
+        self.rect.x, self.rect.y = event_pos[0] * board.cell_size, event_pos[1] * board.cell_size
+
+    def animation(self, last_move, go=True):
+        if self.count_static == 48:
+            self.count_static = 0
+        self.count_static += 1
+
+        if last_move[0] == 1:
+            list_anim_right = [load_image('vrag/right_vrag.png', colorkey=colorkey),
+                               load_image('vrag/right_vrag_2.png', colorkey=colorkey)]
+            self.image = list_anim_right[self.count_static // 24 - 1]
+            if go:
+                self.rect.x += speed
+
+        elif last_move[0] == -1:
+            list_anim_left = [load_image('vrag/left_vrag.png', colorkey=colorkey),
+                              load_image('vrag/left_vrag_2.png', colorkey=colorkey)]
+            self.image = list_anim_left[self.count_static // 24 - 1]
+            if go:
+                self.rect.x -= speed
+                print(last_move, self.route[self.index], possition((self.rect.x, self.rect.y)))
+
+        elif last_move[1] == 1:
+            list_anim_down = [load_image('vrag/front_vrag.png', colorkey=colorkey),
+                              load_image('vrag/front_vrag_2.png', colorkey=colorkey)]
+            self.image = list_anim_down[self.count_static // 24 - 1]
+            if go:
+                self.rect.y += speed
+
+        elif last_move[1] == -1:
+            list_anim_up = [load_image('vrag/back_vrag.png', colorkey=colorkey),
+                            load_image('vrag/back_vrag_2.png', colorkey=colorkey)]
+            self.image = list_anim_up[self.count_static // 24 - 1]
+            if go:
+                self.rect.y -= speed
+
+    def go_go_zeppely(self):
+        try:
+            if self.index + 1 == len(self.route):
+                self.index = 0
+            pos = possition((self.rect.x, self.rect.y))
+            x = self.route[self.index][0] - pos[0]
+            y = self.route[self.index][1] - pos[1]
+            last_move = (x, y)
+            if self.route[self.index] != possition((self.rect.x, self.rect.y)):
+                self.animation(last_move)
+
+            else:
+                self.index += 1
+        except Exception:
+            pass
+
+    def set_route(self, list_click):
+        self.route = list_click
+
+
 class Fruit(pygame.sprite.Sprite):
     def __init__(self, name_person, name_sprite, event_pos, can_eat):
         super().__init__(fruit_sprites)
@@ -448,6 +529,7 @@ if __name__ == '__main__':
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
+    enemy_sprites = pygame.sprite.Group()
     cursor = pygame.sprite.Group()
 
     fps = 60
@@ -468,12 +550,18 @@ if __name__ == '__main__':
     sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
     sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
     sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
+    enemy_sprite = Enemy('vrag/front_vrag.png')
+    enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
+
     start_screen()
+    flag_of_list_click = False
     volume = 0.5  # значение от 0 до 1
     pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
     pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
     pygame.mixer.music.set_volume(volume)  # изменить громкость
     flaag = True
+    _enemy_ = None
+    list_click = []
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -491,14 +579,28 @@ if __name__ == '__main__':
                 elif flag == 'block':
                     pass
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
-                if possition(event.pos) == possition((sprite_banana.rect.x, sprite_banana.rect.y)):
-                    flag = 'banana'
-                elif possition(event.pos) == possition((sprite_ice.rect.x, sprite_ice.rect.y)):
-                    flag = 'ice'
-                elif possition(event.pos) == possition((sprite_cherry.rect.x, sprite_cherry.rect.y)):
-                    flag = 'cherry'
-                elif possition(event.pos) == possition((sprite_iron_block.rect.x, sprite_iron_block.rect.y)):
-                    flag = 'block'
+                if flag_of_list_click:
+                    try:
+                        list_click.append(possition(event.pos))
+                        board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                        if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)):
+                            flag_of_list_click = False
+                            _enemy_.set_route(list_click)
+                            list_click = []
+                            _enemy_ = None
+                    except Exception:
+                        pass
+                else:
+                    if possition(event.pos) == possition((sprite_banana.rect.x, sprite_banana.rect.y)):
+                        flag = 'banana'
+                    elif possition(event.pos) == possition((sprite_ice.rect.x, sprite_ice.rect.y)):
+                        flag = 'ice'
+                    elif possition(event.pos) == possition((sprite_cherry.rect.x, sprite_cherry.rect.y)):
+                        flag = 'cherry'
+                    elif possition(event.pos) == possition((sprite_iron_block.rect.x, sprite_iron_block.rect.y)):
+                        flag = 'block'
+                    elif possition(event.pos) == possition((enemy_sprite.rect.x, enemy_sprite.rect.y)):
+                        flag = 'enemy'
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
                 if flag == 'banana':
                     Fruit('banana', 'fruct/banana.png', event.pos, True)
@@ -534,6 +636,17 @@ if __name__ == '__main__':
                                         block.kill_block()
                         except IndexError:
                             pass
+                elif flag == 'enemy':
+                    if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
+                            or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
+                        try:
+                            if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
+                                enemy_ = Enemy('vrag/front_vrag.png')
+                                enemy_.set_posittion(possition(event.pos))
+                                _enemy_ = enemy_
+                                flag_of_list_click = True
+                        except IndexError:
+                            pass
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
                 ice_list = []
                 if move or flag_of_move:
@@ -546,7 +659,7 @@ if __name__ == '__main__':
                     shagg = 0
                 spawn_ice(smotrit)
                 count = dlina_ice_list = len(ice_list)
-
+        enemy_sprite.animation((0, 1), go=False)
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
@@ -594,6 +707,9 @@ if __name__ == '__main__':
                 sprite_hero.spawn_ice_dino(smotrit)
             else:
                 sprite_hero.static_animation(smotrit)
+        for enemy in enemy_sprites:
+            if enemy != enemy_sprite:
+                enemy.go_go_zeppely()
         clock.tick(fps)
         screen.fill((255, 255, 255))
         board.render(screen)
@@ -601,4 +717,5 @@ if __name__ == '__main__':
         ice_sprites.draw(screen)
         fruit_sprites.draw(screen)
         iron_block_sprites.draw(screen)
+        enemy_sprites.draw(screen)
         pygame.display.flip()
