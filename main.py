@@ -9,14 +9,14 @@ def terminate():
 
 
 def start_screen():
-    fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
+    fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     volum = 0.5
     pygame.mixer.music.load('Start_menu_music.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
     all_sett = pygame.sprite.Group()
-    setting = load_image("settings.png", colorkey=(255, 255, 255))
+    setting = load_image("start_windiws/settings.png", colorkey=(255, 255, 255))
     settings = pygame.sprite.Sprite(all_sett)
     settings.image = setting
     settings.rect = settings.image.get_rect()
@@ -26,7 +26,7 @@ def start_screen():
     flag_1, flag_2, flag_3, flag_4, flag_5 = True, True, True, True, True
     while True:
         if flaa:
-            fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
+            fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
             screen.blit(fon, (0, 0))
             if flaa and settings.rect.y != -150:
                 settings.rect.y += 25
@@ -37,13 +37,13 @@ def start_screen():
                         terminate()
                     if event1.type == pygame.MOUSEMOTION:
                         if 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
-                            setting = load_image("settings_close.png", colorkey=(255, 255, 255))
+                            setting = load_image("start_windiws/settings_close.png", colorkey=(255, 255, 255))
                             settings.image = setting
                             if flag_5:
                                 pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                                 flag_5 = False
                         else:
-                            setting = load_image("settings.png", colorkey=(255, 255, 255))
+                            setting = load_image("start_windiws/settings.png", colorkey=(255, 255, 255))
                             settings.image = setting
                             flag_5 = True
                     if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1030 > event1.pos[0] > 980 and 150 > \
@@ -60,7 +60,7 @@ def start_screen():
                     terminate()
                 if event1.type == pygame.MOUSEMOTION:
                     if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
-                        fon = pygame.transform.scale(load_image('start_okno_play.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'), (68 * 20, 68 * 10 + 80))
                         if flag_1:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = False, True, True, True
@@ -69,23 +69,23 @@ def start_screen():
                         if flag_2:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = True, False, True, True
-                        fon = pygame.transform.scale(load_image('start_okno_redactor.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'), (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
                         if flag_3:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, False, True
-                        fon = pygame.transform.scale(load_image('start_okno_person.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'), (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
                         if flag_4:
                             pygame.mixer.Sound('zvuk_navedenie.mp3').play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, True, False
-                        fon = pygame.transform.scale(load_image('start_okno_setting.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno_setting.png'), (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     else:
                         flag_1, flag_2, flag_3, flag_4 = True, True, True, True
-                        fon = pygame.transform.scale(load_image('start_okno.png'), (68 * 20, 68 * 10 + 80))
+                        fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
                         and 126 < event1.pos[1] < 217:
@@ -297,28 +297,28 @@ class Unit(pygame.sprite.Sprite):
             speeda = speed
 
         if last_move[0] == 1:
-            list_anim_right = [load_image('right_anim/right_shag_1.png', colorkey=colorkey),
-                               load_image('right_anim/right_shag_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image('default_dino/right_anim/right_shag_1.png', colorkey=colorkey),
+                               load_image('default_dino/right_anim/right_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_right[self.count // 6 - 1]
             if self.rect.right < board.width * board.cell_size:  # для того чтобы не выходил за границы
                 self.rect.x += speeda
         elif last_move[0] == -1:
-            list_anim_left = [load_image('left_anim/left_shag_1.png', colorkey=colorkey),
-                              load_image('left_anim/left_shag_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image('default_dino/left_anim/left_shag_1.png', colorkey=colorkey),
+                              load_image('default_dino/left_anim/left_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_left[self.count // 6 - 1]
             if self.rect.left > 0:
                 self.rect.x -= speeda
 
         elif last_move[1] == 1:
-            list_anim_up = [load_image('front_anim/front_shag_1.png', colorkey=colorkey),
-                            load_image('front_anim/front_shag_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image('default_dino/front_anim/front_shag_1.png', colorkey=colorkey),
+                            load_image('default_dino/front_anim/front_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_up[self.count // 6 - 1]
             if self.rect.bottom < (board.height * board.cell_size):
                 self.rect.y += speeda
 
         elif last_move[1] == -1:
-            list_anim_down = [load_image('back_anim/back_shag_1.png', colorkey=colorkey),
-                              load_image('back_anim/back_shag_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image('default_dino/back_anim/back_shag_1.png', colorkey=colorkey),
+                              load_image('default_dino/back_anim/back_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_down[self.count // 6 - 1]
             if self.rect.top > 0:
                 self.rect.y -= speeda
@@ -338,34 +338,34 @@ class Unit(pygame.sprite.Sprite):
                 fruit.static_animation()
         self.count_static += 1
         if last_move[0] == 1:
-            list_anim_right = [load_image('right_anim/right_stoit_1.png', colorkey=colorkey),
-                               load_image('right_anim/right_stoit_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image('default_dino/right_anim/right_stoit_1.png', colorkey=colorkey),
+                               load_image('default_dino/right_anim/right_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_right[self.count_static // 12 - 1]
 
         elif last_move[0] == -1:
-            list_anim_left = [load_image('left_anim/left_stoit_1.png', colorkey=colorkey),
-                              load_image('left_anim/left_stoit_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image('default_dino/left_anim/left_stoit_1.png', colorkey=colorkey),
+                              load_image('default_dino/left_anim/left_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_left[self.count_static // 12 - 1]
 
         elif last_move[1] == 1:
-            list_anim_down = [load_image('front_anim/front_stoit_1.png', colorkey=colorkey),
-                              load_image('front_anim/front_stoit_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image('default_dino/front_anim/front_stoit_1.png', colorkey=colorkey),
+                              load_image('default_dino/front_anim/front_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_down[self.count_static // 12 - 1]
 
         elif last_move[1] == -1:
-            list_anim_up = [load_image('back_anim/back_stoit_1.png', colorkey=colorkey),
-                            load_image('back_anim/back_stoit_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image('default_dino/back_anim/back_stoit_1.png', colorkey=colorkey),
+                            load_image('default_dino/back_anim/back_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_up[self.count_static // 12 - 1]
 
     def spawn_ice_dino(self, last_move):
         if last_move[0] == 1:
-            self.image = load_image('right_anim/right_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image('default_dino/right_anim/right_break_or_place_ice.png', colorkey=colorkey)
         elif last_move[0] == -1:
-            self.image = load_image('left_anim/left_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image('default_dino/left_anim/left_break_or_place_ice.png', colorkey=colorkey)
         elif last_move[1] == 1:
-            self.image = load_image('front_anim/front_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image('default_dino/front_anim/front_break_or_place_ice.png', colorkey=colorkey)
         elif last_move[1] == -1:
-            self.image = load_image('back_anim/back_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image('default_dino/back_anim/back_break_or_place_ice.png', colorkey=colorkey)
 
 
 class Fruit(pygame.sprite.Sprite):
@@ -443,7 +443,7 @@ if __name__ == '__main__':
     running = True
 
     all_sprites = pygame.sprite.Group()
-    sprite_hero = Unit('hero', 'right_anim/right_stoit_1.png')
+    sprite_hero = Unit('hero', 'default_dino/right_anim/right_stoit_1.png')
 
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
