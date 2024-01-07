@@ -113,6 +113,14 @@ def start_screen():
         clock.tick(fps)
 
 
+def game_lose():
+    pass
+
+
+def game_win():
+    pass
+
+
 def spawn_ice(last_move):  # перенес функцию т.к. она созадвала экземпляры класса в котором
     break_ice_flag = False
     xx = sprite_hero.rect.x // board.cell_size  # смотрим на какой клетке стоял дино
@@ -216,7 +224,7 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
 
 
 def possition(mouse_pos):
-    return (mouse_pos[0] + 1) // board.cell_size, (mouse_pos[1] + 1) // board.cell_size
+    return mouse_pos[0] // board.cell_size, mouse_pos[1] // board.cell_size
 
 
 def load_image(name, colorkey=None):
@@ -263,9 +271,6 @@ class Board:
                                      (x * self.cell_size, y * self.cell_size, self.cell_size,
                                       self.cell_size),
                                      width=10)
-                    # my_font = pygame.font.SysFont('Times New Roman', 25)
-                    # text_surface = my_font.render(f'{x},{y}', False, pygame.Color('black'))
-                    # screen.blit(text_surface, (x * cell_size, y * cell_size))
 
 
 class Unit(pygame.sprite.Sprite):
@@ -416,7 +421,6 @@ class Enemy(pygame.sprite.Sprite):
             self.image = list_anim_left[self.count_static // 24 - 1]
             if go:
                 self.rect.x -= speed
-                print(last_move, self.route[self.index], possition((self.rect.x, self.rect.y)))
 
         elif last_move[1] == 1:
             list_anim_down = [load_image('vrag/front_vrag.png', colorkey=colorkey),
@@ -434,18 +438,31 @@ class Enemy(pygame.sprite.Sprite):
 
     def go_go_zeppely(self):
         try:
-            if self.index + 1 == len(self.route):
+            if self.index == len(self.route):
                 self.index = 0
-            pos = possition((self.rect.x, self.rect.y))
-            x = self.route[self.index][0] - pos[0]
-            y = self.route[self.index][1] - pos[1]
+            x = self.route[self.index][0] * cell_size - self.rect.x
+            y = self.route[self.index][1] * cell_size - self.rect.y
+            if x > 0:
+                x = 1
+            if y > 0:
+                y = 1
+            if y < 0:
+                y = -1
+            if x < 0:
+                x = -1
             last_move = (x, y)
-            if self.route[self.index] != possition((self.rect.x, self.rect.y)):
-                self.animation(last_move)
-
-            else:
+            if self.route[self.index][0] * board.cell_size == self.rect.x and self.route[self.index][
+                1] * board.cell_size == self.rect.y:
                 self.index += 1
+            else:
+                self.animation(last_move)
         except Exception:
+            pass
+        try:
+            if board.board[self.route[self.index][1]][self.route[self.index][0]] == 'ice':
+                self.route.reverse()
+                self.index = 0
+        except IndexError:
             pass
 
     def set_route(self, list_click):
@@ -536,7 +553,7 @@ if __name__ == '__main__':
     cursor = pygame.sprite.Group()
 
     fps = 60
-    v = 160
+    v = 120
     speed = v // fps
 
     clock = pygame.time.Clock()
@@ -713,6 +730,9 @@ if __name__ == '__main__':
         for enemy in enemy_sprites:
             if enemy != enemy_sprite:
                 enemy.go_go_zeppely()
+                if enemy.rect.colliderect(sprite_hero):
+                    print(1)
+                    game_lose()
         clock.tick(fps)
         screen.fill((255, 255, 255))
         board.render(screen)
