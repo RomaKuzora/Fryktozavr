@@ -260,6 +260,7 @@ def start_screen():
                         and 126 < event1.pos[1] < 217:
                     pygame.mixer.Sound('zvuk_click.mp3').play()
                     pygame.mixer.music.stop()
+                    flag_redact = False
                     choose_level()
                     return
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
@@ -444,18 +445,19 @@ class Board:
         self.cell_size = cell_cize
 
     def render(self, screen_1):
-        for yy in range(len(self.board)):
-            for xx in range(len(self.board[0])):
-                if self.board[yy][xx] is None:
-                    pygame.draw.rect(screen_1, (0, 0, 0),
-                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size,
-                                      self.cell_size),
-                                     width=1)
-                if self.board[yy][xx] == 'route':
-                    pygame.draw.rect(screen_1, pygame.Color('red'),
-                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size,
-                                      self.cell_size),
-                                     width=10)
+        if flag_redact:
+            for yy in range(len(self.board)):
+                for xx in range(len(self.board[0])):
+                    if self.board[yy][xx] is None:
+                        pygame.draw.rect(screen_1, (0, 0, 0),
+                                         (xx * self.cell_size, yy * self.cell_size, self.cell_size,
+                                          self.cell_size),
+                                         width=1)
+                    if self.board[yy][xx] == 'route':
+                        pygame.draw.rect(screen_1, pygame.Color('red'),
+                                         (xx * self.cell_size, yy * self.cell_size, self.cell_size,
+                                          self.cell_size),
+                                         width=10)
 
 
 class Unit(pygame.sprite.Sprite):
@@ -721,12 +723,17 @@ class IronBlock(pygame.sprite.Sprite):
 
 def start_level(level=0):
     global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites
-    print(level_list)
+    global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
     sprite_hero = level_list[level][0]
     ice_sprites = level_list[level][1]
     iron_block_sprites = level_list[level][2]
     enemy_sprites = level_list[level][3]
     fruit_sprites = level_list[level][4]
+    ice_sprites.remove(sprite_ice)
+    iron_block_sprites.remove(sprite_iron_block)
+    fruit_sprites.remove(sprite_banana)
+    fruit_sprites.remove(sprite_cherry)
+    enemy_sprites.remove(enemy_sprite)
     return
 
 
@@ -737,6 +744,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     board = Board(20, 10)
     pygame.display.set_caption('Фруктозавр')
+    pygame.display.set_icon(load_image('default_dino/left_anim/left_shag_1.png'))
     running = True
     volume = 0.5
 
@@ -749,6 +757,9 @@ if __name__ == '__main__':
     enemy_sprites = pygame.sprite.Group()
     cursor = pygame.sprite.Group()
     clock = pygame.time.Clock()
+
+    surface = load_image('pole.png')
+    rect = surface.get_rect(center=(wight // 2, height // 2))
 
     fps = 60
     v = 120
@@ -955,6 +966,9 @@ if __name__ == '__main__':
         if flag_redact:
             screen.blit(text1, (5 * cell_size, 10 * cell_size))
             screen.blit(text2, (8 * cell_size, 10 * cell_size))
+        else:
+
+            screen.blit(surface, rect)
         clock.tick(fps)
         board.render(screen)
         all_sprites.draw(screen)
