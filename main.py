@@ -127,7 +127,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     or not break_ice_flag and board.board[yy][i] == 'ice' \
                     or board.board[yy][i] == 'block' or (move and board.board[yy][i - 1] == 'block'):
                 break
-            if board.board[yy][i] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
+            if not break_ice_flag and not (move and board.board[yy][i - 1] == 'block'
+                                           or board.board[yy][i] == 'block'):  # убрал спавн лишнего спрайта
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
             elif board.board[yy][i] == 'ice' and break_ice_flag or \
                     board.board[yy][i - 1] == 'ice' and break_ice_flag:  # проверка на ломание
@@ -149,7 +150,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     or not break_ice_flag and board.board[yy][i] == 'ice' \
                     or board.board[yy][i] == 'block' or (move and board.board[yy][i + 1] == 'block'):
                 break
-            if board.board[yy][i] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
+            if not break_ice_flag and not (move and board.board[yy][i + 1] == 'block'
+                                           or board.board[yy][i] == 'block'):  # убрал спавн лишнего спрайта
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
             elif board.board[yy][i] == 'ice' and break_ice_flag or \
                     board.board[yy][i + 1] == 'ice' and break_ice_flag:  # проверка на ломание
@@ -171,7 +173,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     or not break_ice_flag and board.board[i][xx] == 'ice' \
                     or board.board[i][xx] == 'block' or (move and board.board[i + 1][xx] == 'block'):
                 break
-            if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
+            if not break_ice_flag and not (move and board.board[i][xx] == 'block'
+                                           or board.board[i][xx] == 'block'):  # убрал спавн лишнего спрайта
                 ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
             elif board.board[i][xx] == 'ice' and break_ice_flag or \
                     board.board[i + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
@@ -196,7 +199,8 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                         or not break_ice_flag and board.board[i][xx] == 'ice' \
                         or board.board[i][xx] == 'block' or (move and board.board[i - 1][xx] == 'block'):
                     break
-                if board.board[i][xx] != 'ice' and not break_ice_flag:  # убрал спавн лишнего спрайта
+                if not break_ice_flag and not (move and board.board[i][xx] == 'block'
+                                               or board.board[i][xx] == 'block'):  # убрал спавн лишнего спрайта
                     ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
                 elif board.board[i][xx] == 'ice' and break_ice_flag or \
                         board.board[i - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
@@ -259,10 +263,9 @@ class Board:
                                      (x * self.cell_size, y * self.cell_size, self.cell_size,
                                       self.cell_size),
                                      width=10)
-                    #my_font = pygame.font.SysFont('Times New Roman', 25)
-                    #text_surface = my_font.render(f'{x},{y}', False, pygame.Color('black'))
-                    #screen.blit(text_surface, (x * cell_size, y * cell_size))
-
+                    # my_font = pygame.font.SysFont('Times New Roman', 25)
+                    # text_surface = my_font.render(f'{x},{y}', False, pygame.Color('black'))
+                    # screen.blit(text_surface, (x * cell_size, y * cell_size))
 
 
 class Unit(pygame.sprite.Sprite):
@@ -579,7 +582,7 @@ if __name__ == '__main__':
                 elif flag == 'block':
                     pass
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
-                if flag_of_list_click:
+                if flag_of_list_click and possition(event.pos)[1] != 10:
                     try:
                         list_click.append(possition(event.pos))
                         board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
@@ -591,20 +594,20 @@ if __name__ == '__main__':
                     except Exception:
                         pass
                 else:
-                    if possition(event.pos) == possition((sprite_banana.rect.x, sprite_banana.rect.y)):
+                    if possition(event.pos) == (1, 10):
                         flag = 'banana'
-                    elif possition(event.pos) == possition((sprite_ice.rect.x, sprite_ice.rect.y)):
+                    elif possition(event.pos) == (0, 10):
                         flag = 'ice'
-                    elif possition(event.pos) == possition((sprite_cherry.rect.x, sprite_cherry.rect.y)):
+                    elif possition(event.pos) == (2, 10):
                         flag = 'cherry'
-                    elif possition(event.pos) == possition((sprite_iron_block.rect.x, sprite_iron_block.rect.y)):
+                    elif possition(event.pos) == (3, 10):
                         flag = 'block'
-                    elif possition(event.pos) == possition((enemy_sprite.rect.x, enemy_sprite.rect.y)):
+                    elif possition(event.pos) == (4, 10):
                         flag = 'enemy'
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
-                if flag == 'banana':
+                if flag == 'banana' and possition(event.pos)[1] != 10:
                     Fruit('banana', 'fruct/banana.png', event.pos, True)
-                elif flag == 'cherry':
+                elif flag == 'cherry' and possition(event.pos)[1] != 10:
                     Fruit('cherry', 'fruct/cherry.png', event.pos, True)
                 elif flag == 'ice':
                     if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
