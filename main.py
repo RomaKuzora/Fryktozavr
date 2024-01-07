@@ -50,10 +50,18 @@ def number(volumm):
 
 
 def start_screen():
-    global volume, flag_redact
+    global volume, flag_redact, personalization
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
+    f = open("volume.txt")
     volum = 0.5
+    volum_effects = 0
+    for ii in f:
+        ii = ii.split(';')
+        volum = float(ii[0])
+        volume = float(ii[1])
+        volum_effects = float(ii[2])
+    f.close()
     pygame.mixer.music.load('Start_menu_music.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
@@ -88,6 +96,18 @@ def start_screen():
     minus_2.rect = minus_2.image.get_rect()
     minus_2.rect.x += 500
     minus_2.rect.y = -260
+    plus3 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+    plus_3 = pygame.sprite.Sprite(all_sett)
+    plus_3.image = plus3
+    plus_3.rect = plus_3.image.get_rect()
+    plus_3.rect.x += 800
+    plus_3.rect.y = -140
+    minus3 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+    minus_3 = pygame.sprite.Sprite(all_sett)
+    minus_3.image = minus3
+    minus_3.rect = minus_3.image.get_rect()
+    minus_3.rect.x += 500
+    minus_3.rect.y = -140
     num_2 = pygame.sprite.Sprite(all_sett)
     num1, num2 = number(volum)
     num_2.image = num2
@@ -110,10 +130,21 @@ def start_screen():
     num_4.rect = num_4.image.get_rect()
     num_4.rect.x += 625
     num_4.rect.y = -260
+    num1, num2 = number(volum_effects)
+    num_5 = pygame.sprite.Sprite(all_sett)
+    num_5.image = num2
+    num_5.rect = num_5.image.get_rect()
+    num_5.rect.x += 675
+    num_5.rect.y = -140
+    num_6 = pygame.sprite.Sprite(all_sett)
+    num_6.image = num1
+    num_6.rect = num_6.image.get_rect()
+    num_6.rect.x += 625
+    num_6.rect.y = -140
 
     flaa = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9 \
-        = True, True, True, True, True, True, True, True, True
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11 \
+        = True, True, True, True, True, True, True, True, True, True, True
     while True:
         if flaa:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
@@ -124,17 +155,31 @@ def start_screen():
                 minus_1.rect.y += 25
                 minus_2.rect.y += 25
                 plus_2.rect.y += 25
+                minus_3.rect.y += 25
+                plus_3.rect.y += 25
                 num_2.rect.y += 25
                 num_1.rect.y += 25
                 num_3.rect.y += 25
                 num_4.rect.y += 25
+                num_5.rect.y += 25
+                num_6.rect.y += 25
             else:
+                f = open("volume.txt")
+                for ii in f:
+                    ii = ii.split(';')
+                    volum = float(ii[0])
+                    volume = float(ii[1])
+                    volum_effects = float(ii[2])
+                f.close()
                 num1, num2 = number(volum)
                 num_1.image = num1
                 num_2.image = num2
                 num1, num2 = number(volume)
                 num_3.image = num2
                 num_4.image = num1
+                num1, num2 = number(volum_effects)
+                num_5.image = num2
+                num_6.image = num1
                 for event1 in pygame.event.get():
                     pressed1 = pygame.mouse.get_pressed()
                     if event1.type == pygame.QUIT:
@@ -144,32 +189,58 @@ def start_screen():
                             setting = load_image("start_windiws/settings_close.png", colorkey=(255, 255, 255))
                             settings.image = setting
                             if flag_5:
-                                pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
                                 flag_5 = False
                         elif 550 > event1.pos[0] > 495 and 260 > event1.pos[1] > 240:
                             minus1 = load_image("start_windiws/minus_pick.png", colorkey=(255, 255, 255))
                             minus_1.image = minus1
                             if flag_6:
-                                pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
                                 flag_6 = False
                         elif 850 > event1.pos[0] > 800 and 270 > event1.pos[1] > 215:
                             plus1 = load_image("start_windiws/plus_pick.png", colorkey=(255, 255, 255))
                             plus_1.image = plus1
                             if flag_7:
-                                pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
                                 flag_7 = False
                         elif 550 > event1.pos[0] > 495 and 370 > event1.pos[1] > 355:
                             minus2 = load_image("start_windiws/minus_pick.png", colorkey=(255, 255, 255))
                             minus_2.image = minus2
                             if flag_8:
-                                pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
                                 flag_8 = False
                         elif 850 > event1.pos[0] > 800 and 390 > event1.pos[1] > 335:
                             plus2 = load_image("start_windiws/plus_pick.png", colorkey=(255, 255, 255))
                             plus_2.image = plus2
                             if flag_9:
-                                pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
                                 flag_9 = False
+                        elif 550 > event1.pos[0] > 495 and 490 > event1.pos[1] > 475:
+                            minus3 = load_image("start_windiws/minus_pick.png", colorkey=(255, 255, 255))
+                            minus_3.image = minus3
+                            if flag_10:
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
+                                flag_10 = False
+                        elif 850 > event1.pos[0] > 800 and 510 > event1.pos[1] > 455:
+                            plus3 = load_image("start_windiws/plus_pick.png", colorkey=(255, 255, 255))
+                            plus_3.image = plus3
+                            if flag_11:
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
+                                flag_11 = False
                         else:
                             minus1 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
                             minus_1.image = minus1
@@ -179,34 +250,72 @@ def start_screen():
                             minus_2.image = minus2
                             plus2 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
                             plus_2.image = plus2
+                            minus3 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+                            minus_3.image = minus3
+                            plus3 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+                            plus_3.image = plus3
                             setting = load_image("start_windiws/settings.png", colorkey=(255, 255, 255))
                             settings.image = setting
-                            flag_5, flag_6, flag_7, flag_8, flag_9 = True, True, True, True, True
+                            flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11 \
+                                = True, True, True, True, True, True, True
                     if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1030 > event1.pos[0] > 980 and 150 > \
                             event1.pos[1] > 100:
                         flaa = False
-                        pygame.mixer.Sound('zvuk_settings_close.mp3').play()
+                        sound = pygame.mixer.Sound('zvuk_settings_close.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
                         break
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 550 > event1.pos[0] > 495 \
                             and 260 > event1.pos[1] > 240:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
                         if volum > 0:
                             volum -= 0.1
                             volum = round(volum, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
                             and 270 > event1.pos[1] > 215:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
                         if volum < 1:
                             volum += 0.1
                             volum = round(volum, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 550 > event1.pos[0] > 495 \
                             and 370 > event1.pos[1] > 355:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
                         if volume > 0:
                             volume -= 0.1
                             volume = round(volume, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
                             and 390 > event1.pos[1] > 335:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
                         if volume < 1:
                             volume += 0.1
                             volume = round(volume, 1)
+                    elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 550 > event1.pos[0] > 495 \
+                            and 490 > event1.pos[1] > 475:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        if volum_effects > 0:
+                            volum_effects -= 0.1
+                            volum_effects = round(volum_effects, 1)
+                    elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
+                            and 510 > event1.pos[1] > 455:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        if volum_effects < 1:
+                            volum_effects += 0.1
+                            volum_effects = round(volum_effects, 1)
+                    f = open("volume.txt", 'w')
+                    f.write(f'{volum};{volume};{volum_effects}')
+                    f.close()
         if flaa is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
@@ -214,10 +323,14 @@ def start_screen():
                 minus_1.rect.y = -380
                 minus_2.rect.y = -260
                 plus_2.rect.y = -260
+                plus_3.rect.y = -140
+                minus_3.rect.y = -140
                 num_2.rect.y = - 380
                 num_1.rect.y = -380
                 num_3.rect.y = -260
                 num_4.rect.y = -260
+                num_5.rect.y = -140
+                num_6.rect.y = -140
             for event1 in pygame.event.get():
                 pressed1 = pygame.mouse.get_pressed()
                 if event1.type == pygame.QUIT:
@@ -227,26 +340,34 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         if flag_1:
-                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sound.set_volume(volum_effects)
+                            sound.play()
                         flag_1, flag_2, flag_3, flag_4 = False, True, True, True
                         screen.blit(fon, (0, 0))
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323:
                         if flag_2:
-                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sound.set_volume(volum_effects)
+                            sound.play()
                         flag_1, flag_2, flag_3, flag_4 = True, False, True, True
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
                         if flag_3:
-                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sound.set_volume(volum_effects)
+                            sound.play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, False, True
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
                     elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
                         if flag_4:
-                            pygame.mixer.Sound('zvuk_navedenie.mp3').play()
+                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sound.set_volume(volum_effects)
+                            sound.play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, True, False
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_setting.png'),
                                                      (68 * 20, 68 * 10 + 80))
@@ -258,24 +379,33 @@ def start_screen():
                         screen.blit(fon, (0, 0))
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
                         and 126 < event1.pos[1] < 217:
-                    pygame.mixer.Sound('zvuk_click.mp3').play()
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
                     pygame.mixer.music.stop()
                     flag_redact = False
                     choose_level()
                     return
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
                         and 236 < event1.pos[1] < 323:
-                    pygame.mixer.Sound('zvuk_click.mp3').play()
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
                     pygame.mixer.music.stop()
                     flag_redact = True
                     return  # начинаем игру
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
                         and 342 < event1.pos[1] < 400:
-                    pygame.mixer.Sound('zvuk_click.mp3').play()
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    personalization = 'pink_dino'
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
                         and 386 < event1.pos[1] < 441 and flaa is False:
                     if flaa is False:
-                        pygame.mixer.Sound('zvuk_settings.mp3').play()
+                        sound = pygame.mixer.Sound('zvuk_settings.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
                         flaa = True
         pygame.mixer.music.set_volume(volum)
         all_sett.draw(screen)
@@ -507,28 +637,28 @@ class Unit(pygame.sprite.Sprite):
             speeda = speed
 
         if last_move[0] == 1:
-            list_anim_right = [load_image('default_dino/right_anim/right_shag_1.png', colorkey=colorkey),
-                               load_image('default_dino/right_anim/right_shag_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image(f'{personalization}/right_anim/right_shag_1.png', colorkey=colorkey),
+                               load_image(f'{personalization}/right_anim/right_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_right[self.count // 6 - 1]
             if self.rect.right < board.width * board.cell_size:  # для того чтобы не выходил за границы
                 self.rect.x += speeda
         elif last_move[0] == -1:
-            list_anim_left = [load_image('default_dino/left_anim/left_shag_1.png', colorkey=colorkey),
-                              load_image('default_dino/left_anim/left_shag_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image(f'{personalization}/left_anim/left_shag_1.png', colorkey=colorkey),
+                              load_image(f'{personalization}/left_anim/left_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_left[self.count // 6 - 1]
             if self.rect.left > 0:
                 self.rect.x -= speeda
 
         elif last_move[1] == 1:
-            list_anim_up = [load_image('default_dino/front_anim/front_shag_1.png', colorkey=colorkey),
-                            load_image('default_dino/front_anim/front_shag_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image(f'{personalization}/front_anim/front_shag_1.png', colorkey=colorkey),
+                            load_image(f'{personalization}/front_anim/front_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_up[self.count // 6 - 1]
             if self.rect.bottom < (board.height * board.cell_size):
                 self.rect.y += speeda
 
         elif last_move[1] == -1:
-            list_anim_down = [load_image('default_dino/back_anim/back_shag_1.png', colorkey=colorkey),
-                              load_image('default_dino/back_anim/back_shag_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image(f'{personalization}/back_anim/back_shag_1.png', colorkey=colorkey),
+                              load_image(f'{personalization}/back_anim/back_shag_2.png', colorkey=colorkey)]
             self.image = list_anim_down[self.count // 6 - 1]
             if self.rect.top > 0:
                 self.rect.y -= speeda
@@ -549,34 +679,34 @@ class Unit(pygame.sprite.Sprite):
                 fruit.static_animation()
         self.count_static += 1
         if last_move[0] == 1:
-            list_anim_right = [load_image('default_dino/right_anim/right_stoit_1.png', colorkey=colorkey),
-                               load_image('default_dino/right_anim/right_stoit_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image(f'{personalization}/right_anim/right_stoit_1.png', colorkey=colorkey),
+                               load_image(f'{personalization}/right_anim/right_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_right[self.count_static // 12 - 1]
 
         elif last_move[0] == -1:
-            list_anim_left = [load_image('default_dino/left_anim/left_stoit_1.png', colorkey=colorkey),
-                              load_image('default_dino/left_anim/left_stoit_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image(f'{personalization}/left_anim/left_stoit_1.png', colorkey=colorkey),
+                              load_image(f'{personalization}/left_anim/left_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_left[self.count_static // 12 - 1]
 
         elif last_move[1] == 1:
-            list_anim_down = [load_image('default_dino/front_anim/front_stoit_1.png', colorkey=colorkey),
-                              load_image('default_dino/front_anim/front_stoit_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image(f'{personalization}/front_anim/front_stoit_1.png', colorkey=colorkey),
+                              load_image(f'{personalization}/front_anim/front_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_down[self.count_static // 12 - 1]
 
         elif last_move[1] == -1:
-            list_anim_up = [load_image('default_dino/back_anim/back_stoit_1.png', colorkey=colorkey),
-                            load_image('default_dino/back_anim/back_stoit_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image(f'{personalization}/back_anim/back_stoit_1.png', colorkey=colorkey),
+                            load_image(f'{personalization}/back_anim/back_stoit_2.png', colorkey=colorkey)]
             self.image = list_anim_up[self.count_static // 12 - 1]
 
     def spawn_ice_dino(self, last_move):
         if last_move[0] == 1:
-            self.image = load_image('default_dino/right_anim/right_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/right_anim/right_break_or_place_ice.png', colorkey=colorkey)
         elif last_move[0] == -1:
-            self.image = load_image('default_dino/left_anim/left_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/left_anim/left_break_or_place_ice.png', colorkey=colorkey)
         elif last_move[1] == 1:
-            self.image = load_image('default_dino/front_anim/front_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/front_anim/front_break_or_place_ice.png', colorkey=colorkey)
         elif last_move[1] == -1:
-            self.image = load_image('default_dino/back_anim/back_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/back_anim/back_break_or_place_ice.png', colorkey=colorkey)
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -766,6 +896,7 @@ if __name__ == '__main__':
     fps = 60
     v = 120
     speed = v // fps
+    personalization = 'default_dino'
     start_screen()
 
     fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
@@ -791,7 +922,7 @@ if __name__ == '__main__':
         text1 = my_font.render('сохранить', False, pygame.Color('red'))
         text2 = my_font.render('сбросить', False, pygame.Color('red'))
     flag_of_list_click = False
-    pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
+    pygame.mixer.music.load('music_redactor.mp3')  # загрузили
     pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
     pygame.mixer.music.set_volume(volume)  # изменить громкость
     flaag = True
@@ -891,7 +1022,6 @@ if __name__ == '__main__':
                                         ice.kill_ice()
                                         if fruit_list[possition(event.pos)[1]][possition(event.pos)[0]]:
                                             Fruit('banana', 'fruct/banana.png', event.pos, True)
-
                                     elif possition(event.pos) == possition((ice.rect.x, ice.rect.y)):
                                         board.board[event.pos[1] // 68][event.pos[0] // 68] = None
                                         ice.kill_ice()
