@@ -483,6 +483,7 @@ class Unit(pygame.sprite.Sprite):
         for fruit in fruit_sprites:
             if self.rect.colliderect(fruit):
                 fruit.kill_fruit()
+                fruit_list[fruit.rect.y // 68][fruit.rect.x // 68] = None
             else:
                 fruit.static_animation()
         last_pos = self.rect.x, self.rect.y
@@ -543,6 +544,7 @@ class Unit(pygame.sprite.Sprite):
         for fruit in fruit_sprites:
             if self.rect.colliderect(fruit):
                 fruit.kill_fruit()
+                fruit_list[fruit.rect.y // 68][fruit.rect.x // 68] = None
             else:
                 fruit.static_animation()
         self.count_static += 1
@@ -766,6 +768,7 @@ if __name__ == '__main__':
     speed = v // fps
     start_screen()
 
+    fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
     smotrit = (1, 0)
     smotrit_y = (1, 0)
     smotrit_x = (1, 0)
@@ -851,23 +854,49 @@ if __name__ == '__main__':
                         enemy_sprite = Enemy('vrag/front_vrag.png')
                         enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
-                if flag == 'banana' and possition(event.pos)[1] != 10:
-                    Fruit('banana', 'fruct/banana.png', event.pos, True)
-                elif flag == 'cherry' and possition(event.pos)[1] != 10:
+                if flag == 'banana' and possition(event.pos)[1] != 10 \
+                        and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
+                    if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
+                        fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'banana'
+                        Fruit('banana', 'fruct/banana.png', (event.pos[0] + 5, event.pos[1] + 5), True)
+                    else:
+                        for fruct in fruit_sprites:
+                            if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
+                                fruct.kill_fruit()
+                                fruit_list[possition(event.pos)[1]][possition(event.pos)[0]] = None
+                elif flag == 'cherry' and possition(event.pos)[1] != 10 \
+                        and not fruit_list[event.pos[1] // 68][event.pos[0] // 68] \
+                        and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
+                    fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'cherry'
                     Fruit('cherry', 'fruct/cherry.png', event.pos, True)
                 elif flag == 'ice':
                     if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
                             or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
                         try:
                             if not board.board[event.pos[1] // 68][event.pos[0] // 68]:
-                                Ice('ice', 'ice/ice.png', event.pos)
-                                board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
+                                if fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
+                                    for fruit in fruit_sprites:
+                                        if possition(event.pos) == possition((fruit.rect.x, fruit.rect.y)):
+                                            fruit.kill_fruit()
+                                    Ice('ice', 'fruct/banana_in_ice.png', event.pos)  # нужно название фрукта вставить
+                                    board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
+                                else:
+                                    Ice('ice', 'ice/ice.png', event.pos)
+                                    board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
                             else:
                                 for ice in ice_sprites:
-                                    if event.pos[1] // 68 == (ice.rect.y // 68) and \
-                                            event.pos[0] // 68 == (ice.rect.x // 68):
+                                    if possition(event.pos) == possition((ice.rect.x, ice.rect.y)) \
+                                            and fruit_list[possition(event.pos)[1]][possition(event.pos)[0]]:
                                         board.board[event.pos[1] // 68][event.pos[0] // 68] = None
                                         ice.kill_ice()
+                                        if fruit_list[possition(event.pos)[1]][possition(event.pos)[0]]:
+                                            Fruit('banana', 'fruct/banana.png', event.pos, True)
+
+                                    elif possition(event.pos) == possition((ice.rect.x, ice.rect.y)):
+                                        board.board[event.pos[1] // 68][event.pos[0] // 68] = None
+                                        ice.kill_ice()
+                            for i in fruit_sprites:
+                                print(i.rect.x, i.rect.y)
                         except IndexError:
                             pass
                 elif flag == 'block':
