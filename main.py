@@ -9,40 +9,42 @@ def terminate():
 
 
 def number(volumm):
-    num1, num2, num3 = 0, 0, 0
+    num1, num2 = 0, 0
     if volumm == 0.1:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/one.png", colorkey=(255, 255, 255))
+    elif volumm == 0.2:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/two.png", colorkey=(255, 255, 255))
+    elif volumm == 0.3:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/three.png", colorkey=(255, 255, 255))
+    elif volumm == 0.4:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/four.png", colorkey=(255, 255, 255))
+    elif volumm == 0.5:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/five.png", colorkey=(255, 255, 255))
+    elif volumm == 0.6:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/six.png", colorkey=(255, 255, 255))
+    elif volumm == 0.7:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/seven.png", colorkey=(255, 255, 255))
+    elif volumm == 0.8:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/eight.png", colorkey=(255, 255, 255))
+    elif volumm == 0.9:
+        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/nine.png", colorkey=(255, 255, 255))
+    elif volumm == 1:
         num1 = load_image("start_windiws/numberss/one.png", colorkey=(255, 255, 255))
         num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.2:
-        num1 = load_image("start_windiws/numberss/two.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.3:
-        num1 = load_image("start_windiws/numberss/three.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.4:
-        num1 = load_image("start_windiws/numberss/four.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.5:
-        num1 = load_image("start_windiws/numberss/five.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.6:
-        num1 = load_image("start_windiws/numberss/six.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.7:
-        num1 = load_image("start_windiws/numberss/seven.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.8:
-        num1 = load_image("start_windiws/numberss/eight.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 0.9:
-        num1 = load_image("start_windiws/numberss/nine.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-    elif volumm == 1 or volumm == 0:
+    elif volumm == 0:
         num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
         num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        if volumm == 1:
-            num3 = load_image("start_windiws/numberss/one.png", colorkey=(255, 255, 255))
-    return num1, num2, num3
+    return num1, num2
+
 
 def start_screen():
     global volume
@@ -84,7 +86,7 @@ def start_screen():
     minus_2.rect.x += 500
     minus_2.rect.y = -260
     num_2 = pygame.sprite.Sprite(all_sett)
-    num1, num2, num3 = number(volum)
+    num1, num2 = number(volum)
     num_2.image = num2
     num_2.rect = num_2.image.get_rect()
     num_2.rect.x += 675
@@ -94,13 +96,18 @@ def start_screen():
     num_1.rect = num_1.image.get_rect()
     num_1.rect.x += 625
     num_1.rect.y = -380
-    num_3 = None
-    if num3 != 0:
-        num_3 = pygame.sprite.Sprite(all_sett)
-        num_3.image = num3
-        num_3.rect = num_3.image.get_rect()
-        num_3.rect.x += 575
-        num_3.rect.y = -380
+    num1, num2 = number(volume)
+    num_3 = pygame.sprite.Sprite(all_sett)
+    num_3.image = num2
+    num_3.rect = num_3.image.get_rect()
+    num_3.rect.x += 675
+    num_3.rect.y = -260
+    num_4 = pygame.sprite.Sprite(all_sett)
+    num_4.image = num1
+    num_4.rect = num_4.image.get_rect()
+    num_4.rect.x += 625
+    num_4.rect.y = -260
+
     flaa = False
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9 \
         = True, True, True, True, True, True, True, True, True
@@ -116,12 +123,15 @@ def start_screen():
                 plus_2.rect.y += 25
                 num_2.rect.y += 25
                 num_1.rect.y += 25
-                if num_3:
-                    num_3.rect.y += 25
+                num_3.rect.y += 25
+                num_4.rect.y += 25
             else:
-                num1, num2, num3 = number(volum)
+                num1, num2 = number(volum)
                 num_1.image = num1
                 num_2.image = num2
+                num1, num2 = number(volume)
+                num_3.image = num2
+                num_4.image = num1
                 for event1 in pygame.event.get():
                     pressed1 = pygame.mouse.get_pressed()
                     if event1.type == pygame.QUIT:
@@ -189,13 +199,11 @@ def start_screen():
                         if volume > 0:
                             volume -= 0.1
                             volume = round(volume, 1)
-                            print(volume)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
                             and 390 > event1.pos[1] > 335:
                         if volume < 1:
                             volume += 0.1
                             volume = round(volume, 1)
-                            print(volume)
         if flaa is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
@@ -205,6 +213,8 @@ def start_screen():
                 plus_2.rect.y = -260
                 num_2.rect.y = - 380
                 num_1.rect.y = -380
+                num_3.rect.y = -260
+                num_4.rect.y = -260
             for event1 in pygame.event.get():
                 pressed1 = pygame.mouse.get_pressed()
                 if event1.type == pygame.QUIT:
@@ -411,16 +421,16 @@ class Board:
         self.cell_size = cell_cize
 
     def render(self, screen_1):
-        for y in range(len(self.board)):
-            for x in range(len(self.board[0])):
-                if self.board[y][x] is None:
+        for yy in range(len(self.board)):
+            for xx in range(len(self.board[0])):
+                if self.board[yy][xx] is None:
                     pygame.draw.rect(screen_1, (0, 0, 0),
-                                     (x * self.cell_size, y * self.cell_size, self.cell_size,
+                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size,
                                       self.cell_size),
                                      width=1)
-                if self.board[y][x] == 'route':
+                if self.board[yy][xx] == 'route':
                     pygame.draw.rect(screen_1, pygame.Color('red'),
-                                     (x * self.cell_size, y * self.cell_size, self.cell_size,
+                                     (xx * self.cell_size, yy * self.cell_size, self.cell_size,
                                       self.cell_size),
                                      width=10)
 
@@ -592,19 +602,19 @@ class Enemy(pygame.sprite.Sprite):
         try:
             if self.index == len(self.route):
                 self.index = 0
-            x = self.route[self.index][0] * cell_size - self.rect.x
-            y = self.route[self.index][1] * cell_size - self.rect.y
-            if x > 0:
-                x = 1
-            if y > 0:
-                y = 1
-            if y < 0:
-                y = -1
-            if x < 0:
-                x = -1
-            last_move = (x, y)
-            if self.route[self.index][0] * board.cell_size == self.rect.x and self.route[self.index][
-                1] * board.cell_size == self.rect.y:
+            xx = self.route[self.index][0] * cell_size - self.rect.x
+            yy = self.route[self.index][1] * cell_size - self.rect.y
+            if xx > 0:
+                xx = 1
+            if yy > 0:
+                yy = 1
+            if yy < 0:
+                yy = -1
+            if xx < 0:
+                xx = -1
+            last_move = (xx, yy)
+            if self.route[self.index][0] * board.cell_size == self.rect.x and self.route[self.index][1] \
+                    * board.cell_size == self.rect.y:
                 self.index += 1
             else:
                 self.animation(last_move)
