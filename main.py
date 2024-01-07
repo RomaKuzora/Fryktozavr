@@ -424,14 +424,14 @@ def game_win():
 def choose_level():
     pygame.font.init()
 
-    my_font = pygame.font.SysFont('Times New Roman', 45)
-    text = my_font.render('level 1', False, pygame.Color('red'))
+    my_fontt = pygame.font.SysFont('Times New Roman', 45)
+    text = my_fontt.render('level 1', False, pygame.Color('red'))
     while True:
-        pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        #   pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        for event2 in pygame.event.get():
+            if event2.type == pygame.QUIT:
                 terminate()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event2.type == pygame.MOUSEBUTTONDOWN:
                 start_level()
                 return
         clock.tick(fps)
