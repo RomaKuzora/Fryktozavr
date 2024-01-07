@@ -2,6 +2,9 @@ import sys
 import os
 import pygame
 
+level_list = []
+flag_redact = False
+
 
 def terminate():
     pygame.quit()
@@ -47,7 +50,7 @@ def number(volumm):
 
 
 def start_screen():
-    global volume
+    global volume, flag_redact
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     volum = 0.5
@@ -256,10 +259,14 @@ def start_screen():
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
                         and 126 < event1.pos[1] < 217:
                     pygame.mixer.Sound('zvuk_click.mp3').play()
+                    pygame.mixer.music.stop()
+                    choose_level()
+                    return
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
                         and 236 < event1.pos[1] < 323:
                     pygame.mixer.Sound('zvuk_click.mp3').play()
                     pygame.mixer.music.stop()
+                    flag_redact = True
                     return  # начинаем игру
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
                         and 342 < event1.pos[1] < 400:
@@ -281,6 +288,25 @@ def game_lose():
 
 def game_win():
     pass
+
+
+def choose_level():
+    pygame.font.init()
+
+    my_font = pygame.font.SysFont('Times New Roman', 45)
+    text = my_font.render('level 1', False, pygame.Color('red'))
+    while True:
+        pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                start_level()
+                return
+        clock.tick(fps)
+        screen.fill((255, 255, 255))
+        screen.blit(text, (50, 50))
+        pygame.display.flip()
 
 
 def spawn_ice(last_move):  # перенес функцию т.к. она созадвала экземпляры класса в котором
@@ -403,10 +429,7 @@ def load_image(name, colorkey=None):
     return image
 
 
-move_map = {pygame.K_w: (0, -1),
-            pygame.K_s: (0, 1),
-            pygame.K_a: (-1, 0),
-            pygame.K_d: (1, 0)}
+move_map = {pygame.K_w: (0, -1), pygame.K_s: (0, 1), pygame.K_a: (-1, 0), pygame.K_d: (1, 0)}
 colorkey = (255, 255, 255)
 
 
@@ -696,6 +719,17 @@ class IronBlock(pygame.sprite.Sprite):
         iron_block_sprites.remove(self)
 
 
+def start_level(level=0):
+    global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites
+    print(level_list)
+    sprite_hero = level_list[level][0]
+    ice_sprites = level_list[level][1]
+    iron_block_sprites = level_list[level][2]
+    enemy_sprites = level_list[level][3]
+    fruit_sprites = level_list[level][4]
+    return
+
+
 if __name__ == '__main__':
     pygame.init()
     cell_size = 68
@@ -704,6 +738,7 @@ if __name__ == '__main__':
     board = Board(20, 10)
     pygame.display.set_caption('Фруктозавр')
     running = True
+    volume = 0.5
 
     all_sprites = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'default_dino/right_anim/right_stoit_1.png')
@@ -713,12 +748,13 @@ if __name__ == '__main__':
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
     cursor = pygame.sprite.Group()
+    clock = pygame.time.Clock()
 
     fps = 60
     v = 120
     speed = v // fps
+    start_screen()
 
-    clock = pygame.time.Clock()
     smotrit = (1, 0)
     smotrit_y = (1, 0)
     smotrit_x = (1, 0)
@@ -728,14 +764,18 @@ if __name__ == '__main__':
     dlina_ice_list = 0
     flag = False
     last_pos_dino = 0, 0
-    sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
-    sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
-    sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
-    sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
-    enemy_sprite = Enemy('vrag/front_vrag.png')
-    enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
-    volume = 0.5
-    start_screen()
+
+    if flag_redact:
+        sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+        sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
+        sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
+        sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
+        enemy_sprite = Enemy('vrag/front_vrag.png')
+        enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
+        pygame.font.init()
+        my_font = pygame.font.SysFont('Times New Roman', 30)
+        text1 = my_font.render('сохранить', False, pygame.Color('red'))
+        text2 = my_font.render('сбросить', False, pygame.Color('red'))
     flag_of_list_click = False
     pygame.mixer.music.load('Звук в уровне.mp3')  # загрузили
     pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
@@ -759,11 +799,13 @@ if __name__ == '__main__':
                     pass
                 elif flag == 'block':
                     pass
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                start_screen()
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_of_list_click and possition(event.pos)[1] != 10:
                     try:
                         list_click.append(possition(event.pos))
-                        board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                        # board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
                         if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)):
                             flag_of_list_click = False
                             _enemy_.set_route(list_click)
@@ -782,6 +824,21 @@ if __name__ == '__main__':
                         flag = 'block'
                     elif possition(event.pos) == (4, 10):
                         flag = 'enemy'
+                    elif possition(event.pos) == (5, 10):
+                        level_list.append([sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
+                    elif possition(event.pos) == (8, 10):
+                        board.board = [[None] * board.width for _ in range(board.height)]
+                        sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
+                        ice_sprites = pygame.sprite.Group()
+                        iron_block_sprites = pygame.sprite.Group()
+                        enemy_sprites = pygame.sprite.Group()
+                        fruit_sprites = pygame.sprite.Group()
+                        sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+                        sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
+                        sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
+                        sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
+                        enemy_sprite = Enemy('vrag/front_vrag.png')
+                        enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
                 if flag == 'banana' and possition(event.pos)[1] != 10:
                     Fruit('banana', 'fruct/banana.png', event.pos, True)
@@ -840,7 +897,8 @@ if __name__ == '__main__':
                     shagg = 0
                 spawn_ice(smotrit)
                 count = dlina_ice_list = len(ice_list)
-        enemy_sprite.animation((0, 1), go=False)
+        if flag_redact:
+            enemy_sprite.animation((0, 1), go=False)
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
@@ -892,10 +950,12 @@ if __name__ == '__main__':
             if enemy != enemy_sprite:
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
-                    print(1)
                     game_lose()
-        clock.tick(fps)
         screen.fill((255, 255, 255))
+        if flag_redact:
+            screen.blit(text1, (5 * cell_size, 10 * cell_size))
+            screen.blit(text2, (8 * cell_size, 10 * cell_size))
+        clock.tick(fps)
         board.render(screen)
         all_sprites.draw(screen)
         ice_sprites.draw(screen)
