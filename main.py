@@ -72,6 +72,30 @@ def start_screen():
     settings.rect = settings.image.get_rect()
     settings.rect.x += 300
     settings.rect.y -= 750
+    personal = load_image("personal/personal.png", colorkey=(255, 255, 255))
+    perso = pygame.sprite.Sprite(all_sett)
+    perso.image = personal
+    perso.rect = perso.image.get_rect()
+    perso.rect.x += 300
+    perso.rect.y -= 750
+    lef = load_image("personal/left.png", colorkey=(255, 255, 255))
+    left = pygame.sprite.Sprite(all_sett)
+    left.image = lef
+    left.rect = left.image.get_rect()
+    left.rect.x += 480
+    left.rect.y -= 410
+    rig = load_image("personal/right.png", colorkey=(255, 255, 255))
+    right = pygame.sprite.Sprite(all_sett)
+    right.image = rig
+    right.rect = right.image.get_rect()
+    right.rect.x += 880
+    right.rect.y -= 410
+    din = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+    dino = pygame.sprite.Sprite(all_sett)
+    dino.image = din
+    dino.rect = dino.image.get_rect()
+    dino.rect.x += 640
+    dino.rect.y -= 420
     plus1 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
     plus_1 = pygame.sprite.Sprite(all_sett)
     plus_1.image = plus1
@@ -141,10 +165,10 @@ def start_screen():
     num_6.rect = num_6.image.get_rect()
     num_6.rect.x += 625
     num_6.rect.y = -140
-
     flaa = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11 \
-        = True, True, True, True, True, True, True, True, True, True, True
+    fla = False
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
+        flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     while True:
         if flaa:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
@@ -316,7 +340,63 @@ def start_screen():
                     f = open("volume.txt", 'w')
                     f.write(f'{volum};{volume};{volum_effects}')
                     f.close()
-        if flaa is False:
+        if fla:
+            fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
+            screen.blit(fon, (0, 0))
+            if fla and perso.rect.y != -100:
+                perso.rect.y += 25
+                left.rect.y += 25
+                right.rect.y += 25
+                dino.rect.y += 25
+            else:
+                for event1 in pygame.event.get():
+                    pressed1 = pygame.mouse.get_pressed()
+                    if event1.type == pygame.QUIT:
+                        terminate()
+                    if event1.type == pygame.MOUSEMOTION:
+                        if 1055 > event1.pos[0] > 1005 and 150 > event1.pos[1] > 100:
+                            personal = load_image("personal/personal_close.png", colorkey=(255, 255, 255))
+                            perso.image = personal
+                            if flag_12:
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
+                                flag_12 = False
+                        elif 530 > event1.pos[0] > 480 and 340 > event1.pos[1] > 240:
+                            lef = load_image("personal/left_pick.png", colorkey=(255, 255, 255))
+                            left.image = lef
+                            if flag_13:
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
+                                flag_13 = False
+                        elif 930 > event1.pos[0] > 880 and 340 > event1.pos[1] > 240:
+                            rig = load_image("personal/right_pick.png", colorkey=(255, 255, 255))
+                            right.image = rig
+                            if flag_14:
+                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sound.set_volume(volum_effects)
+                                sound.play()
+                                flag_14 = False
+                        else:
+                            flag_12, flag_13, flag_14 = True, True, True
+                            rig = load_image("personal/right.png", colorkey=(255, 255, 255))
+                            right.image = rig
+                            lef = load_image("personal/left.png", colorkey=(255, 255, 255))
+                            left.image = lef
+                            personal = load_image("personal/personal.png", colorkey=(255, 255, 255))
+                            perso.image = personal
+                    if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1055 > event1.pos[0] > 1005 \
+                            and 150 > event1.pos[1] > 100:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        perso.rect.y = - 750
+                        left.rect.y = -410
+                        right.rect.y = -410
+                        dino.rect.y = -420
+                        fla = False
+        if flaa is False and fla is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
                 plus_1.rect.y = -380
@@ -399,6 +479,7 @@ def start_screen():
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
+                    fla = True
                     personalization = 'pink_dino'
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
                         and 386 < event1.pos[1] < 441 and flaa is False:
@@ -952,6 +1033,9 @@ if __name__ == '__main__':
                     pass
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 start_screen()
+                pygame.mixer.music.load('music_redactor.mp3')
+                pygame.mixer.music.play(-1)
+                pygame.mixer.music.set_volume(volume)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_of_list_click and possition(event.pos)[1] != 10:
                     try:
