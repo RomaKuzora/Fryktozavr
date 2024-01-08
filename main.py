@@ -52,15 +52,15 @@ def start_screen():
     global volume, flag_redact, personalization
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
-    f = open("volume.txt")
+    skin_now = open("volume.txt")
     volum = 0.5
     volum_effects = 0
-    for ii in f:
+    for ii in skin_now:
         ii = ii.split(';')
         volum = float(ii[0])
         volume = float(ii[1])
         volum_effects = float(ii[2])
-    f.close()
+    skin_now.close()
     pygame.mixer.music.load('Start_menu_music.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
@@ -89,12 +89,6 @@ def start_screen():
     right.rect = right.image.get_rect()
     right.rect.x += 880
     right.rect.y -= 410
-    din = load_image("personal/dinod.png", colorkey=(255, 255, 255))
-    dino = pygame.sprite.Sprite(all_sett)
-    dino.image = din
-    dino.rect = dino.image.get_rect()
-    dino.rect.x += 640
-    dino.rect.y -= 420
     plus1 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
     plus_1 = pygame.sprite.Sprite(all_sett)
     plus_1.image = plus1
@@ -166,8 +160,63 @@ def start_screen():
     num_6.rect.y = -140
     flaa = False
     fla = False
+    flag_na_click = True
+    flaagg = False
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
         flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
+    din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    dinos_list = ['default_dino', 'pink_dino', 'purple_dino']
+    a = open('personalization.txt')
+    skin_now = a.read()
+    ff = 0
+    dd = 0
+    if skin_now == 'default_dino':
+        din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    elif skin_now == 'pink_dino':
+        din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+    elif skin_now == 'purple_dino':
+        din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    for i in range(len(dinos_list)):
+        if dinos_list[i] == skin_now:
+            try:
+                ff = dinos_list[i + 1]
+            except IndexError:
+                ff = dinos_list[0]
+            try:
+                dd = dinos_list[i - 1]
+            except IndexError:
+                dd = dinos_list[-1]
+    a.close()
+    dino = pygame.sprite.Sprite(all_sett)
+    dino.image = din
+    dino.rect = dino.image.get_rect()
+    dino.rect.x += 640
+    dino.rect.y -= 420
+    din2 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+    if ff == 'default_dino':
+        din2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    elif ff == 'pink_dino':
+        din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+    elif ff == 'purple_dino':
+        din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    dino2 = pygame.sprite.Sprite(all_sett)
+    dino2.image = din2
+    dino2.rect = dino2.image.get_rect()
+    dino2.rect.x = -40
+    dino2.rect.y -= 1020
+    din3 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+    if dd == 'default_dino':
+        din3 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    elif dd == 'pink_dino':
+        din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+    elif dd == 'purple_dino':
+        din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    dino3 = pygame.sprite.Sprite(all_sett)
+    dino3.image = din3
+    dino3.rect = dino2.image.get_rect()
+    dino3.rect.x = -40
+    dino3.rect.y -= 1020
+    flaaag = False
     while True:
         if flaa:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
@@ -187,13 +236,13 @@ def start_screen():
                 num_5.rect.y += 25
                 num_6.rect.y += 25
             else:
-                f = open("volume.txt")
-                for ii in f:
+                skin_now = open("volume.txt")
+                for ii in skin_now:
                     ii = ii.split(';')
                     volum = float(ii[0])
                     volume = float(ii[1])
                     volum_effects = float(ii[2])
-                f.close()
+                skin_now.close()
                 num1, num2 = number(volum)
                 num_1.image = num1
                 num_2.image = num2
@@ -336,9 +385,9 @@ def start_screen():
                         if volum_effects < 1:
                             volum_effects += 0.1
                             volum_effects = round(volum_effects, 1)
-                    f = open("volume.txt", 'w')
-                    f.write(f'{volum};{volume};{volum_effects}')
-                    f.close()
+                    skin_now = open("volume.txt", 'w')
+                    skin_now.write(f'{volum};{volume};{volum_effects}')
+                    skin_now.close()
         if fla:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
             screen.blit(fon, (0, 0))
@@ -352,7 +401,7 @@ def start_screen():
                     pressed1 = pygame.mouse.get_pressed()
                     if event1.type == pygame.QUIT:
                         terminate()
-                    if event1.type == pygame.MOUSEMOTION:
+                    elif event1.type == pygame.MOUSEMOTION:
                         if 1055 > event1.pos[0] > 1005 and 150 > event1.pos[1] > 100:
                             personal = load_image("personal/personal_close.png", colorkey=(255, 255, 255))
                             perso.image = personal
@@ -361,7 +410,7 @@ def start_screen():
                                 sound.set_volume(volum_effects)
                                 sound.play()
                                 flag_12 = False
-                        elif 530 > event1.pos[0] > 480 and 340 > event1.pos[1] > 240:
+                        elif 525 > event1.pos[0] > 475 and 340 > event1.pos[1] > 240:
                             lef = load_image("personal/left_pick.png", colorkey=(255, 255, 255))
                             left.image = lef
                             if flag_13:
@@ -385,7 +434,7 @@ def start_screen():
                             left.image = lef
                             personal = load_image("personal/personal.png", colorkey=(255, 255, 255))
                             perso.image = personal
-                    if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1055 > event1.pos[0] > 1005 \
+                    elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1055 > event1.pos[0] > 1005 \
                             and 150 > event1.pos[1] > 100:
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
                         sound.set_volume(volum_effects)
@@ -394,7 +443,87 @@ def start_screen():
                         left.rect.y = -410
                         right.rect.y = -410
                         dino.rect.y = -420
+                        dino2.rect.x = -40
+                        dino2.rect.y -= 1020
+                        dino3.rect.x = -40
+                        dino3.rect.y -= 1020
                         fla = False
+                        a = open('personalization.txt')
+                        personalization = a.read()
+                    elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 525 > event1.pos[0] > 475 \
+                            and 340 > event1.pos[1] > 240 and flag_na_click:
+                        flag_na_click = False
+                        dino2.rect.x = 840
+                        dino2.rect.y = 230
+                        flaaag = True
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 930 > event1.pos[0] > 880 \
+                            and 340 > event1.pos[1] > 240 and flag_na_click:
+                        dino3.rect.x = 440
+                        dino3.rect.y = 230
+                        flaagg = True
+                        flag_na_click = False
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                if flaaag and dino2.rect.x != 640:
+                    dino2.rect.x -= 20
+                elif flaagg and dino3.rect.x != 640:
+                    dino3.rect.x += 20
+                elif flaaag and dino2.rect.x == 640 or flaagg and dino3.rect.x:
+                    dino2.rect.x = -40
+                    dino2.rect.y -= 1020
+                    dino3.rect.x = -40
+                    dino3.rect.y -= 1020
+                    a = open('personalization.txt', 'w')
+                    if flaaag:
+                        a.write(ff)
+                    elif flaagg:
+                        a.write(dd)
+                    a.close()
+                    a = open('personalization.txt')
+                    skin_now = a.read()
+                    ff = 0
+                    flag_na_click = True
+                    if skin_now == 'default_dino':
+                        din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                    elif skin_now == 'pink_dino':
+                        din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                    elif skin_now == 'purple_dino':
+                        din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    for i in range(len(dinos_list)):
+                        if dinos_list[i] == skin_now:
+                            try:
+                                ff = dinos_list[i + 1]
+                            except IndexError:
+                                ff = dinos_list[0]
+                            try:
+                                dd = dinos_list[i - 1]
+                            except IndexError:
+                                dd = dinos_list[-1]
+                    a.close()
+                    din2 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+                    if ff == 'default_dino':
+                        din2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                    elif ff == 'pink_dino':
+                        din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                    elif ff == 'purple_dino':
+                        din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    din3 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+                    if dd == 'default_dino':
+                        din3 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                    elif dd == 'pink_dino':
+                        din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                    elif dd == 'purple_dino':
+                        din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    dino3.image = din3
+                    dino2.image = din2
+                    dino.image = din
+                    flaaag = False
+                    flaagg = False
+
         if flaa is False and fla is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
@@ -475,11 +604,10 @@ def start_screen():
                     return  # начинаем игру
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
                         and 342 < event1.pos[1] < 400:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound = pygame.mixer.Sound('zvuk_settings.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
                     fla = True
-                    personalization = 'pink_dino'
                 if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
                         and 386 < event1.pos[1] < 441 and flaa is False:
                     if flaa is False:
