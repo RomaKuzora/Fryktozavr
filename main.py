@@ -217,6 +217,20 @@ def start_screen():
     dino3.rect.x = -40
     dino3.rect.y -= 1020
     flaaag = False
+    count_pashalka = 0
+    pashalka = pygame.sprite.Group()
+    pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+    pash2 = pygame.sprite.Sprite(pashalka)
+    pash2.image = pasg2
+    pash2.rect = pash2.image.get_rect()
+    pash2.rect.x = -150
+    pash2.rect.y = 630
+    pasg = load_image("start_windiws/pashalka.png", colorkey=(255, 255, 255))
+    pash = pygame.sprite.Sprite(pashalka)
+    pash.image = pasg
+    pash.rect = pash.image.get_rect()
+    pash.rect.x = -150
+    pash.rect.y = 630
     while True:
         if flaa:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
@@ -388,7 +402,7 @@ def start_screen():
                     skin_now = open("volume.txt", 'w')
                     skin_now.write(f'{volum};{volume};{volum_effects}')
                     skin_now.close()
-        if fla:
+        elif fla:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
             screen.blit(fon, (0, 0))
             if fla and perso.rect.y != -100:
@@ -524,7 +538,7 @@ def start_screen():
                     flaaag = False
                     flaagg = False
 
-        if flaa is False and fla is False:
+        elif flaa is False and fla is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
                 plus_1.rect.y = -380
@@ -540,11 +554,13 @@ def start_screen():
                 num_5.rect.y = -140
                 num_6.rect.y = -140
             for event1 in pygame.event.get():
+                pashalka.draw(screen)
                 pressed1 = pygame.mouse.get_pressed()
                 if event1.type == pygame.QUIT:
                     terminate()
-                if event1.type == pygame.MOUSEMOTION:
-                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
+                elif event1.type == pygame.MOUSEMOTION:
+                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217 and count_pashalka != 10:
+                        count_pashalka = 0
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         if flag_1:
@@ -553,7 +569,8 @@ def start_screen():
                             sound.play()
                         flag_1, flag_2, flag_3, flag_4 = False, True, True, True
                         screen.blit(fon, (0, 0))
-                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323:
+                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
+                        count_pashalka = 0
                         if flag_2:
                             sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
                             sound.set_volume(volum_effects)
@@ -562,7 +579,8 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
+                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400 and count_pashalka != 10:
+                        count_pashalka = 0
                         if flag_3:
                             sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
                             sound.set_volume(volum_effects)
@@ -571,7 +589,8 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
+                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441 and count_pashalka != 10:
+                        count_pashalka = 0
                         if flag_4:
                             sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
                             sound.set_volume(volum_effects)
@@ -585,38 +604,48 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
-                        and 126 < event1.pos[1] < 217:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
-                    pygame.mixer.music.stop()
-                    flag_redact = False
-                    choose_level()
-                    return
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
-                        and 236 < event1.pos[1] < 323:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
-                    pygame.mixer.music.stop()
-                    flag_redact = True
-                    return  # начинаем игру
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
-                        and 342 < event1.pos[1] < 400:
-                    sound = pygame.mixer.Sound('zvuk_settings.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
-                    fla = True
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
-                        and 386 < event1.pos[1] < 441 and flaa is False:
-                    if flaa is False:
+                    if count_pashalka == 10 and pash2.rect.x != 1400:
+                        pash2.rect.x += 20
+                        pash.rect.x += 20
+                    elif count_pashalka == 10 and pash2.rect.x == 1400:
+                        count_pashalka = 0
+                elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0]:
+                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217 and count_pashalka != 10:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        pygame.mixer.music.stop()
+                        flag_redact = False
+                        choose_level()
+                        return
+                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        pygame.mixer.music.stop()
+                        flag_redact = True
+                        return  # начинаем игру
+                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400 and count_pashalka != 10:
                         sound = pygame.mixer.Sound('zvuk_settings.mp3')
                         sound.set_volume(volum_effects)
                         sound.play()
-                        flaa = True
-        pygame.mixer.music.set_volume(volum)
+                        fla = True
+                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441 and flaa is False and count_pashalka != 10:
+                        if flaa is False:
+                            sound = pygame.mixer.Sound('zvuk_settings.mp3')
+                            sound.set_volume(volum_effects)
+                            sound.play()
+                            flaa = True
+                    elif 500 < event1.pos[0] < 864 and 30 < event1.pos[1] < 90 and count_pashalka != 10:
+                        count_pashalka += 1
+                        if count_pashalka == 10:
+                            pash.rect.x = 150
+                            pash.rect.y = 650
+                            pash2.rect.x = 0
+                            pash2.rect.y = 630
+        pashalka.draw(screen)
         all_sett.draw(screen)
+        pygame.mixer.music.set_volume(volum)
         pygame.display.flip()
         clock.tick(fps)
 
