@@ -541,20 +541,18 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
             elif board.board[yy][i] == 'ice' and break_ice_flag or \
                     board.board[yy][i - 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][i]:
+                    if (i, yy) == possition((ices.rect.x, ices.rect.y)):
                         board.board[yy][i] = None
                         ices.kill_ice()
-                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][i - 1]:
+                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move:
                         board.board[yy][i - 1] = None
                         ices.kill_ice()
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][i]:
+                    elif (i, yy) == possition((ices.rect.x, ices.rect.y)):
                         board.board[yy][i] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (i * 68, yy * 68), True)
-                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][i - 1]:
+                    elif (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move:
                         board.board[yy][i - 1] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', ((i - 1) * 68, yy * 68), True)
 
     elif last_move[0] == -1:
         for i in range(xx - 1, -1, -1):
@@ -572,21 +570,12 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
             elif board.board[yy][i] == 'ice' and break_ice_flag or \
                     board.board[yy][i + 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][i]:
+                    if (i, yy) == possition((ices.rect.x, ices.rect.y)):
                         board.board[yy][i] = None
                         ices.kill_ice()
-                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][i + 1]:
+                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move:
                         board.board[yy][i + 1] = None
                         ices.kill_ice()
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][i]:
-                        board.board[yy][i] = None
-                        ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (i * 68, yy * 68), True)
-
-                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][i + 1]:
-                        board.board[yy][i + 1] = None
-                        ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', ((i + 1) * 68, yy * 68), True)
 
     elif last_move[1] == -1:
         for i in range(yy - 1, -1, -1):
@@ -604,20 +593,12 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
             elif board.board[i][xx] == 'ice' and break_ice_flag or \
                     board.board[i + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:
-                    if (xx, i) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[i][xx]:
+                    if (xx, i) == possition((ices.rect.x, ices.rect.y)):
                         board.board[i][xx] = None
                         ices.kill_ice()
-                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[i][xx]:
+                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move:
                         board.board[i + 1][xx] = None
                         ices.kill_ice()
-                    if (xx, i) == possition((ices.rect.x, ices.rect.y)) and fruit_list[i][xx]:
-                        board.board[i][xx] = None
-                        ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (xx * 68, i * 68), True)
-                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[i][xx]:
-                        board.board[i + 1][xx] = None
-                        ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (xx * 68, (i + 1) * 68), True)
 
     elif last_move[1] == 1:
         for i in range(yy + shagg + 1, 12):
@@ -638,20 +619,12 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 elif board.board[i][xx] == 'ice' and break_ice_flag or \
                         board.board[i - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                     for ices in ice_sprites:
-                        if (xx, i) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[i][xx]:
+                        if (xx, i) == possition((ices.rect.x, ices.rect.y)):
                             board.board[i][xx] = None
                             ices.kill_ice()
-                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[i][xx]:
+                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move:
                             board.board[i - 1][xx] = None
                             ices.kill_ice()
-                        if (xx, i) == possition((ices.rect.x, ices.rect.y)) and fruit_list[i][xx]:
-                            board.board[i][xx] = None
-                            ices.kill_ice()
-                            Fruit('banana', 'fruct/banana.png', (xx * 68, i * 68), True)
-                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[i][xx]:
-                            board.board[i + 1][xx] = None
-                            ices.kill_ice()
-                            Fruit('banana', 'fruct/banana.png', (xx * 68, (i - 1) * 68), True)
             except IndexError:
                 pass
 
@@ -1090,7 +1063,6 @@ if __name__ == '__main__':
                         level_list.append([sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
                     elif possition(event.pos) == (8, 10):
                         board.board = [[None] * board.width for _ in range(board.height)]
-                        fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
                         sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
                         ice_sprites = pygame.sprite.Group()
                         iron_block_sprites = pygame.sprite.Group()
@@ -1107,7 +1079,7 @@ if __name__ == '__main__':
                         and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
                     if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
                         fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'banana'
-                        Fruit('banana', 'fruct/banana.png', (event.pos[0], event.pos[1]), True)
+                        Fruit('banana', 'fruct/banana.png', (event.pos[0] + 5, event.pos[1] + 5), True)
                     else:
                         for fruct in fruit_sprites:
                             if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
