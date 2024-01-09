@@ -226,6 +226,14 @@ def start_screen():
     count_pashalka = 0
     pashalka = pygame.sprite.Group()
     pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+    if skin_now == 'default_dino':
+        pasg2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    elif skin_now == 'pink_dino':
+        pasg2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+    elif skin_now == 'purple_dino':
+        pasg2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif skin_now == 'red_dino':
+        pasg2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     pash2 = pygame.sprite.Sprite(pashalka)
     pash2.image = pasg2
     pash2.rect = pash2.image.get_rect()
@@ -510,14 +518,20 @@ def start_screen():
                     skin_now = a.read()
                     ff = 0
                     flag_na_click = True
+                    pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
                     if skin_now == 'default_dino':
                         din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
                     elif skin_now == 'pink_dino':
                         din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif skin_now == 'purple_dino':
                         din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
                     elif skin_now == 'red_dino':
                         din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                    pash2.image = pasg2
                     for ii in range(len(dinos_list)):
                         if dinos_list[ii] == skin_now:
                             try:
