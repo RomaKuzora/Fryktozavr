@@ -163,7 +163,7 @@ def start_screen():
     flag_na_click = True
     flaagg = False
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
-    flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
+        flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino']
     a = open('personalization.txt')
@@ -995,6 +995,7 @@ class Enemy(pygame.sprite.Sprite):
         self.count_static = 0
         self.route = []
         self.index = 0
+        self.number = 1
 
     def set_posittion(self, event_pos):
         self.rect.x, self.rect.y = event_pos[0] * board.cell_size, event_pos[1] * board.cell_size
@@ -1049,17 +1050,19 @@ class Enemy(pygame.sprite.Sprite):
             last_move = (xx, yy)
             if self.route[self.index][0] * board.cell_size == self.rect.x and self.route[self.index][1] \
                     * board.cell_size == self.rect.y:
-                self.index += 1
+                self.index += self.number
             else:
                 self.animation(last_move)
         except Exception:
             pass
         try:
-            if board.board[self.route[self.index][1]][self.route[self.index][0]] == 'ice' or \
-                    board.board[self.route[self.index][1]][self.route[self.index][0]] == 'block':
-                self.route.reverse()
-                self.index = 0
-        except IndexError:
+            if self.number == 1:
+                if board.board[self.route[self.index + 1][1]][self.route[self.index + 1][0]]:
+                    self.number *= -1
+            elif self.number == -1:
+                if board.board[self.route[self.index - 1][1]][self.route[self.index - 1][0]]:
+                    self.number *= -1
+        except Exception:
             pass
 
     def set_route(self, list_click):
@@ -1106,6 +1109,11 @@ class Ice(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.name = name_person
         self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
+        try:
+            board.board[possition(event_pos)[1]][possition(event_pos)[0]] = 'ice'
+        except IndexError:
+            if self.rect.y == 680 and not flag_redact:
+                ice_sprites.remove(self)
 
     def ice_animation(self):  # сделайте анимацию появления я хз как
         if self.count == 12:
@@ -1126,6 +1134,11 @@ class IronBlock(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.name = 'block'
         self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
+        try:
+            board.board[possition(event_pos)[1]][possition(event_pos)[0]] = 'block'
+        except IndexError:
+            if self.rect.x == 3 * cell_size and self.rect.y == 680 and not flag_redact:
+                iron_block_sprites.remove(self)
 
     def kill_block(self):
         iron_block_sprites.remove(self)
@@ -1141,54 +1154,24 @@ def start_level():
     with open('level_1.txt', 'r') as level_file:
         count = 0
         for string in level_file:
+            eval_string = eval(string)
             if count == 0:
-                n_ = list(map(int, string.split(',')))
-                sprite_hero.rect.x = n_[0]
-                sprite_hero.rect.y = n_[1]
+                sprite_hero.rect.x, sprite_hero.rect.y = eval_string
             elif count == 1:
-                for i in string.split('::'):
-                    try:
-                        n_ = list(map(int, i.split(',')))
-                        Ice('ice', 'ice/ice.png', n_)
-                    except ValueError:
-                        pass
+                for i in eval_string:
+                    Ice('ice', 'ice/ice.png', i)
             elif count == 2:
-                for b in string.split('::'):
-                    try:
-                        n_ = list(map(int, b.split(',')))
-                        IronBlock('block/block.png', n_)
-                    except ValueError:
-                        pass
+                for b in eval_string:
+                    IronBlock('block/block.png', b)
             elif count == 3:
-                for e in string.split('::'):
-                    try:
-                        n_ = e.split('//')
-                        enemy_1 = Enemy('vrag/front_vrag.png')
-                        enemy_1.set_posittion(tuple(map(int, [int(n_[0]) // cell_size, int(n_[1]) // cell_size])))
-                        route_ = n_[2].split(')')
-                        _route_ = []
-                        for point in route_:
-                            _route_.append(tuple([int(x) for x in point if x.isnumeric()]))
-                        try:
-                            _route_.remove(())
-                        except Exception:
-                            pass
-                        enemy_1.set_route(_route_)
-                    except ValueError:
-                        pass
-
+                for e in eval_string:
+                    enemy_1 = Enemy('vrag/front_vrag.png')
+                    enemy_1.set_posittion((e[0] // cell_size, e[1] // cell_size))
+                    enemy_1.set_route(e[2])
             elif count == 4:
-                try:
-                    for f in string.split('::'):
-                        n_ = f.split(',')
-                        if len(n_) > 1:
-                            Fruit(n_[2].lstrip(' '), 'fruct/banana.png', tuple(map(int, n_[:2])), True)
-                except IndexError:
-                    pass
+                for f in eval_string:
+                    Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
             count += 1
-    for en in enemy_sprites:
-        if en.route == []:
-            enemy_sprites.remove(en)
     return
 
 
@@ -1299,23 +1282,23 @@ if __name__ == '__main__':
                             # level_list.append(
                             #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
                             with open(f'level_1.txt', 'w+') as level_file:
-                                hero = f'{sprite_hero.rect.x}, {sprite_hero.rect.y}'
-                                ice = ''
+                                hero = (sprite_hero.rect.x, sprite_hero.rect.y)
+                                ice = []
                                 for i in ice_sprites:
                                     if i != sprite_ice:
-                                        ice += f'{i.rect.x}, {i.rect.y}::'
-                                block = ''
+                                        ice.append((i.rect.x, i.rect.y))
+                                block = []
                                 for b in iron_block_sprites:
                                     if b != sprite_iron_block:
-                                        block += f'{b.rect.x}, {b.rect.y}::'
-                                enemy = ''
+                                        block.append((b.rect.x, b.rect.y))
+                                enemy = []
                                 for e in enemy_sprites:
                                     if e != enemy_sprite:
-                                        enemy += f'{e.rect.x}// {e.rect.y}// {e.route}::'
-                                fruit = ''
+                                        enemy.append((e.rect.x, e.rect.y, e.route))
+                                fruit = []
                                 for f in fruit_sprites:
                                     if f != sprite_cherry and f != sprite_banana:
-                                        fruit += f'{f.rect.x}, {f.rect.y}, {f.name}::'
+                                        fruit.append((f.rect.x, f.rect.y, f.name))
                                 level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
                         elif possition(event.pos) == (7, 10):
                             board.board = [[None] * board.width for _ in range(board.height)]
