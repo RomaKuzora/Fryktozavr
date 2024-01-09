@@ -75,19 +75,19 @@ def start_screen():
     perso = pygame.sprite.Sprite(all_sett)
     perso.image = personal
     perso.rect = perso.image.get_rect()
-    perso.rect.x += 300
+    perso.rect.x += 280
     perso.rect.y -= 750
     lef = load_image("personal/left.png", colorkey=(255, 255, 255))
     left = pygame.sprite.Sprite(all_sett)
     left.image = lef
     left.rect = left.image.get_rect()
-    left.rect.x += 480
+    left.rect.x += 460
     left.rect.y -= 410
     rig = load_image("personal/right.png", colorkey=(255, 255, 255))
     right = pygame.sprite.Sprite(all_sett)
     right.image = rig
     right.rect = right.image.get_rect()
-    right.rect.x += 880
+    right.rect.x += 860
     right.rect.y -= 410
     plus1 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
     plus_1 = pygame.sprite.Sprite(all_sett)
@@ -165,7 +165,7 @@ def start_screen():
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
         flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
-    dinos_list = ['default_dino', 'pink_dino', 'purple_dino']
+    dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
     a = open('personalization.txt')
     skin_now = a.read()
     ff = 0
@@ -176,6 +176,8 @@ def start_screen():
         din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
     elif skin_now == 'purple_dino':
         din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif skin_now == 'red_dino':
+        din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     for i in range(len(dinos_list)):
         if dinos_list[i] == skin_now:
             try:
@@ -190,7 +192,7 @@ def start_screen():
     dino = pygame.sprite.Sprite(all_sett)
     dino.image = din
     dino.rect = dino.image.get_rect()
-    dino.rect.x += 640
+    dino.rect.x += 620
     dino.rect.y -= 420
     din2 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
     if ff == 'default_dino':
@@ -199,6 +201,8 @@ def start_screen():
         din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
     elif ff == 'purple_dino':
         din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif ff == 'red_dino':
+        din2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     dino2 = pygame.sprite.Sprite(all_sett)
     dino2.image = din2
     dino2.rect = dino2.image.get_rect()
@@ -211,6 +215,8 @@ def start_screen():
         din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
     elif dd == 'purple_dino':
         din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif dd == 'red_dino':
+        din3 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     dino3 = pygame.sprite.Sprite(all_sett)
     dino3.image = din3
     dino3.rect = dino2.image.get_rect()
@@ -467,7 +473,7 @@ def start_screen():
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 525 > event1.pos[0] > 475 \
                             and 340 > event1.pos[1] > 240 and flag_na_click:
                         flag_na_click = False
-                        dino2.rect.x = 840
+                        dino2.rect.x = 820
                         dino2.rect.y = 230
                         flaaag = True
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
@@ -475,18 +481,21 @@ def start_screen():
                         sound.play()
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 930 > event1.pos[0] > 880 \
                             and 340 > event1.pos[1] > 240 and flag_na_click:
-                        dino3.rect.x = 440
+                        dino3.rect.x = 420
                         dino3.rect.y = 230
                         flaagg = True
                         flag_na_click = False
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
                         sound.set_volume(volum_effects)
                         sound.play()
-                if flaaag and dino2.rect.x != 640:
+                if flaaag and dino2.rect.x != 620:
+                    dino.rect.x -= 20
                     dino2.rect.x -= 20
-                elif flaagg and dino3.rect.x != 640:
+                elif flaagg and dino3.rect.x != 620:
                     dino3.rect.x += 20
-                elif flaaag and dino2.rect.x == 640 or flaagg and dino3.rect.x:
+                    dino.rect.x += 20
+                elif flaaag and dino2.rect.x == 620 or flaagg and dino3.rect.x:
+                    dino.rect.x = 620
                     dino2.rect.x = -40
                     dino2.rect.y -= 1020
                     dino3.rect.x = -40
@@ -507,14 +516,16 @@ def start_screen():
                         din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif skin_now == 'purple_dino':
                         din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
-                    for i in range(len(dinos_list)):
-                        if dinos_list[i] == skin_now:
+                    elif skin_now == 'red_dino':
+                        din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                    for ii in range(len(dinos_list)):
+                        if dinos_list[ii] == skin_now:
                             try:
-                                ff = dinos_list[i + 1]
+                                ff = dinos_list[ii + 1]
                             except IndexError:
                                 ff = dinos_list[0]
                             try:
-                                dd = dinos_list[i - 1]
+                                dd = dinos_list[ii - 1]
                             except IndexError:
                                 dd = dinos_list[-1]
                     a.close()
@@ -525,6 +536,8 @@ def start_screen():
                         din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif ff == 'purple_dino':
                         din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    elif ff == 'red_dino':
+                        din2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
                     din3 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
                     if dd == 'default_dino':
                         din3 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
@@ -532,6 +545,8 @@ def start_screen():
                         din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif dd == 'purple_dino':
                         din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    elif dd == 'red_dino':
+                        din3 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
                     dino3.image = din3
                     dino2.image = din2
                     dino.image = din
