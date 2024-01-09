@@ -613,7 +613,7 @@ def start_screen():
                         sound.play()
                         pygame.mixer.music.stop()
                         flag_redact = False
-                        choose_level()
+                        choose_level(volum_effects, volum)
                         return
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
@@ -627,8 +627,8 @@ def start_screen():
                         sound.set_volume(volum_effects)
                         sound.play()
                         fla = True
-                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[
-                        1] < 441 and flaa is False and count_pashalka != 10:
+                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441 \
+                            and flaa is False and count_pashalka != 10:
                         if flaa is False:
                             sound = pygame.mixer.Sound('zvuk_settings.mp3')
                             sound.set_volume(volum_effects)
@@ -660,29 +660,167 @@ def game_win():
     pass
 
 
-def choose_level():
+def choose_level(volum_effects, volum):
     pygame.font.init()
-
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10 \
+        = True, True, True, True, True, True, True, True, True, True
+    pygame.mixer.music.load('zvuk_level.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(volum)
     my_fontt = pygame.font.SysFont('Times New Roman', 45)
-    text = my_fontt.render('level 1', False, pygame.Color('red'))
+    fon = pygame.transform.scale(load_image('start_windiws/level.png'), (68 * 20, 68 * 10 + 80))
+    screen.blit(fon, (0, 0))
     while True:
-        #   pressed = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
         for event2 in pygame.event.get():
             if event2.type == pygame.QUIT:
                 terminate()
-            if event2.type == pygame.MOUSEBUTTONDOWN:
-                start_level()
-                return
-            if event2.type == pygame.KEYDOWN and event2.key == pygame.K_ESCAPE:
+            elif event2.type == pygame.MOUSEMOTION:
+                if 272 > event2.pos[0] > 113 and 290 > event2.pos[1] > 113:
+                    fon = pygame.transform.scale(load_image('start_windiws/level1.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_1:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_1 = False
+                elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
+                    fon = pygame.transform.scale(load_image('start_windiws/level2.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_2:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_2 = False
+                elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
+                    fon = pygame.transform.scale(load_image('start_windiws/level3.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_3:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_3 = False
+                elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
+                    fon = pygame.transform.scale(load_image('start_windiws/level4.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_4:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_4 = False
+                elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
+                    fon = pygame.transform.scale(load_image('start_windiws/level5.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_5:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_5 = False
+                elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
+                    fon = pygame.transform.scale(load_image('start_windiws/level6.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_6:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_6 = False
+                elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
+                    fon = pygame.transform.scale(load_image('start_windiws/level7.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_7:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_7 = False
+                elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
+                    fon = pygame.transform.scale(load_image('start_windiws/level8.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_8:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_8 = False
+                elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
+                    fon = pygame.transform.scale(load_image('start_windiws/level9.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_9:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_9 = False
+                elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
+                    fon = pygame.transform.scale(load_image('start_windiws/level10.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_10:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        flag_10 = False
+                else:
+                    fon = pygame.transform.scale(load_image('start_windiws/level.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10 \
+                        = True, True, True, True, True, True, True, True, True, True
+            elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
+                if 272 > event2.pos[0] > 113 and 290 > event2.pos[1] > 113:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    start_level()
+                    return
+                elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(2)
+                elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(3)
+                elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(4)
+                elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(5)
+                elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(6)
+                elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(7)
+                elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(8)
+                elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(9)
+                elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    print(10)
+            elif event2.type == pygame.KEYDOWN and event2.key == pygame.K_ESCAPE:
                 start_screen()
                 pygame.mixer.music.load('music_redactor.mp3')
                 pygame.mixer.music.play(-1)
                 pygame.mixer.music.set_volume(volume)
                 return
-        clock.tick(fps)
-        screen.fill((255, 255, 255))
-        screen.blit(text, (50, 50))
         pygame.display.flip()
+        clock.tick(fps)
 
 
 def spawn_ice(last_move):  # перенес функцию т.к. она созадвала экземпляры класса в котором
