@@ -163,7 +163,7 @@ def start_screen():
     flag_na_click = True
     flaagg = False
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
-        flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
+    flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino']
     a = open('personalization.txt')
@@ -217,6 +217,20 @@ def start_screen():
     dino3.rect.x = -40
     dino3.rect.y -= 1020
     flaaag = False
+    count_pashalka = 0
+    pashalka = pygame.sprite.Group()
+    pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+    pash2 = pygame.sprite.Sprite(pashalka)
+    pash2.image = pasg2
+    pash2.rect = pash2.image.get_rect()
+    pash2.rect.x = -150
+    pash2.rect.y = 630
+    pasg = load_image("start_windiws/pashalka.png", colorkey=(255, 255, 255))
+    pash = pygame.sprite.Sprite(pashalka)
+    pash.image = pasg
+    pash.rect = pash.image.get_rect()
+    pash.rect.x = -150
+    pash.rect.y = 630
     while True:
         if flaa:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
@@ -388,7 +402,7 @@ def start_screen():
                     skin_now = open("volume.txt", 'w')
                     skin_now.write(f'{volum};{volume};{volum_effects}')
                     skin_now.close()
-        if fla:
+        elif fla:
             fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
             screen.blit(fon, (0, 0))
             if fla and perso.rect.y != -100:
@@ -524,7 +538,7 @@ def start_screen():
                     flaaag = False
                     flaagg = False
 
-        if flaa is False and fla is False:
+        elif flaa is False and fla is False:
             if flaa is False and settings.rect.y != -750:
                 settings.rect.y -= 600
                 plus_1.rect.y = -380
@@ -540,11 +554,13 @@ def start_screen():
                 num_5.rect.y = -140
                 num_6.rect.y = -140
             for event1 in pygame.event.get():
+                pashalka.draw(screen)
                 pressed1 = pygame.mouse.get_pressed()
                 if event1.type == pygame.QUIT:
                     terminate()
-                if event1.type == pygame.MOUSEMOTION:
-                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217:
+                elif event1.type == pygame.MOUSEMOTION:
+                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217 and count_pashalka != 10:
+                        count_pashalka = 0
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         if flag_1:
@@ -553,7 +569,8 @@ def start_screen():
                             sound.play()
                         flag_1, flag_2, flag_3, flag_4 = False, True, True, True
                         screen.blit(fon, (0, 0))
-                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323:
+                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
+                        count_pashalka = 0
                         if flag_2:
                             sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
                             sound.set_volume(volum_effects)
@@ -562,7 +579,8 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400:
+                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400 and count_pashalka != 10:
+                        count_pashalka = 0
                         if flag_3:
                             sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
                             sound.set_volume(volum_effects)
@@ -571,7 +589,8 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441:
+                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441 and count_pashalka != 10:
+                        count_pashalka = 0
                         if flag_4:
                             sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
                             sound.set_volume(volum_effects)
@@ -585,38 +604,49 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 519 < event1.pos[0] < 838 \
-                        and 126 < event1.pos[1] < 217:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
-                    pygame.mixer.music.stop()
-                    flag_redact = False
-                    choose_level()
-                    return
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 470 < event1.pos[0] < 894 \
-                        and 236 < event1.pos[1] < 323:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
-                    pygame.mixer.music.stop()
-                    flag_redact = True
-                    return  # начинаем игру
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 449 < event1.pos[0] < 938 \
-                        and 342 < event1.pos[1] < 400:
-                    sound = pygame.mixer.Sound('zvuk_settings.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
-                    fla = True
-                if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 981 < event1.pos[0] < 1036 \
-                        and 386 < event1.pos[1] < 441 and flaa is False:
-                    if flaa is False:
+                    if count_pashalka == 10 and pash2.rect.x != 1400:
+                        pash2.rect.x += 20
+                        pash.rect.x += 20
+                    elif count_pashalka == 10 and pash2.rect.x == 1400:
+                        count_pashalka = 0
+                elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0]:
+                    if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217 and count_pashalka != 10:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        pygame.mixer.music.stop()
+                        flag_redact = False
+                        choose_level()
+                        return
+                    elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
+                        sound = pygame.mixer.Sound('zvuk_click.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                        pygame.mixer.music.stop()
+                        flag_redact = True
+                        return  # начинаем игру
+                    elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400 and count_pashalka != 10:
                         sound = pygame.mixer.Sound('zvuk_settings.mp3')
                         sound.set_volume(volum_effects)
                         sound.play()
-                        flaa = True
-        pygame.mixer.music.set_volume(volum)
+                        fla = True
+                    elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[
+                        1] < 441 and flaa is False and count_pashalka != 10:
+                        if flaa is False:
+                            sound = pygame.mixer.Sound('zvuk_settings.mp3')
+                            sound.set_volume(volum_effects)
+                            sound.play()
+                            flaa = True
+                    elif 500 < event1.pos[0] < 864 and 30 < event1.pos[1] < 90 and count_pashalka != 10:
+                        count_pashalka += 1
+                        if count_pashalka == 10:
+                            pash.rect.x = 150
+                            pash.rect.y = 650
+                            pash2.rect.x = 0
+                            pash2.rect.y = 630
+        pashalka.draw(screen)
         all_sett.draw(screen)
+        pygame.mixer.music.set_volume(volum)
         pygame.display.flip()
         clock.tick(fps)
 
@@ -673,19 +703,21 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
             elif board.board[yy][i] == 'ice' and break_ice_flag or \
                     board.board[yy][i - 1] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)):
+                for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][i]:
                         board.board[yy][i] = None
                         ices.kill_ice()
-                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move:
+                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][i - 1]:
                         board.board[yy][i - 1] = None
                         ices.kill_ice()
-                    elif (i, yy) == possition((ices.rect.x, ices.rect.y)):
+                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][i]:
                         board.board[yy][i] = None
                         ices.kill_ice()
-                    elif (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move:
+                        Fruit('banana', 'fruct/banana.png', (i * 68, yy * 68), True)
+                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][i - 1]:
                         board.board[yy][i - 1] = None
                         ices.kill_ice()
+                        Fruit('banana', 'fruct/banana.png', ((i - 1) * 68, yy * 68), True)
 
     elif last_move[0] == -1:
         for i in range(xx - 1, -1, -1):
@@ -702,13 +734,22 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
             elif board.board[yy][i] == 'ice' and break_ice_flag or \
                     board.board[yy][i + 1] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)):
+                for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][i]:
                         board.board[yy][i] = None
                         ices.kill_ice()
-                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move:
+                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][i + 1]:
                         board.board[yy][i + 1] = None
                         ices.kill_ice()
+                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][i]:
+                        board.board[yy][i] = None
+                        ices.kill_ice()
+                        Fruit('banana', 'fruct/banana.png', (i * 68, yy * 68), True)
+
+                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][i + 1]:
+                        board.board[yy][i + 1] = None
+                        ices.kill_ice()
+                        Fruit('banana', 'fruct/banana.png', ((i + 1) * 68, yy * 68), True)
 
     elif last_move[1] == -1:
         for i in range(yy - 1, -1, -1):
@@ -725,13 +766,21 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
             elif board.board[i][xx] == 'ice' and break_ice_flag or \
                     board.board[i + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:
-                    if (xx, i) == possition((ices.rect.x, ices.rect.y)):
+                for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                    if (xx, i) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[i][xx]:
                         board.board[i][xx] = None
                         ices.kill_ice()
-                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move:
+                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[i][xx]:
                         board.board[i + 1][xx] = None
                         ices.kill_ice()
+                    if (xx, i) == possition((ices.rect.x, ices.rect.y)) and fruit_list[i][xx]:
+                        board.board[i][xx] = None
+                        ices.kill_ice()
+                        Fruit('banana', 'fruct/banana.png', (xx * 68, i * 68), True)
+                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[i][xx]:
+                        board.board[i + 1][xx] = None
+                        ices.kill_ice()
+                        Fruit('banana', 'fruct/banana.png', (xx * 68, (i + 1) * 68), True)
 
     elif last_move[1] == 1:
         for i in range(yy + shagg + 1, 12):
@@ -751,13 +800,21 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
                 elif board.board[i][xx] == 'ice' and break_ice_flag or \
                         board.board[i - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
-                    for ices in ice_sprites:
-                        if (xx, i) == possition((ices.rect.x, ices.rect.y)):
+                    for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                        if (xx, i) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[i][xx]:
                             board.board[i][xx] = None
                             ices.kill_ice()
-                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move:
+                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[i][xx]:
                             board.board[i - 1][xx] = None
                             ices.kill_ice()
+                        if (xx, i) == possition((ices.rect.x, ices.rect.y)) and fruit_list[i][xx]:
+                            board.board[i][xx] = None
+                            ices.kill_ice()
+                            Fruit('banana', 'fruct/banana.png', (xx * 68, i * 68), True)
+                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[i][xx]:
+                            board.board[i + 1][xx] = None
+                            ices.kill_ice()
+                            Fruit('banana', 'fruct/banana.png', (xx * 68, (i - 1) * 68), True)
             except IndexError:
                 pass
 
@@ -1262,6 +1319,7 @@ if __name__ == '__main__':
                                 level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
                         elif possition(event.pos) == (7, 10):
                             board.board = [[None] * board.width for _ in range(board.height)]
+                            fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
                             sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
                             ice_sprites = pygame.sprite.Group()
                             iron_block_sprites = pygame.sprite.Group()
@@ -1279,7 +1337,7 @@ if __name__ == '__main__':
                             and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
                         if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
                             fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'banana'
-                            Fruit('banana', 'fruct/banana.png', (event.pos[0] + 5, event.pos[1] + 5), True)
+                            Fruit('banana', 'fruct/banana.png', (event.pos[0], event.pos[1]), True)
                         else:
                             for fruct in fruit_sprites:
                                 if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
