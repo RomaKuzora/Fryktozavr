@@ -613,7 +613,8 @@ def start_screen():
                         sound.play()
                         pygame.mixer.music.stop()
                         flag_redact = False
-                        choose_level(volum_effects, volum)
+                        level = choose_level(volum_effects, volum)
+                        start_level(level)
                         return
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
@@ -766,53 +767,52 @@ def choose_level(volum_effects, volum):
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    start_level()
-                    return
+                    return 'level_1.txt'
                 elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(2)
+                    return 'level_2.txt'
                 elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(3)
+                    return 'level_3.txt'
                 elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(4)
+                    return 'level_4.txt'
                 elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(5)
+                    return 'level_5.txt'
                 elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(6)
+                    return 'level_6.txt'
                 elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(7)
+                    return 'level_7.txt'
                 elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(8)
+                    return 'level_8.txt'
                 elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(9)
+                    return 'level_9.txt'
                 elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    print(10)
+                    return 'level_10.txt'
             elif event2.type == pygame.KEYDOWN and event2.key == pygame.K_ESCAPE:
                 start_screen()
                 pygame.mixer.music.load('music_redactor.mp3')
@@ -1283,14 +1283,14 @@ class IronBlock(pygame.sprite.Sprite):
         iron_block_sprites.remove(self)
 
 
-def start_level():
+def start_level(level):
     global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites
     global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
     ice_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
-    with open('level_1.txt', 'r') as level_file:
+    with open(level, 'r') as level_file:
         count = 0
         for string in level_file:
             eval_string = eval(string)
