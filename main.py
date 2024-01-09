@@ -1231,6 +1231,9 @@ class Fruit(pygame.sprite.Sprite):
         elif self.name == 'cherry':
             list_anim_right = [load_image('fruct/cherry.png', colorkey=colorkey),
                                load_image('fruct/cherry2.png', colorkey=colorkey)]
+        elif self.name == 'limon':
+            list_anim_right = [load_image('fruct/limon.png', colorkey=colorkey),
+                               load_image('fruct/limon_2.png', colorkey=colorkey)]
         self.image = list_anim_right[self.count // 12 - 1]
 
     def kill_fruit(self):
@@ -1358,9 +1361,10 @@ if __name__ == '__main__':
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
         sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
         sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
-        sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
+        sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False)
+        sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
         enemy_sprite = Enemy('vrag/front_vrag.png')
-        enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
+        enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
         pygame.font.init()
         my_font = pygame.font.SysFont('Throne and Libert', 30)
         text1 = my_font.render('save', False, pygame.Color('red'))
@@ -1414,8 +1418,10 @@ if __name__ == '__main__':
                         elif possition(event.pos) == (2, 10):
                             flag = 'cherry'
                         elif possition(event.pos) == (3, 10):
-                            flag = 'block'
+                            flag = 'limon'
                         elif possition(event.pos) == (4, 10):
+                            flag = 'block'
+                        elif possition(event.pos) == (5, 10):
                             flag = 'enemy'
                         elif possition(event.pos) == (6, 10):
                             # level_list.append(
@@ -1436,7 +1442,7 @@ if __name__ == '__main__':
                                         enemy.append((e.rect.x, e.rect.y, e.route))
                                 fruit = []
                                 for f in fruit_sprites:
-                                    if f != sprite_cherry and f != sprite_banana:
+                                    if f != sprite_cherry and f != sprite_banana and f != sprite_limon:
                                         fruit.append((f.rect.x, f.rect.y, f.name))
                                 level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
                         elif possition(event.pos) == (7, 10):
@@ -1450,9 +1456,10 @@ if __name__ == '__main__':
                             sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
                             sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
                             sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
-                            sprite_iron_block = IronBlock('block/block.png', (cell_size * 3, cell_size * 10))
+                            sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False)
+                            sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
                             enemy_sprite = Enemy('vrag/front_vrag.png')
-                            enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 4, cell_size * 10
+                            enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
                 if flag_redact:
                     if flag == 'banana' and possition(event.pos)[1] != 10 \
@@ -1460,6 +1467,16 @@ if __name__ == '__main__':
                         if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
                             fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'banana'
                             Fruit('banana', 'fruct/banana.png', (event.pos[0], event.pos[1]), True)
+                        else:
+                            for fruct in fruit_sprites:
+                                if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
+                                    fruct.kill_fruit()
+                                    fruit_list[possition(event.pos)[1]][possition(event.pos)[0]] = None
+                    elif flag == 'limon' and possition(event.pos)[1] != 10 \
+                            and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
+                        if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
+                            fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'limon'
+                            Fruit('limon', 'fruct/limon.png', (event.pos[0], event.pos[1]), True)
                         else:
                             for fruct in fruit_sprites:
                                 if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
