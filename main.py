@@ -1423,7 +1423,7 @@ if __name__ == '__main__':
                             flag = 'block'
                         elif possition(event.pos) == (5, 10):
                             flag = 'enemy'
-                        elif possition(event.pos) == (6, 10):
+                        elif possition(event.pos) == (18, 10):
                             # level_list.append(
                             #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
                             with open(f'level_1.txt', 'w+') as level_file:
@@ -1445,7 +1445,7 @@ if __name__ == '__main__':
                                     if f != sprite_cherry and f != sprite_banana and f != sprite_limon:
                                         fruit.append((f.rect.x, f.rect.y, f.name))
                                 level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
-                        elif possition(event.pos) == (7, 10):
+                        elif possition(event.pos) == (19, 10):
                             board.board = [[None] * board.width for _ in range(board.height)]
                             fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
                             sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
@@ -1545,7 +1545,6 @@ if __name__ == '__main__':
                 ice_list = []
                 if move or flag_of_move:
                     if flaag:
-
                         shagg = 1
                     else:
                         shagg = 0
@@ -1626,10 +1625,10 @@ if __name__ == '__main__':
         screen.fill((255, 255, 255))
         if flag_redact:
             enemy_sprite.animation((0, 1), go=False)
-            screen.blit(load_image('save.png'), (6 * cell_size, 10 * cell_size))
-            screen.blit(text1, (6 * cell_size + 5, int(10.8 * cell_size)))
-            screen.blit(load_image('restart.png'), (7 * cell_size, 10 * cell_size))
-            screen.blit(text2, (7 * cell_size, int(10.8 * cell_size)))
+            screen.blit(load_image('save.png'), (18 * cell_size, 10 * cell_size))
+            screen.blit(text1, (18 * cell_size + 5, int(10.8 * cell_size)))
+            screen.blit(load_image('restart.png'), (19 * cell_size, 10 * cell_size))
+            screen.blit(text2, (19 * cell_size, int(10.8 * cell_size)))
         else:
             screen.blit(surface, rect)
         clock.tick(fps)
