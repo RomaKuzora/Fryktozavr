@@ -604,10 +604,7 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         screen.blit(fon, (0, 0))
-                    if count_pashalka == 10 and pash2.rect.x != 1400:
-                        pash2.rect.x += 20
-                        pash.rect.x += 20
-                    elif count_pashalka == 10 and pash2.rect.x == 1400:
+                    if count_pashalka == 10 and pash2.rect.x == 1400:
                         count_pashalka = 0
                 elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0]:
                     if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217 and count_pashalka != 10:
@@ -644,6 +641,10 @@ def start_screen():
                             pash.rect.y = 650
                             pash2.rect.x = 0
                             pash2.rect.y = 630
+            if count_pashalka == 10 and pash2.rect.x != 1400:
+                pash2.rect.x += 10
+                pash.rect.x += 10
+        screen.blit(fon, (0, 0))
         pashalka.draw(screen)
         all_sett.draw(screen)
         pygame.mixer.music.set_volume(volum)
