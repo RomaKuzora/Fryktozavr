@@ -1459,8 +1459,12 @@ if __name__ == '__main__':
                     pygame.mouse.set_visible(False)
                     cursor.rect.topleft = event.pos
                 else:
+                    cursor_image = load_image("cursor.png")
+                    cursor.image = cursor_image
                     pygame.mouse.set_visible(True)
+                    cursor.rect.topleft = event.pos
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                pygame.mouse.set_visible(True)
                 start_screen()
                 if flag_redact:
                     pygame.mixer.music.load('music_redactor.mp3')
