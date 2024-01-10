@@ -3,6 +3,10 @@ import os
 import pygame
 
 flag_redact = False
+score = 0
+LEVEL = None
+flag_cherry = False
+flag_limon = False
 
 
 def terminate():
@@ -49,7 +53,7 @@ def number(volumm):
 
 
 def start_screen():
-    global volume, flag_redact, personalization
+    global volume, flag_redact, personalization, LEVEL
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     skin_now = open("volume.txt")
@@ -614,6 +618,7 @@ def start_screen():
                         pygame.mixer.music.stop()
                         flag_redact = False
                         level = choose_level(volum_effects, volum)
+                        LEVEL = level
                         start_level(level)
                         return
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
@@ -1022,6 +1027,7 @@ class Unit(pygame.sprite.Sprite):
                 return move_last
 
     def animation(self, last_move):
+        global score, flag_cherry, flag_limon
         if self.count == 12:
             self.count = 0
         self.count += 1
@@ -1030,8 +1036,36 @@ class Unit(pygame.sprite.Sprite):
             if self.rect.colliderect(fruit):
                 fruit.kill_fruit()
                 fruit_list[fruit.rect.y // 68][fruit.rect.x // 68] = None
+                if fruit.name == 'banana':
+                    score += 1
+                elif fruit.name == 'cherry':
+                    score += 2
+                elif fruit.name == 'limon':
+                    score += 3
             else:
                 fruit.static_animation()
+        if [fruit.name for fruit in fruit_sprites].count('banana') == 0 and not flag_cherry:
+            with open(LEVEL, 'r') as level_file:
+                count = 0
+                for string in level_file:
+                    if count == 4:
+                        eval_string = eval(string)
+                        for f in eval_string:
+                            if f[2] == 'cherry':
+                                Fruit(f[2], 'fruct/cherry.png', (f[0], f[1]), True)
+                    count += 1
+                flag_cherry = True
+        elif [fruit.name for fruit in fruit_sprites].count('cherry') == 0 and flag_cherry and not flag_limon:
+            with open(LEVEL, 'r') as level_file:
+                count = 0
+                for string in level_file:
+                    if count == 4:
+                        eval_string = eval(string)
+                        for f in eval_string:
+                            if f[2] == 'limon':
+                                Fruit(f[2], 'fruct/limon.png', (f[0], f[1]), True)
+                    count += 1
+                flag_limon = True
         last_pos = self.rect.x, self.rect.y
         flag1, flag2 = True, True
         speeda = speed
@@ -1174,7 +1208,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def go_go_zeppely(self):
         try:
-            if self.index == len(self.route):
+            if self.index == len(self.route) or self.index == -len(self.route):
                 self.index = 0
             xx = self.route[self.index][0] * cell_size - self.rect.x
             yy = self.route[self.index][1] * cell_size - self.rect.y
@@ -1196,10 +1230,10 @@ class Enemy(pygame.sprite.Sprite):
             pass
         try:
             if self.number == 1:
-                if board.board[self.route[self.index + 1][1]][self.route[self.index + 1][0]]:
+                if board.board[self.route[self.index + 1][1]][self.route[self.index + 1][0]] in ['ice', 'block']:
                     self.number *= -1
             elif self.number == -1:
-                if board.board[self.route[self.index - 1][1]][self.route[self.index - 1][0]]:
+                if board.board[self.route[self.index - 1][1]][self.route[self.index - 1][0]] in ['ice', 'block']:
                     self.number *= -1
         except Exception:
             pass
@@ -1312,7 +1346,8 @@ def start_level(level):
                     enemy_1.set_route(e[2])
             elif count == 4:
                 for f in eval_string:
-                    Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
+                    if f[2] == 'banana':
+                        Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
             count += 1
     return
 
@@ -1357,6 +1392,7 @@ if __name__ == '__main__':
     dlina_ice_list = 0
     flag = False
     last_pos_dino = 0, 0
+    my_font = pygame.font.SysFont('Throne and Libert', 30)
     if flag_redact:
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
         sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
@@ -1366,9 +1402,10 @@ if __name__ == '__main__':
         enemy_sprite = Enemy('vrag/front_vrag.png')
         enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
         pygame.font.init()
-        my_font = pygame.font.SysFont('Throne and Libert', 30)
         text1 = my_font.render('save', False, pygame.Color('red'))
         text2 = my_font.render('refresh', False, pygame.Color('red'))
+    else:
+        text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
     flag_of_list_click = False
     pygame.mixer.music.load('music_redactor.mp3')  # загрузили
     pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
@@ -1402,12 +1439,17 @@ if __name__ == '__main__':
                     if flag_of_list_click and possition(event.pos)[1] != 10:
                         try:
                             list_click.append(possition(event.pos))
-                            # board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                            board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
                             if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)):
                                 flag_of_list_click = False
                                 _enemy_.set_route(list_click)
                                 list_click = []
                                 _enemy_ = None
+                                for y in range(len(board.board)):
+                                    for x in range(len(board.board[y])):
+                                        if board.board[y][x] == 'route':
+                                            board.board[y][x] = None
+
                         except Exception:
                             pass
                     else:
@@ -1587,6 +1629,7 @@ if __name__ == '__main__':
                 sprite_hero.spawn_ice_dino(smotrit)
             else:
                 last_pos_dino, flaag = sprite_hero.animation(move)
+                text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
             smotrit = move
             if move[0] != 0:
                 smotrit_x = move
@@ -1614,10 +1657,10 @@ if __name__ == '__main__':
                 sprite_hero.static_animation(smotrit)
         for enemy in enemy_sprites:
             if flag_redact:
-                if enemy != enemy_sprite:
-                    enemy.go_go_zeppely()
-                    if enemy.rect.colliderect(sprite_hero):
-                        game_lose()
+                    if enemy != enemy_sprite:
+                        enemy.go_go_zeppely()
+                        if enemy.rect.colliderect(sprite_hero):
+                            game_lose()
             else:
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
@@ -1631,6 +1674,7 @@ if __name__ == '__main__':
             screen.blit(text2, (19 * cell_size, int(10.8 * cell_size)))
         else:
             screen.blit(surface, rect)
+            screen.blit(text3, (15 * cell_size, 10 * cell_size))
         clock.tick(fps)
         board.render(screen)
         all_sprites.draw(screen)
