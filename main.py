@@ -3,10 +3,6 @@ import os
 import pygame
 
 flag_redact = False
-score = 0
-LEVEL = None
-flag_cherry = False
-flag_limon = False
 
 
 def terminate():
@@ -53,7 +49,7 @@ def number(volumm):
 
 
 def start_screen():
-    global volume, flag_redact, personalization, LEVEL
+    global volume, flag_redact, personalization
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     skin_now = open("volume.txt")
@@ -79,19 +75,19 @@ def start_screen():
     perso = pygame.sprite.Sprite(all_sett)
     perso.image = personal
     perso.rect = perso.image.get_rect()
-    perso.rect.x += 300
+    perso.rect.x += 280
     perso.rect.y -= 750
     lef = load_image("personal/left.png", colorkey=(255, 255, 255))
     left = pygame.sprite.Sprite(all_sett)
     left.image = lef
     left.rect = left.image.get_rect()
-    left.rect.x += 480
+    left.rect.x += 460
     left.rect.y -= 410
     rig = load_image("personal/right.png", colorkey=(255, 255, 255))
     right = pygame.sprite.Sprite(all_sett)
     right.image = rig
     right.rect = right.image.get_rect()
-    right.rect.x += 880
+    right.rect.x += 860
     right.rect.y -= 410
     plus1 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
     plus_1 = pygame.sprite.Sprite(all_sett)
@@ -169,7 +165,7 @@ def start_screen():
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
         flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
-    dinos_list = ['default_dino', 'pink_dino', 'purple_dino']
+    dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
     a = open('personalization.txt')
     skin_now = a.read()
     ff = 0
@@ -180,6 +176,8 @@ def start_screen():
         din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
     elif skin_now == 'purple_dino':
         din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif skin_now == 'red_dino':
+        din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     for i in range(len(dinos_list)):
         if dinos_list[i] == skin_now:
             try:
@@ -194,7 +192,7 @@ def start_screen():
     dino = pygame.sprite.Sprite(all_sett)
     dino.image = din
     dino.rect = dino.image.get_rect()
-    dino.rect.x += 640
+    dino.rect.x += 620
     dino.rect.y -= 420
     din2 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
     if ff == 'default_dino':
@@ -203,6 +201,8 @@ def start_screen():
         din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
     elif ff == 'purple_dino':
         din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif ff == 'red_dino':
+        din2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     dino2 = pygame.sprite.Sprite(all_sett)
     dino2.image = din2
     dino2.rect = dino2.image.get_rect()
@@ -215,6 +215,8 @@ def start_screen():
         din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
     elif dd == 'purple_dino':
         din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif dd == 'red_dino':
+        din3 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     dino3 = pygame.sprite.Sprite(all_sett)
     dino3.image = din3
     dino3.rect = dino2.image.get_rect()
@@ -224,6 +226,14 @@ def start_screen():
     count_pashalka = 0
     pashalka = pygame.sprite.Group()
     pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+    if skin_now == 'default_dino':
+        pasg2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    elif skin_now == 'pink_dino':
+        pasg2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+    elif skin_now == 'purple_dino':
+        pasg2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+    elif skin_now == 'red_dino':
+        pasg2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
     pash2 = pygame.sprite.Sprite(pashalka)
     pash2.image = pasg2
     pash2.rect = pash2.image.get_rect()
@@ -471,7 +481,7 @@ def start_screen():
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 525 > event1.pos[0] > 475 \
                             and 340 > event1.pos[1] > 240 and flag_na_click:
                         flag_na_click = False
-                        dino2.rect.x = 840
+                        dino2.rect.x = 820
                         dino2.rect.y = 230
                         flaaag = True
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
@@ -479,18 +489,21 @@ def start_screen():
                         sound.play()
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 930 > event1.pos[0] > 880 \
                             and 340 > event1.pos[1] > 240 and flag_na_click:
-                        dino3.rect.x = 440
+                        dino3.rect.x = 420
                         dino3.rect.y = 230
                         flaagg = True
                         flag_na_click = False
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
                         sound.set_volume(volum_effects)
                         sound.play()
-                if flaaag and dino2.rect.x != 640:
+                if flaaag and dino2.rect.x != 620:
+                    dino.rect.x -= 20
                     dino2.rect.x -= 20
-                elif flaagg and dino3.rect.x != 640:
+                elif flaagg and dino3.rect.x != 620:
                     dino3.rect.x += 20
-                elif flaaag and dino2.rect.x == 640 or flaagg and dino3.rect.x:
+                    dino.rect.x += 20
+                elif flaaag and dino2.rect.x == 620 or flaagg and dino3.rect.x:
+                    dino.rect.x = 620
                     dino2.rect.x = -40
                     dino2.rect.y -= 1020
                     dino3.rect.x = -40
@@ -505,20 +518,28 @@ def start_screen():
                     skin_now = a.read()
                     ff = 0
                     flag_na_click = True
+                    pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
                     if skin_now == 'default_dino':
                         din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
                     elif skin_now == 'pink_dino':
                         din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif skin_now == 'purple_dino':
                         din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
-                    for i in range(len(dinos_list)):
-                        if dinos_list[i] == skin_now:
+                        pasg2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    elif skin_now == 'red_dino':
+                        din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                    pash2.image = pasg2
+                    for ii in range(len(dinos_list)):
+                        if dinos_list[ii] == skin_now:
                             try:
-                                ff = dinos_list[i + 1]
+                                ff = dinos_list[ii + 1]
                             except IndexError:
                                 ff = dinos_list[0]
                             try:
-                                dd = dinos_list[i - 1]
+                                dd = dinos_list[ii - 1]
                             except IndexError:
                                 dd = dinos_list[-1]
                     a.close()
@@ -529,6 +550,8 @@ def start_screen():
                         din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif ff == 'purple_dino':
                         din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    elif ff == 'red_dino':
+                        din2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
                     din3 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
                     if dd == 'default_dino':
                         din3 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
@@ -536,6 +559,8 @@ def start_screen():
                         din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
                     elif dd == 'purple_dino':
                         din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                    elif dd == 'red_dino':
+                        din3 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
                     dino3.image = din3
                     dino2.image = din2
                     dino.image = din
@@ -616,15 +641,20 @@ def start_screen():
                         sound.set_volume(volum_effects)
                         sound.play()
                         pygame.mixer.music.stop()
+                        a = open('personalization.txt')
+                        personalization = a.read()
+                        a.close()
                         flag_redact = False
                         level = choose_level(volum_effects, volum)
-                        LEVEL = level
                         start_level(level)
                         return
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
                         sound = pygame.mixer.Sound('zvuk_click.mp3')
                         sound.set_volume(volum_effects)
                         sound.play()
+                        a = open('personalization.txt')
+                        personalization = a.read()
+                        a.close()
                         pygame.mixer.music.stop()
                         flag_redact = True
                         return  # начинаем игру
@@ -833,101 +863,101 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
     xx = sprite_hero.rect.x // board.cell_size  # смотрим на какой клетке стоял дино
     yy = sprite_hero.rect.y // board.cell_size
     if last_move[0] == 1:  # определяем куда смотрел дино последний раз
-        for i in range(xx + shagg + 1, 20):
+        for ii in range(xx + shagg + 1, 20):
             if board.board[yy][xx + shagg + 1] == 'ice' or \
                     board.board[yy][xx + shagg] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and (not board.board[yy][i] and not board.board[yy][i - 1]) \
-                    or not break_ice_flag and board.board[yy][i] == 'ice' \
-                    or board.board[yy][i] == 'block' or (move and board.board[yy][i - 1] == 'block'):
+            if break_ice_flag and (not board.board[yy][ii] and not board.board[yy][ii - 1]) \
+                    or not break_ice_flag and board.board[yy][ii] == 'ice' \
+                    or board.board[yy][ii] == 'block' or (move and board.board[yy][ii - 1] == 'block'):
                 break
-            if not break_ice_flag and not (move and board.board[yy][i - 1] == 'block'
-                                           or board.board[yy][i] == 'block'):  # убрал спавн лишнего спрайта
-                ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[yy][i] == 'ice' and break_ice_flag or \
-                    board.board[yy][i - 1] == 'ice' and break_ice_flag:  # проверка на ломание
+            if not break_ice_flag and not (move and board.board[yy][ii - 1] == 'block'
+                                           or board.board[yy][ii] == 'block'):  # убрал спавн лишнего спрайта
+                ice_list.append((yy, ii))  # запоминаем на каих координатах ставим  лёд
+            elif board.board[yy][ii] == 'ice' and break_ice_flag or \
+                    board.board[yy][ii - 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][i]:
-                        board.board[yy][i] = None
+                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][ii]:
+                        board.board[yy][ii] = None
                         ices.kill_ice()
-                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][i - 1]:
-                        board.board[yy][i - 1] = None
+                    if (ii - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][ii - 1]:
+                        board.board[yy][ii - 1] = None
                         ices.kill_ice()
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][i]:
-                        board.board[yy][i] = None
+                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][ii]:
+                        board.board[yy][ii] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (i * 68, yy * 68), True)
-                    if (i - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][i - 1]:
-                        board.board[yy][i - 1] = None
+                        Fruit('banana', 'fruct/banana.png', (ii * 68, yy * 68), True)
+                    if (ii - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][ii - 1]:
+                        board.board[yy][ii - 1] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', ((i - 1) * 68, yy * 68), True)
+                        Fruit('banana', 'fruct/banana.png', ((ii - 1) * 68, yy * 68), True)
 
     elif last_move[0] == -1:
-        for i in range(xx - 1, -1, -1):
+        for ii in range(xx - 1, -1, -1):
             if board.board[yy][xx - 1] == 'ice' or \
                     board.board[yy][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and (not board.board[yy][i] and not board.board[yy][i + 1]) \
-                    or not break_ice_flag and board.board[yy][i] == 'ice' \
-                    or board.board[yy][i] == 'block' or (move and board.board[yy][i + 1] == 'block'):
+            if break_ice_flag and (not board.board[yy][ii] and not board.board[yy][ii + 1]) \
+                    or not break_ice_flag and board.board[yy][ii] == 'ice' \
+                    or board.board[yy][ii] == 'block' or (move and board.board[yy][ii + 1] == 'block'):
                 break
-            if not break_ice_flag and not (move and board.board[yy][i + 1] == 'block'
-                                           or board.board[yy][i] == 'block'):  # убрал спавн лишнего спрайта
-                ice_list.append((yy, i))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[yy][i] == 'ice' and break_ice_flag or \
-                    board.board[yy][i + 1] == 'ice' and break_ice_flag:  # проверка на ломание
+            if not break_ice_flag and not (move and board.board[yy][ii + 1] == 'block'
+                                           or board.board[yy][ii] == 'block'):  # убрал спавн лишнего спрайта
+                ice_list.append((yy, ii))  # запоминаем на каих координатах ставим  лёд
+            elif board.board[yy][ii] == 'ice' and break_ice_flag or \
+                    board.board[yy][ii + 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][i]:
-                        board.board[yy][i] = None
+                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][ii]:
+                        board.board[yy][ii] = None
                         ices.kill_ice()
-                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][i + 1]:
-                        board.board[yy][i + 1] = None
+                    if (ii + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][ii + 1]:
+                        board.board[yy][ii + 1] = None
                         ices.kill_ice()
-                    if (i, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][i]:
-                        board.board[yy][i] = None
+                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][ii]:
+                        board.board[yy][ii] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (i * 68, yy * 68), True)
+                        Fruit('banana', 'fruct/banana.png', (ii * 68, yy * 68), True)
 
-                    if (i + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][i + 1]:
-                        board.board[yy][i + 1] = None
+                    if (ii + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][ii + 1]:
+                        board.board[yy][ii + 1] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', ((i + 1) * 68, yy * 68), True)
+                        Fruit('banana', 'fruct/banana.png', ((ii + 1) * 68, yy * 68), True)
 
     elif last_move[1] == -1:
-        for i in range(yy - 1, -1, -1):
+        for ii in range(yy - 1, -1, -1):
             if board.board[yy - 1][xx] == 'ice' or \
                     board.board[yy][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and (not board.board[i][xx] and not board.board[i + 1][xx]) \
-                    or not break_ice_flag and board.board[i][xx] == 'ice' \
-                    or board.board[i][xx] == 'block' or (move and board.board[i + 1][xx] == 'block'):
+            if break_ice_flag and (not board.board[ii][xx] and not board.board[ii + 1][xx]) \
+                    or not break_ice_flag and board.board[ii][xx] == 'ice' \
+                    or board.board[ii][xx] == 'block' or (move and board.board[ii + 1][xx] == 'block'):
                 break
-            if not break_ice_flag and not (move and board.board[i][xx] == 'block'
-                                           or board.board[i][xx] == 'block'):  # убрал спавн лишнего спрайта
-                ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[i][xx] == 'ice' and break_ice_flag or \
-                    board.board[i + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+            if not break_ice_flag and not (move and board.board[ii][xx] == 'block'
+                                           or board.board[ii][xx] == 'block'):  # убрал спавн лишнего спрайта
+                ice_list.append((ii, xx))  # запоминаем на каих координатах ставим  лёд
+            elif board.board[ii][xx] == 'ice' and break_ice_flag or \
+                    board.board[ii + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                 for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (xx, i) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[i][xx]:
-                        board.board[i][xx] = None
+                    if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[ii][xx]:
+                        board.board[ii][xx] = None
                         ices.kill_ice()
-                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[i][xx]:
-                        board.board[i + 1][xx] = None
+                    if (xx, ii + 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[ii][xx]:
+                        board.board[ii + 1][xx] = None
                         ices.kill_ice()
-                    if (xx, i) == possition((ices.rect.x, ices.rect.y)) and fruit_list[i][xx]:
-                        board.board[i][xx] = None
+                    if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and fruit_list[ii][xx]:
+                        board.board[ii][xx] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (xx * 68, i * 68), True)
-                    if (xx, i + 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[i][xx]:
-                        board.board[i + 1][xx] = None
+                        Fruit('banana', 'fruct/banana.png', (xx * 68, ii * 68), True)
+                    if (xx, ii + 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[ii][xx]:
+                        board.board[ii + 1][xx] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (xx * 68, (i + 1) * 68), True)
+                        Fruit('banana', 'fruct/banana.png', (xx * 68, (ii + 1) * 68), True)
 
     elif last_move[1] == 1:
-        for i in range(yy + shagg + 1, 12):
+        for ii in range(yy + shagg + 1, 12):
             if yy == 9 or yy == 8 and move:
                 break
             if board.board[yy + shagg + 1][xx] == 'ice' or \
@@ -935,30 +965,30 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 break_ice_flag = True
             try:
                 # проверка столкновения льда и столкновения ломания (жесть какая-то)
-                if break_ice_flag and (not board.board[i][xx] and not board.board[i - 1][xx]) \
-                        or not break_ice_flag and board.board[i][xx] == 'ice' \
-                        or board.board[i][xx] == 'block' or (move and board.board[i - 1][xx] == 'block'):
+                if break_ice_flag and (not board.board[ii][xx] and not board.board[ii - 1][xx]) \
+                        or not break_ice_flag and board.board[ii][xx] == 'ice' \
+                        or board.board[ii][xx] == 'block' or (move and board.board[ii - 1][xx] == 'block'):
                     break
-                if not break_ice_flag and not (move and board.board[i][xx] == 'block'
-                                               or board.board[i][xx] == 'block'):  # убрал спавн лишнего спрайта
-                    ice_list.append((i, xx))  # запоминаем на каих координатах ставим  лёд
-                elif board.board[i][xx] == 'ice' and break_ice_flag or \
-                        board.board[i - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+                if not break_ice_flag and not (move and board.board[ii][xx] == 'block'
+                                               or board.board[ii][xx] == 'block'):  # убрал спавн лишнего спрайта
+                    ice_list.append((ii, xx))  # запоминаем на каих координатах ставим  лёд
+                elif board.board[ii][xx] == 'ice' and break_ice_flag or \
+                        board.board[ii - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                     for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                        if (xx, i) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[i][xx]:
-                            board.board[i][xx] = None
+                        if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[ii][xx]:
+                            board.board[ii][xx] = None
                             ices.kill_ice()
-                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[i][xx]:
-                            board.board[i - 1][xx] = None
+                        if (xx, ii - 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[ii][xx]:
+                            board.board[ii - 1][xx] = None
                             ices.kill_ice()
-                        if (xx, i) == possition((ices.rect.x, ices.rect.y)) and fruit_list[i][xx]:
-                            board.board[i][xx] = None
+                        if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and fruit_list[ii][xx]:
+                            board.board[ii][xx] = None
                             ices.kill_ice()
-                            Fruit('banana', 'fruct/banana.png', (xx * 68, i * 68), True)
-                        if (xx, i - 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[i][xx]:
-                            board.board[i + 1][xx] = None
+                            Fruit('banana', 'fruct/banana.png', (xx * 68, ii * 68), True)
+                        if (xx, ii - 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[ii][xx]:
+                            board.board[ii + 1][xx] = None
                             ices.kill_ice()
-                            Fruit('banana', 'fruct/banana.png', (xx * 68, (i - 1) * 68), True)
+                            Fruit('banana', 'fruct/banana.png', (xx * 68, (ii - 1) * 68), True)
             except IndexError:
                 pass
 
@@ -1027,7 +1057,6 @@ class Unit(pygame.sprite.Sprite):
                 return move_last
 
     def animation(self, last_move):
-        global score, flag_cherry, flag_limon
         if self.count == 12:
             self.count = 0
         self.count += 1
@@ -1036,36 +1065,8 @@ class Unit(pygame.sprite.Sprite):
             if self.rect.colliderect(fruit):
                 fruit.kill_fruit()
                 fruit_list[fruit.rect.y // 68][fruit.rect.x // 68] = None
-                if fruit.name == 'banana':
-                    score += 1
-                elif fruit.name == 'cherry':
-                    score += 2
-                elif fruit.name == 'limon':
-                    score += 3
             else:
                 fruit.static_animation()
-        if [fruit.name for fruit in fruit_sprites].count('banana') == 0 and not flag_cherry:
-            with open(LEVEL, 'r') as level_file:
-                count = 0
-                for string in level_file:
-                    if count == 4:
-                        eval_string = eval(string)
-                        for f in eval_string:
-                            if f[2] == 'cherry':
-                                Fruit(f[2], 'fruct/cherry.png', (f[0], f[1]), True)
-                    count += 1
-                flag_cherry = True
-        elif [fruit.name for fruit in fruit_sprites].count('cherry') == 0 and flag_cherry and not flag_limon:
-            with open(LEVEL, 'r') as level_file:
-                count = 0
-                for string in level_file:
-                    if count == 4:
-                        eval_string = eval(string)
-                        for f in eval_string:
-                            if f[2] == 'limon':
-                                Fruit(f[2], 'fruct/limon.png', (f[0], f[1]), True)
-                    count += 1
-                flag_limon = True
         last_pos = self.rect.x, self.rect.y
         flag1, flag2 = True, True
         speeda = speed
@@ -1208,7 +1209,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def go_go_zeppely(self):
         try:
-            if self.index == len(self.route) or self.index == -len(self.route):
+            if self.index == len(self.route):
                 self.index = 0
             xx = self.route[self.index][0] * cell_size - self.rect.x
             yy = self.route[self.index][1] * cell_size - self.rect.y
@@ -1230,10 +1231,10 @@ class Enemy(pygame.sprite.Sprite):
             pass
         try:
             if self.number == 1:
-                if board.board[self.route[self.index + 1][1]][self.route[self.index + 1][0]] in ['ice', 'block']:
+                if board.board[self.route[self.index + 1][1]][self.route[self.index + 1][0]]:
                     self.number *= -1
             elif self.number == -1:
-                if board.board[self.route[self.index - 1][1]][self.route[self.index - 1][0]] in ['ice', 'block']:
+                if board.board[self.route[self.index - 1][1]][self.route[self.index - 1][0]]:
                     self.number *= -1
         except Exception:
             pass
@@ -1346,8 +1347,7 @@ def start_level(level):
                     enemy_1.set_route(e[2])
             elif count == 4:
                 for f in eval_string:
-                    if f[2] == 'banana':
-                        Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
+                    Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
             count += 1
     return
 
@@ -1364,13 +1364,13 @@ if __name__ == '__main__':
     volume = 0.5
 
     all_sprites = pygame.sprite.Group()
+    cursoro = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'default_dino/right_anim/right_stoit_1.png')
 
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
-    cursor = pygame.sprite.Group()
     clock = pygame.time.Clock()
 
     surface = load_image('pole.png')
@@ -1392,7 +1392,10 @@ if __name__ == '__main__':
     dlina_ice_list = 0
     flag = False
     last_pos_dino = 0, 0
-    my_font = pygame.font.SysFont('Throne and Libert', 30)
+    cursor_image = load_image("ice_cursor.png")
+    cursor = pygame.sprite.Sprite(cursoro)
+    cursor.image = cursor_image
+    cursor.rect = cursor.image.get_rect()
     if flag_redact:
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
         sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
@@ -1402,14 +1405,18 @@ if __name__ == '__main__':
         enemy_sprite = Enemy('vrag/front_vrag.png')
         enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
         pygame.font.init()
+        my_font = pygame.font.SysFont('Throne and Libert', 30)
         text1 = my_font.render('save', False, pygame.Color('red'))
         text2 = my_font.render('refresh', False, pygame.Color('red'))
+        text3 = my_font.render('my_level', False, pygame.Color('red'))
+        pygame.mixer.music.load('music_redactor.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(volume)
     else:
-        text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+        pygame.mixer.music.load('level_music.mp3')
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(volume)
     flag_of_list_click = False
-    pygame.mixer.music.load('music_redactor.mp3')  # загрузили
-    pygame.mixer.music.play(-1)  # бесконечное повторение мелодии
-    pygame.mixer.music.set_volume(volume)  # изменить громкость
     flaag = True
     _enemy_ = None
     list_click = []
@@ -1422,34 +1429,62 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.MOUSEMOTION:  # нужно релаизовать чтобы за мышкой следовал спрай, который мы выбрали
                 if flag == 'banana':
-                    pass
+                    cursor_image = load_image("banana_cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(False)
+                    cursor.rect.topleft = event.pos
                 elif flag == 'cherry':
-                    pass
+                    cursor_image = load_image("cherry_cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(False)
+                    cursor.rect.topleft = event.pos
                 elif flag == 'ice':
-                    pass
+                    cursor_image = load_image("ice_cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(False)
+                    cursor.rect.topleft = event.pos
                 elif flag == 'block':
-                    pass
+                    cursor_image = load_image("block_cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(False)
+                    cursor.rect.topleft = event.pos
+                elif flag == 'limon':
+                    cursor_image = load_image("limon_cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(False)
+                    cursor.rect.topleft = event.pos
+                elif flag == 'enemy':
+                    cursor_image = load_image("vrag_cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(False)
+                    cursor.rect.topleft = event.pos
+                else:
+                    cursor_image = load_image("cursor.png")
+                    cursor.image = cursor_image
+                    pygame.mouse.set_visible(True)
+                    cursor.rect.topleft = event.pos
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                pygame.mouse.set_visible(True)
                 start_screen()
-                pygame.mixer.music.load('music_redactor.mp3')
-                pygame.mixer.music.play(-1)
-                pygame.mixer.music.set_volume(volume)
+                if flag_redact:
+                    pygame.mixer.music.load('music_redactor.mp3')
+                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.set_volume(volume)
+                else:
+                    pygame.mixer.music.load('level_music.mp3')
+                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.set_volume(volume)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_redact:
                     if flag_of_list_click and possition(event.pos)[1] != 10:
                         try:
                             list_click.append(possition(event.pos))
-                            board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                            # board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
                             if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)):
                                 flag_of_list_click = False
                                 _enemy_.set_route(list_click)
                                 list_click = []
                                 _enemy_ = None
-                                for y in range(len(board.board)):
-                                    for x in range(len(board.board[y])):
-                                        if board.board[y][x] == 'route':
-                                            board.board[y][x] = None
-
                         except Exception:
                             pass
                     else:
@@ -1629,7 +1664,6 @@ if __name__ == '__main__':
                 sprite_hero.spawn_ice_dino(smotrit)
             else:
                 last_pos_dino, flaag = sprite_hero.animation(move)
-                text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
             smotrit = move
             if move[0] != 0:
                 smotrit_x = move
@@ -1657,10 +1691,10 @@ if __name__ == '__main__':
                 sprite_hero.static_animation(smotrit)
         for enemy in enemy_sprites:
             if flag_redact:
-                    if enemy != enemy_sprite:
-                        enemy.go_go_zeppely()
-                        if enemy.rect.colliderect(sprite_hero):
-                            game_lose()
+                if enemy != enemy_sprite:
+                    enemy.go_go_zeppely()
+                    if enemy.rect.colliderect(sprite_hero):
+                        game_lose()
             else:
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
@@ -1672,9 +1706,11 @@ if __name__ == '__main__':
             screen.blit(text1, (18 * cell_size + 5, int(10.8 * cell_size)))
             screen.blit(load_image('restart.png'), (19 * cell_size, 10 * cell_size))
             screen.blit(text2, (19 * cell_size, int(10.8 * cell_size)))
+            screen.blit(load_image('my_level.png'), (17 * cell_size, 10 * cell_size))
+            screen.blit(text3, (16.7 * cell_size, int(10.8 * cell_size)))
         else:
             screen.blit(surface, rect)
-            screen.blit(text3, (15 * cell_size, 10 * cell_size))
+        cursoro.draw(screen)
         clock.tick(fps)
         board.render(screen)
         all_sprites.draw(screen)
