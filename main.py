@@ -1500,10 +1500,11 @@ if __name__ == '__main__':
                     cursor_image = load_image("cursor.png")
                     cursor.image = cursor_image
                     pygame.mouse.set_visible(True)
-                    cursor.rect.topleft = event.pos
+                    cursor.rect.topleft = 1400, 800
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.mouse.set_visible(True)
                 start_screen()
+                flag = None
                 if flag_redact:
                     pygame.mixer.music.load('music_redactor.mp3')
                     pygame.mixer.music.play(-1)
