@@ -17,43 +17,43 @@ def terminate():
 def number(volumm):
     num1, num2 = 0, 0
     if volumm == 0.1:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/one.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/one.png", colorkeys=(255, 255, 255))
     elif volumm == 0.2:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/two.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/two.png", colorkeys=(255, 255, 255))
     elif volumm == 0.3:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/three.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/three.png", colorkeys=(255, 255, 255))
     elif volumm == 0.4:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/four.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/four.png", colorkeys=(255, 255, 255))
     elif volumm == 0.5:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/five.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/five.png", colorkeys=(255, 255, 255))
     elif volumm == 0.6:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/six.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/six.png", colorkeys=(255, 255, 255))
     elif volumm == 0.7:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/seven.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/seven.png", colorkeys=(255, 255, 255))
     elif volumm == 0.8:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/eight.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/eight.png", colorkeys=(255, 255, 255))
     elif volumm == 0.9:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/nine.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/nine.png", colorkeys=(255, 255, 255))
     elif volumm == 1:
-        num1 = load_image("start_windiws/numberss/one.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/one.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
     elif volumm == 0:
-        num1 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
-        num2 = load_image("start_windiws/numberss/zero.png", colorkey=(255, 255, 255))
+        num1 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
+        num2 = load_image("start_windiws/numberss/zero.png", colorkeys=(255, 255, 255))
     return num1, num2
 
 
 def start_screen():
-    global volume, flag_redact, personalization, LEVEL
+    global volume, flag_redact, personalization, LEVEL, volum_effects
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     skin_now = open("volume.txt")
@@ -69,61 +69,61 @@ def start_screen():
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
     all_sett = pygame.sprite.Group()
-    setting = load_image("start_windiws/settings.png", colorkey=(255, 255, 255))
+    setting = load_image("start_windiws/settings.png", colorkeys=(255, 255, 255))
     settings = pygame.sprite.Sprite(all_sett)
     settings.image = setting
     settings.rect = settings.image.get_rect()
     settings.rect.x += 300
     settings.rect.y -= 750
-    personal = load_image("personal/personal.png", colorkey=(255, 255, 255))
+    personal = load_image("personal/personal.png", colorkeys=(255, 255, 255))
     perso = pygame.sprite.Sprite(all_sett)
     perso.image = personal
     perso.rect = perso.image.get_rect()
     perso.rect.x += 280
     perso.rect.y -= 750
-    lef = load_image("personal/left.png", colorkey=(255, 255, 255))
+    lef = load_image("personal/left.png", colorkeys=(255, 255, 255))
     left = pygame.sprite.Sprite(all_sett)
     left.image = lef
     left.rect = left.image.get_rect()
     left.rect.x += 460
     left.rect.y -= 410
-    rig = load_image("personal/right.png", colorkey=(255, 255, 255))
+    rig = load_image("personal/right.png", colorkeys=(255, 255, 255))
     right = pygame.sprite.Sprite(all_sett)
     right.image = rig
     right.rect = right.image.get_rect()
     right.rect.x += 860
     right.rect.y -= 410
-    plus1 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+    plus1 = load_image("start_windiws/plus.png", colorkeys=(255, 255, 255))
     plus_1 = pygame.sprite.Sprite(all_sett)
     plus_1.image = plus1
     plus_1.rect = plus_1.image.get_rect()
     plus_1.rect.x += 800
     plus_1.rect.y = -380
-    minus1 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+    minus1 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
     minus_1 = pygame.sprite.Sprite(all_sett)
     minus_1.image = minus1
     minus_1.rect = minus_1.image.get_rect()
     minus_1.rect.x += 500
     minus_1.rect.y = -380
-    plus2 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+    plus2 = load_image("start_windiws/plus.png", colorkeys=(255, 255, 255))
     plus_2 = pygame.sprite.Sprite(all_sett)
     plus_2.image = plus2
     plus_2.rect = plus_2.image.get_rect()
     plus_2.rect.x += 800
     plus_2.rect.y = -260
-    minus2 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+    minus2 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
     minus_2 = pygame.sprite.Sprite(all_sett)
     minus_2.image = minus2
     minus_2.rect = minus_2.image.get_rect()
     minus_2.rect.x += 500
     minus_2.rect.y = -260
-    plus3 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+    plus3 = load_image("start_windiws/plus.png", colorkeys=(255, 255, 255))
     plus_3 = pygame.sprite.Sprite(all_sett)
     plus_3.image = plus3
     plus_3.rect = plus_3.image.get_rect()
     plus_3.rect.x += 800
     plus_3.rect.y = -140
-    minus3 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+    minus3 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
     minus_3 = pygame.sprite.Sprite(all_sett)
     minus_3.image = minus3
     minus_3.rect = minus_3.image.get_rect()
@@ -168,28 +168,28 @@ def start_screen():
     flaagg = False
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
         flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
-    din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+    din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
     a = open('personalization.txt')
     skin_now = a.read()
     ff = 0
     dd = 0
     if skin_now == 'default_dino':
-        din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+        din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     elif skin_now == 'pink_dino':
-        din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+        din = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
     elif skin_now == 'purple_dino':
-        din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+        din = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
     elif skin_now == 'red_dino':
-        din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
-    for i in range(len(dinos_list)):
-        if dinos_list[i] == skin_now:
+        din = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
+    for len_dino in range(len(dinos_list)):
+        if dinos_list[len_dino] == skin_now:
             try:
-                ff = dinos_list[i + 1]
+                ff = dinos_list[len_dino + 1]
             except IndexError:
                 ff = dinos_list[0]
             try:
-                dd = dinos_list[i - 1]
+                dd = dinos_list[len_dino - 1]
             except IndexError:
                 dd = dinos_list[-1]
     a.close()
@@ -198,29 +198,29 @@ def start_screen():
     dino.rect = dino.image.get_rect()
     dino.rect.x += 620
     dino.rect.y -= 420
-    din2 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+    din2 = load_image("personal/dinop.png", colorkeys=(255, 255, 255))
     if ff == 'default_dino':
-        din2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+        din2 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     elif ff == 'pink_dino':
-        din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+        din2 = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
     elif ff == 'purple_dino':
-        din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+        din2 = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
     elif ff == 'red_dino':
-        din2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+        din2 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
     dino2 = pygame.sprite.Sprite(all_sett)
     dino2.image = din2
     dino2.rect = dino2.image.get_rect()
     dino2.rect.x = -40
     dino2.rect.y -= 1020
-    din3 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+    din3 = load_image("personal/dinop.png", colorkeys=(255, 255, 255))
     if dd == 'default_dino':
-        din3 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+        din3 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     elif dd == 'pink_dino':
-        din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+        din3 = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
     elif dd == 'purple_dino':
-        din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+        din3 = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
     elif dd == 'red_dino':
-        din3 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+        din3 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
     dino3 = pygame.sprite.Sprite(all_sett)
     dino3.image = din3
     dino3.rect = dino2.image.get_rect()
@@ -229,21 +229,21 @@ def start_screen():
     flaaag = False
     count_pashalka = 0
     pashalka = pygame.sprite.Group()
-    pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+    pasg2 = load_image("personal/dinod.png", colorkeys=(255, 255, 255))
     if skin_now == 'default_dino':
-        pasg2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+        pasg2 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     elif skin_now == 'pink_dino':
-        pasg2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+        pasg2 = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
     elif skin_now == 'purple_dino':
-        pasg2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+        pasg2 = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
     elif skin_now == 'red_dino':
-        pasg2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+        pasg2 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
     pash2 = pygame.sprite.Sprite(pashalka)
     pash2.image = pasg2
     pash2.rect = pash2.image.get_rect()
     pash2.rect.x = -150
     pash2.rect.y = 630
-    pasg = load_image("start_windiws/pashalka.png", colorkey=(255, 255, 255))
+    pasg = load_image("start_windiws/pashalka.png", colorkeys=(255, 255, 255))
     pash = pygame.sprite.Sprite(pashalka)
     pash.image = pasg
     pash.rect = pash.image.get_rect()
@@ -290,7 +290,7 @@ def start_screen():
                         terminate()
                     if event1.type == pygame.MOUSEMOTION:
                         if 1030 > event1.pos[0] > 980 and 150 > event1.pos[1] > 100:
-                            setting = load_image("start_windiws/settings_close.png", colorkey=(255, 255, 255))
+                            setting = load_image("start_windiws/settings_close.png", colorkeys=(255, 255, 255))
                             settings.image = setting
                             if flag_5:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -298,7 +298,7 @@ def start_screen():
                                 sound.play()
                                 flag_5 = False
                         elif 550 > event1.pos[0] > 495 and 260 > event1.pos[1] > 240:
-                            minus1 = load_image("start_windiws/minus_pick.png", colorkey=(255, 255, 255))
+                            minus1 = load_image("start_windiws/minus_pick.png", colorkeys=(255, 255, 255))
                             minus_1.image = minus1
                             if flag_6:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -306,7 +306,7 @@ def start_screen():
                                 sound.play()
                                 flag_6 = False
                         elif 850 > event1.pos[0] > 800 and 270 > event1.pos[1] > 215:
-                            plus1 = load_image("start_windiws/plus_pick.png", colorkey=(255, 255, 255))
+                            plus1 = load_image("start_windiws/plus_pick.png", colorkeys=(255, 255, 255))
                             plus_1.image = plus1
                             if flag_7:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -314,7 +314,7 @@ def start_screen():
                                 sound.play()
                                 flag_7 = False
                         elif 550 > event1.pos[0] > 495 and 370 > event1.pos[1] > 355:
-                            minus2 = load_image("start_windiws/minus_pick.png", colorkey=(255, 255, 255))
+                            minus2 = load_image("start_windiws/minus_pick.png", colorkeys=(255, 255, 255))
                             minus_2.image = minus2
                             if flag_8:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -322,7 +322,7 @@ def start_screen():
                                 sound.play()
                                 flag_8 = False
                         elif 850 > event1.pos[0] > 800 and 390 > event1.pos[1] > 335:
-                            plus2 = load_image("start_windiws/plus_pick.png", colorkey=(255, 255, 255))
+                            plus2 = load_image("start_windiws/plus_pick.png", colorkeys=(255, 255, 255))
                             plus_2.image = plus2
                             if flag_9:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -330,7 +330,7 @@ def start_screen():
                                 sound.play()
                                 flag_9 = False
                         elif 550 > event1.pos[0] > 495 and 490 > event1.pos[1] > 475:
-                            minus3 = load_image("start_windiws/minus_pick.png", colorkey=(255, 255, 255))
+                            minus3 = load_image("start_windiws/minus_pick.png", colorkeys=(255, 255, 255))
                             minus_3.image = minus3
                             if flag_10:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -338,7 +338,7 @@ def start_screen():
                                 sound.play()
                                 flag_10 = False
                         elif 850 > event1.pos[0] > 800 and 510 > event1.pos[1] > 455:
-                            plus3 = load_image("start_windiws/plus_pick.png", colorkey=(255, 255, 255))
+                            plus3 = load_image("start_windiws/plus_pick.png", colorkeys=(255, 255, 255))
                             plus_3.image = plus3
                             if flag_11:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -346,19 +346,19 @@ def start_screen():
                                 sound.play()
                                 flag_11 = False
                         else:
-                            minus1 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+                            minus1 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
                             minus_1.image = minus1
-                            plus1 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+                            plus1 = load_image("start_windiws/plus.png", colorkeys=(255, 255, 255))
                             plus_1.image = plus1
-                            minus2 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+                            minus2 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
                             minus_2.image = minus2
-                            plus2 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+                            plus2 = load_image("start_windiws/plus.png", colorkeys=(255, 255, 255))
                             plus_2.image = plus2
-                            minus3 = load_image("start_windiws/minus.png", colorkey=(255, 255, 255))
+                            minus3 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
                             minus_3.image = minus3
-                            plus3 = load_image("start_windiws/plus.png", colorkey=(255, 255, 255))
+                            plus3 = load_image("start_windiws/plus.png", colorkeys=(255, 255, 255))
                             plus_3.image = plus3
-                            setting = load_image("start_windiws/settings.png", colorkey=(255, 255, 255))
+                            setting = load_image("start_windiws/settings.png", colorkeys=(255, 255, 255))
                             settings.image = setting
                             flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11 \
                                 = True, True, True, True, True, True, True
@@ -435,7 +435,7 @@ def start_screen():
                         terminate()
                     elif event1.type == pygame.MOUSEMOTION:
                         if 1055 > event1.pos[0] > 1005 and 150 > event1.pos[1] > 100:
-                            personal = load_image("personal/personal_close.png", colorkey=(255, 255, 255))
+                            personal = load_image("personal/personal_close.png", colorkeys=(255, 255, 255))
                             perso.image = personal
                             if flag_12:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -443,7 +443,7 @@ def start_screen():
                                 sound.play()
                                 flag_12 = False
                         elif 525 > event1.pos[0] > 475 and 340 > event1.pos[1] > 240:
-                            lef = load_image("personal/left_pick.png", colorkey=(255, 255, 255))
+                            lef = load_image("personal/left_pick.png", colorkeys=(255, 255, 255))
                             left.image = lef
                             if flag_13:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -451,7 +451,7 @@ def start_screen():
                                 sound.play()
                                 flag_13 = False
                         elif 930 > event1.pos[0] > 880 and 340 > event1.pos[1] > 240:
-                            rig = load_image("personal/right_pick.png", colorkey=(255, 255, 255))
+                            rig = load_image("personal/right_pick.png", colorkeys=(255, 255, 255))
                             right.image = rig
                             if flag_14:
                                 sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -460,11 +460,11 @@ def start_screen():
                                 flag_14 = False
                         else:
                             flag_12, flag_13, flag_14 = True, True, True
-                            rig = load_image("personal/right.png", colorkey=(255, 255, 255))
+                            rig = load_image("personal/right.png", colorkeys=(255, 255, 255))
                             right.image = rig
-                            lef = load_image("personal/left.png", colorkey=(255, 255, 255))
+                            lef = load_image("personal/left.png", colorkeys=(255, 255, 255))
                             left.image = lef
-                            personal = load_image("personal/personal.png", colorkey=(255, 255, 255))
+                            personal = load_image("personal/personal.png", colorkeys=(255, 255, 255))
                             perso.image = personal
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1055 > event1.pos[0] > 1005 \
                             and 150 > event1.pos[1] > 100:
@@ -522,19 +522,19 @@ def start_screen():
                     skin_now = a.read()
                     ff = 0
                     flag_na_click = True
-                    pasg2 = load_image("personal/dinod.png", colorkey=(255, 255, 255))
+                    pasg2 = load_image("personal/dinod.png", colorkeys=(255, 255, 255))
                     if skin_now == 'default_dino':
-                        din = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
-                        pasg2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                        din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
                     elif skin_now == 'pink_dino':
-                        din = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
-                        pasg2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                        din = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
                     elif skin_now == 'purple_dino':
-                        din = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
-                        pasg2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                        din = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
                     elif skin_now == 'red_dino':
-                        din = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
-                        pasg2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                        din = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
+                        pasg2 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
                     pash2.image = pasg2
                     for ii in range(len(dinos_list)):
                         if dinos_list[ii] == skin_now:
@@ -547,24 +547,24 @@ def start_screen():
                             except IndexError:
                                 dd = dinos_list[-1]
                     a.close()
-                    din2 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+                    din2 = load_image("personal/dinop.png", colorkeys=(255, 255, 255))
                     if ff == 'default_dino':
-                        din2 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                        din2 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
                     elif ff == 'pink_dino':
-                        din2 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                        din2 = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
                     elif ff == 'purple_dino':
-                        din2 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                        din2 = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
                     elif ff == 'red_dino':
-                        din2 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
-                    din3 = load_image("personal/dinop.png", colorkey=(255, 255, 255))
+                        din2 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
+                    din3 = load_image("personal/dinop.png", colorkeys=(255, 255, 255))
                     if dd == 'default_dino':
-                        din3 = load_image(f"personal/dinod.png", colorkey=(255, 255, 255))
+                        din3 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
                     elif dd == 'pink_dino':
-                        din3 = load_image(f"personal/dinop.png", colorkey=(255, 255, 255))
+                        din3 = load_image(f"personal/dinop.png", colorkeys=(255, 255, 255))
                     elif dd == 'purple_dino':
-                        din3 = load_image(f"personal/dinopu.png", colorkey=(255, 255, 255))
+                        din3 = load_image(f"personal/dinopu.png", colorkeys=(255, 255, 255))
                     elif dd == 'red_dino':
-                        din3 = load_image(f"personal/dinor.png", colorkey=(255, 255, 255))
+                        din3 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
                     dino3.image = din3
                     dino2.image = din2
                     dino.image = din
@@ -701,14 +701,13 @@ def game_win():
     pass
 
 
-def choose_level(volum_effects, volum):
+def choose_level(volume_effects, volum):
     pygame.font.init()
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10 \
         = True, True, True, True, True, True, True, True, True, True
     pygame.mixer.music.load('zvuk_level.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
-    my_fontt = pygame.font.SysFont('Times New Roman', 45)
     fon = pygame.transform.scale(load_image('start_windiws/level.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     while True:
@@ -722,7 +721,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_1:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_1 = False
                 elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
@@ -730,7 +729,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_2:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_2 = False
                 elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
@@ -738,7 +737,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_3:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_3 = False
                 elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
@@ -746,7 +745,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_4:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_4 = False
                 elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
@@ -754,7 +753,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_5:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_5 = False
                 elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
@@ -762,7 +761,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_6:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_6 = False
                 elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
@@ -770,7 +769,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_7:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_7 = False
                 elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
@@ -778,7 +777,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_8:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_8 = False
                 elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
@@ -786,7 +785,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_9:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_9 = False
                 elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
@@ -794,7 +793,7 @@ def choose_level(volum_effects, volum):
                     screen.blit(fon, (0, 0))
                     if flag_10:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
+                        sound.set_volume(volume_effects)
                         sound.play()
                         flag_10 = False
                 else:
@@ -805,52 +804,52 @@ def choose_level(volum_effects, volum):
             elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
                 if 272 > event2.pos[0] > 113 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_1.txt'
                 elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_2.txt'
                 elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_3.txt'
                 elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_4.txt'
                 elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_5.txt'
                 elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_6.txt'
                 elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_7.txt'
                 elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_8.txt'
                 elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_9.txt'
                 elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
+                    sound.set_volume(volume_effects)
                     sound.play()
                     return 'level_10.txt'
             elif event2.type == pygame.KEYDOWN and event2.key == pygame.K_ESCAPE:
@@ -1002,15 +1001,15 @@ def possition(mouse_pos):
     return mouse_pos[0] // board.cell_size, mouse_pos[1] // board.cell_size
 
 
-def load_image(name, colorkey=None):
+def load_image(name, colorkeys=None):
     fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
     image = pygame.image.load(fullname)
-    if colorkey is not None:
+    if colorkeys is not None:
         image = image.convert()
-        image.set_colorkey(colorkey)
+        image.set_colorkey(colorkeys)
     else:
         image = image.convert_alpha()
     return image
@@ -1049,7 +1048,7 @@ class Board:
 class Unit(pygame.sprite.Sprite):
     def __init__(self, name_person, name_sprite):
         super().__init__(all_sprites)
-        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.image = load_image(name_sprite, colorkeys=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.name = name_person
         self.count = 0
@@ -1067,40 +1066,40 @@ class Unit(pygame.sprite.Sprite):
             self.count = 0
         self.count += 1
 
-        for fruit in fruit_sprites:
-            if self.rect.colliderect(fruit):
-                fruit.kill_fruit()
-                fruit_list[fruit.rect.y // 68][fruit.rect.x // 68] = None
-                if fruit.name == 'banana':
+        for fruits in fruit_sprites:
+            if self.rect.colliderect(fruits):
+                fruits.kill_fruit()
+                fruit_list[fruits.rect.y // 68][fruits.rect.x // 68] = None
+                if fruits.name == 'banana':
                     score += 1
-                elif fruit.name == 'cherry':
+                elif fruits.name == 'cherry':
                     score += 2
-                elif fruit.name == 'limon':
+                elif fruits.name == 'limon':
                     score += 3
                 text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
             else:
-                fruit.static_animation()
-        if [fruit.name for fruit in fruit_sprites].count('banana') == 0 and not flag_cherry:
-            with open(LEVEL, 'r') as level_file:
-                count = 0
-                for string in level_file:
-                    if count == 4:
+                fruits.static_animation()
+        if [fruits.name for fruits in fruit_sprites].count('banana') == 0 and not flag_cherry:
+            with open(LEVEL, 'r') as level_files:
+                counts = 0
+                for string in level_files:
+                    if counts == 4:
                         eval_string = eval(string)
-                        for f in eval_string:
-                            if f[2] == 'cherry':
-                                Fruit(f[2], 'fruct/cherry.png', (f[0], f[1]), True)
-                    count += 1
+                        for fff in eval_string:
+                            if fff[2] == 'cherry':
+                                Fruit(fff[2], 'fruct/cherry.png', (fff[0], fff[1]), True)
+                    counts += 1
                 flag_cherry = True
-        elif [fruit.name for fruit in fruit_sprites].count('cherry') == 0 and flag_cherry and not flag_limon:
-            with open(LEVEL, 'r') as level_file:
-                count = 0
-                for string in level_file:
-                    if count == 4:
+        elif [fruits.name for fruits in fruit_sprites].count('cherry') == 0 and flag_cherry and not flag_limon:
+            with open(LEVEL, 'r') as level_files:
+                counts = 0
+                for string in level_files:
+                    if counts == 4:
                         eval_string = eval(string)
-                        for f in eval_string:
-                            if f[2] == 'limon':
-                                Fruit(f[2], 'fruct/limon.png', (f[0], f[1]), True)
-                    count += 1
+                        for fff in eval_string:
+                            if fff[2] == 'limon':
+                                Fruit(fff[2], 'fruct/limon.png', (fff[0], fff[1]), True)
+                    counts += 1
                 flag_limon = True
         last_pos = self.rect.x, self.rect.y
         flag1, flag2 = True, True
@@ -1123,28 +1122,28 @@ class Unit(pygame.sprite.Sprite):
             speeda = speed
 
         if last_move[0] == 1:
-            list_anim_right = [load_image(f'{personalization}/right_anim/right_shag_1.png', colorkey=colorkey),
-                               load_image(f'{personalization}/right_anim/right_shag_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image(f'{personalization}/right_anim/right_shag_1.png', colorkeys=colorkey),
+                               load_image(f'{personalization}/right_anim/right_shag_2.png', colorkeys=colorkey)]
             self.image = list_anim_right[self.count // 6 - 1]
             if self.rect.right < board.width * board.cell_size:  # для того чтобы не выходил за границы
                 self.rect.x += speeda
         elif last_move[0] == -1:
-            list_anim_left = [load_image(f'{personalization}/left_anim/left_shag_1.png', colorkey=colorkey),
-                              load_image(f'{personalization}/left_anim/left_shag_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image(f'{personalization}/left_anim/left_shag_1.png', colorkeys=colorkey),
+                              load_image(f'{personalization}/left_anim/left_shag_2.png', colorkeys=colorkey)]
             self.image = list_anim_left[self.count // 6 - 1]
             if self.rect.left > 0:
                 self.rect.x -= speeda
 
         elif last_move[1] == 1:
-            list_anim_up = [load_image(f'{personalization}/front_anim/front_shag_1.png', colorkey=colorkey),
-                            load_image(f'{personalization}/front_anim/front_shag_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image(f'{personalization}/front_anim/front_shag_1.png', colorkeys=colorkey),
+                            load_image(f'{personalization}/front_anim/front_shag_2.png', colorkeys=colorkey)]
             self.image = list_anim_up[self.count // 6 - 1]
             if self.rect.bottom < (board.height * board.cell_size):
                 self.rect.y += speeda
 
         elif last_move[1] == -1:
-            list_anim_down = [load_image(f'{personalization}/back_anim/back_shag_1.png', colorkey=colorkey),
-                              load_image(f'{personalization}/back_anim/back_shag_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image(f'{personalization}/back_anim/back_shag_1.png', colorkeys=colorkey),
+                              load_image(f'{personalization}/back_anim/back_shag_2.png', colorkeys=colorkey)]
             self.image = list_anim_down[self.count // 6 - 1]
             if self.rect.top > 0:
                 self.rect.y -= speeda
@@ -1157,48 +1156,48 @@ class Unit(pygame.sprite.Sprite):
         if self.count_static == 24:
             self.count_static = 0
 
-        for fruit in fruit_sprites:
-            if self.rect.colliderect(fruit):
-                fruit.kill_fruit()
-                fruit_list[fruit.rect.y // 68][fruit.rect.x // 68] = None
+        for fruits in fruit_sprites:
+            if self.rect.colliderect(fruits):
+                fruits.kill_fruit()
+                fruit_list[fruits.rect.y // 68][fruits.rect.x // 68] = None
             else:
-                fruit.static_animation()
+                fruits.static_animation()
         self.count_static += 1
         if last_move[0] == 1:
-            list_anim_right = [load_image(f'{personalization}/right_anim/right_stoit_1.png', colorkey=colorkey),
-                               load_image(f'{personalization}/right_anim/right_stoit_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image(f'{personalization}/right_anim/right_stoit_1.png', colorkeys=colorkey),
+                               load_image(f'{personalization}/right_anim/right_stoit_2.png', colorkeys=colorkey)]
             self.image = list_anim_right[self.count_static // 12 - 1]
 
         elif last_move[0] == -1:
-            list_anim_left = [load_image(f'{personalization}/left_anim/left_stoit_1.png', colorkey=colorkey),
-                              load_image(f'{personalization}/left_anim/left_stoit_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image(f'{personalization}/left_anim/left_stoit_1.png', colorkeys=colorkey),
+                              load_image(f'{personalization}/left_anim/left_stoit_2.png', colorkeys=colorkey)]
             self.image = list_anim_left[self.count_static // 12 - 1]
 
         elif last_move[1] == 1:
-            list_anim_down = [load_image(f'{personalization}/front_anim/front_stoit_1.png', colorkey=colorkey),
-                              load_image(f'{personalization}/front_anim/front_stoit_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image(f'{personalization}/front_anim/front_stoit_1.png', colorkeys=colorkey),
+                              load_image(f'{personalization}/front_anim/front_stoit_2.png', colorkeys=colorkey)]
             self.image = list_anim_down[self.count_static // 12 - 1]
 
         elif last_move[1] == -1:
-            list_anim_up = [load_image(f'{personalization}/back_anim/back_stoit_1.png', colorkey=colorkey),
-                            load_image(f'{personalization}/back_anim/back_stoit_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image(f'{personalization}/back_anim/back_stoit_1.png', colorkeys=colorkey),
+                            load_image(f'{personalization}/back_anim/back_stoit_2.png', colorkeys=colorkey)]
             self.image = list_anim_up[self.count_static // 12 - 1]
 
     def spawn_ice_dino(self, last_move):
         if last_move[0] == 1:
-            self.image = load_image(f'{personalization}/right_anim/right_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/right_anim/right_break_or_place_ice.png', colorkeys=colorkey)
         elif last_move[0] == -1:
-            self.image = load_image(f'{personalization}/left_anim/left_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/left_anim/left_break_or_place_ice.png', colorkeys=colorkey)
         elif last_move[1] == 1:
-            self.image = load_image(f'{personalization}/front_anim/front_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/front_anim/front_break_or_place_ice.png', colorkeys=colorkey)
         elif last_move[1] == -1:
-            self.image = load_image(f'{personalization}/back_anim/back_break_or_place_ice.png', colorkey=colorkey)
+            self.image = load_image(f'{personalization}/back_anim/back_break_or_place_ice.png', colorkeys=colorkey)
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, name_sprite):
         super().__init__(enemy_sprites)
-        self.image = load_image(name_sprite, colorkey=(255, 255, 255))
+        self.image = load_image(name_sprite, colorkeys=(255, 255, 255))
         self.rect = self.image.get_rect()
         self.count = 0
         self.count_static = 0
@@ -1215,29 +1214,29 @@ class Enemy(pygame.sprite.Sprite):
         self.count_static += 1
 
         if last_move[0] == 1:
-            list_anim_right = [load_image('vrag/right_vrag.png', colorkey=colorkey),
-                               load_image('vrag/right_vrag_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image('vrag/right_vrag.png', colorkeys=colorkey),
+                               load_image('vrag/right_vrag_2.png', colorkeys=colorkey)]
             self.image = list_anim_right[self.count_static // 24 - 1]
             if go:
                 self.rect.x += speed
 
         elif last_move[0] == -1:
-            list_anim_left = [load_image('vrag/left_vrag.png', colorkey=colorkey),
-                              load_image('vrag/left_vrag_2.png', colorkey=colorkey)]
+            list_anim_left = [load_image('vrag/left_vrag.png', colorkeys=colorkey),
+                              load_image('vrag/left_vrag_2.png', colorkeys=colorkey)]
             self.image = list_anim_left[self.count_static // 24 - 1]
             if go:
                 self.rect.x -= speed
 
         elif last_move[1] == 1:
-            list_anim_down = [load_image('vrag/front_vrag.png', colorkey=colorkey),
-                              load_image('vrag/front_vrag_2.png', colorkey=colorkey)]
+            list_anim_down = [load_image('vrag/front_vrag.png', colorkeys=colorkey),
+                              load_image('vrag/front_vrag_2.png', colorkeys=colorkey)]
             self.image = list_anim_down[self.count_static // 24 - 1]
             if go:
                 self.rect.y += speed
 
         elif last_move[1] == -1:
-            list_anim_up = [load_image('vrag/back_vrag.png', colorkey=colorkey),
-                            load_image('vrag/back_vrag_2.png', colorkey=colorkey)]
+            list_anim_up = [load_image('vrag/back_vrag.png', colorkeys=colorkey),
+                            load_image('vrag/back_vrag_2.png', colorkeys=colorkey)]
             self.image = list_anim_up[self.count_static // 24 - 1]
             if go:
                 self.rect.y -= speed
@@ -1262,7 +1261,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.index += self.number
             else:
                 self.animation(last_move)
-        except Exception:
+        except IndexError:
             pass
         try:
             if self.number == 1:
@@ -1271,18 +1270,18 @@ class Enemy(pygame.sprite.Sprite):
             elif self.number == -1:
                 if board.board[self.route[self.index - 1][1]][self.route[self.index - 1][0]] in ['block', 'ice']:
                     self.number *= -1
-        except Exception:
+        except IndexError:
             pass
 
-    def set_route(self, list_click):
-        self.route = list_click
+    def set_route(self, list_clicks):
+        self.route = list_clicks
 
 
 class Fruit(pygame.sprite.Sprite):
     def __init__(self, name_person, name_sprite, event_pos, can_eat):
         super().__init__(fruit_sprites)
         self.count = 0
-        self.image = load_image(name_sprite, colorkey=colorkey)
+        self.image = load_image(name_sprite, colorkeys=colorkey)
         self.rect = self.image.get_rect()
         self.name = name_person
         self.eat_fruct = pygame.mixer.Sound('звук поедания фрукта.mpeg')
@@ -1296,20 +1295,22 @@ class Fruit(pygame.sprite.Sprite):
             self.count = 0
         self.count += 1
         if self.name == 'banana':
-            list_anim_right = [load_image('fruct/banana.png', colorkey=colorkey),
-                               load_image('fruct/banana2.png', colorkey=colorkey)]
+            list_anim_right = [load_image('fruct/banana.png', colorkeys=colorkey),
+                               load_image('fruct/banana2.png', colorkeys=colorkey)]
         elif self.name == 'cherry':
-            list_anim_right = [load_image('fruct/cherry.png', colorkey=colorkey),
-                               load_image('fruct/cherry2.png', colorkey=colorkey)]
+            list_anim_right = [load_image('fruct/cherry.png', colorkeys=colorkey),
+                               load_image('fruct/cherry2.png', colorkeys=colorkey)]
         elif self.name == 'limon':
-            list_anim_right = [load_image('fruct/limon.png', colorkey=colorkey),
-                               load_image('fruct/limon_2.png', colorkey=colorkey)]
+            list_anim_right = [load_image('fruct/limon.png', colorkeys=colorkey),
+                               load_image('fruct/limon_2.png', colorkeys=colorkey)]
         self.image = list_anim_right[self.count // 12 - 1]
 
     def kill_fruit(self):
         if self.can_eat:
             fruit_sprites.remove(self)
-            self.eat_fruct.play()
+            sound = pygame.mixer.Sound('звук поедания фрукта.mpeg')
+            sound.set_volume(volum_effects)
+            sound.play()
 
 
 class Ice(pygame.sprite.Sprite):
@@ -1317,10 +1318,10 @@ class Ice(pygame.sprite.Sprite):
         super().__init__(ice_sprites)
         self.count = 0
         self.flag = False
-        self.image = load_image(name_sprite, colorkey=colorkey)
+        self.image = load_image(name_sprite, colorkeys=colorkey)
         self.rect = self.image.get_rect()
         self.name = name_person
-        self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
+        self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
         try:
             board.board[possition(event_pos)[1]][possition(event_pos)[0]] = 'ice'
         except IndexError:
@@ -1331,8 +1332,8 @@ class Ice(pygame.sprite.Sprite):
         if self.count == 12:
             self.count = 0
         self.count += 1
-        list_anim_right = [load_image('ice/ice.png', colorkey=colorkey),
-                           load_image('ice/ice.png', colorkey=colorkey)]
+        list_anim_right = [load_image('ice/ice.png', colorkeys=colorkey),
+                           load_image('ice/ice.png', colorkeys=colorkey)]
         self.image = list_anim_right[self.count // 6 - 1]
 
     def kill_ice(self):
@@ -1342,10 +1343,10 @@ class Ice(pygame.sprite.Sprite):
 class IronBlock(pygame.sprite.Sprite):
     def __init__(self, name_sprite, event_pos):
         super().__init__(iron_block_sprites)
-        self.image = load_image(name_sprite, colorkey=colorkey)
+        self.image = load_image(name_sprite, colorkeys=colorkey)
         self.rect = self.image.get_rect()
         self.name = 'block'
-        self.rect.x, self.rect.y = [x * board.cell_size for x in possition(event_pos)]
+        self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
         try:
             board.board[possition(event_pos)[1]][possition(event_pos)[0]] = 'block'
         except IndexError:
@@ -1363,28 +1364,28 @@ def start_level(level):
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
-    with open(level, 'r') as level_file:
-        count = 0
-        for string in level_file:
+    with open(level, 'r') as level_files:
+        counts = 0
+        for string in level_files:
             eval_string = eval(string)
-            if count == 0:
+            if counts == 0:
                 sprite_hero.rect.x, sprite_hero.rect.y = eval_string
-            elif count == 1:
-                for i in eval_string:
-                    Ice('ice', 'ice/ice.png', i)
-            elif count == 2:
-                for b in eval_string:
-                    IronBlock('block/block.png', b)
-            elif count == 3:
-                for e in eval_string:
+            elif counts == 1:
+                for ii in eval_string:
+                    Ice('ice', 'ice/ice.png', ii)
+            elif counts == 2:
+                for bb in eval_string:
+                    IronBlock('block/block.png', bb)
+            elif counts == 3:
+                for ee in eval_string:
                     enemy_1 = Enemy('vrag/front_vrag.png')
-                    enemy_1.set_posittion((e[0] // cell_size, e[1] // cell_size))
-                    enemy_1.set_route(e[2])
-            elif count == 4:
+                    enemy_1.set_posittion((ee[0] // cell_size, ee[1] // cell_size))
+                    enemy_1.set_route(ee[2])
+            elif counts == 4:
                 for f in eval_string:
                     if f[2] == 'banana':
                         Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
-            count += 1
+            counts += 1
     return
 
 
@@ -1398,7 +1399,7 @@ if __name__ == '__main__':
     pygame.display.set_icon(load_image('default_dino/left_anim/left_shag_1.png'))
     running = True
     volume = 0.5
-
+    volum_effects = 0.5
     all_sprites = pygame.sprite.Group()
     cursoro = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'default_dino/right_anim/right_stoit_1.png')
