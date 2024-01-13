@@ -698,7 +698,59 @@ def game_lose():
 
 
 def game_win():
-    print(123)
+    pygame.font.init()
+    fon = pygame.transform.scale(load_image('start_windiws/menu.png'), (68 * 20, 68 * 10 + 80))
+    screen.blit(fon, (0, 0))
+    flag_1, flag_2, flag_3 = True, True, True
+    while True:
+        pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        for event2 in pygame.event.get():
+            if event2.type == pygame.QUIT:
+                terminate()
+            elif event2.type == pygame.MOUSEMOTION:
+                if 986 > event2.pos[0] > 373 and 194 > event2.pos[1] > 46:
+                    fon = pygame.transform.scale(load_image('start_windiws/menu_prodolsit.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_1:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_1 = False
+                elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
+                    fon = pygame.transform.scale(load_image('start_windiws/menu_repeat.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_2:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_2 = False
+                elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
+                    fon = pygame.transform.scale(load_image('start_windiws/menu_exit.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_3:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_3 = False
+                else:
+                    fon = pygame.transform.scale(load_image('start_windiws/menu.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    flag_1, flag_2, flag_3 = True, True, True
+            elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
+                if 986 > event2.pos[0] > 373 and 194 > event2.pos[1] > 46:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+        pygame.display.flip()
+        clock.tick(fps)
 
 
 def choose_level(volume_effects, volum):
@@ -1865,11 +1917,12 @@ if __name__ == '__main__':
             if flag_redact:
                 if enemy != enemy_sprite:
                     enemy.go_go_zeppely()
-                    if enemy.rect.colliderect(sprite_hero):
-                        game_lose()
+                    # if enemy.rect.colliderect(sprite_hero):
+                    #    game_lose() если в редакторе было столкновение, то ничего не происходит
             else:
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
+                    pygame.mixer.music.stop()
                     game_lose()
         screen.fill((255, 255, 255))
         if flag_redact:
