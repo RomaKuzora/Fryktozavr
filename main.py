@@ -167,7 +167,7 @@ def start_screen():
     flag_na_click = True
     flaagg = False
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
-        flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
+    flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
     a = open('personalization.txt')
@@ -891,11 +891,13 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][ii]:
                         board.board[yy][ii] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (ii * 68, yy * 68), True)
+                        Fruit(fruit_list[yy][ii], f'fruct/{fruit_list[yy][ii]}_in_ice.png',
+                              (ii * 68, yy * 68), True, True)
                     if (ii - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][ii - 1]:
                         board.board[yy][ii - 1] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', ((ii - 1) * 68, yy * 68), True)
+                        Fruit(fruit_list[yy][ii - 1], f'fruct/{fruit_list[yy][ii - 1]}_in_ice.png',
+                              ((ii - 1) * 68, yy * 68), True, True)
 
     elif last_move[0] == -1:
         for ii in range(xx - 1, -1, -1):
@@ -922,12 +924,14 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][ii]:
                         board.board[yy][ii] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (ii * 68, yy * 68), True)
+                        Fruit(fruit_list[yy][ii], f'fruct/{fruit_list[yy][ii]}_in_ice.png',
+                              (ii * 68, yy * 68), True, True)
 
                     if (ii + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][ii + 1]:
                         board.board[yy][ii + 1] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', ((ii + 1) * 68, yy * 68), True)
+                        Fruit(fruit_list[yy][ii + 1], f'fruct/{fruit_list[yy][ii + 1]}_in_ice.png',
+                              ((ii + 1) * 68, yy * 68), True, True)
 
     elif last_move[1] == -1:
         for ii in range(yy - 1, -1, -1):
@@ -954,11 +958,13 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and fruit_list[ii][xx]:
                         board.board[ii][xx] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (xx * 68, ii * 68), True)
+                        Fruit(fruit_list[ii][xx], f'fruct/{fruit_list[ii][xx]}_in_ice.png',
+                              (xx * 68, ii * 68), True, True)
                     if (xx, ii + 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[ii][xx]:
                         board.board[ii + 1][xx] = None
                         ices.kill_ice()
-                        Fruit('banana', 'fruct/banana.png', (xx * 68, (ii + 1) * 68), True)
+                        Fruit(fruit_list[ii + 1][xx], f'fruct/{fruit_list[ii + 1][xx]}_in_ice.png',
+                              (xx * 68, (ii + 1) * 68), True, True)
 
     elif last_move[1] == 1:
         for ii in range(yy + shagg + 1, 12):
@@ -988,11 +994,13 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                         if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and fruit_list[ii][xx]:
                             board.board[ii][xx] = None
                             ices.kill_ice()
-                            Fruit('banana', 'fruct/banana.png', (xx * 68, ii * 68), True)
+                            Fruit(fruit_list[ii][xx], f'fruct/{fruit_list[ii][xx]}_in_ice.png',
+                                  (xx * 68, ii * 68), True, False)
                         if (xx, ii - 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[ii][xx]:
                             board.board[ii + 1][xx] = None
                             ices.kill_ice()
-                            Fruit('banana', 'fruct/banana.png', (xx * 68, (ii - 1) * 68), True)
+                            Fruit(fruit_list[ii + 1][xx], f'fruct/{fruit_list[ii + 1][xx]}_in_ice.png',
+                                  (xx * 68, (ii - 1) * 68), True, False)
             except IndexError:
                 pass
 
@@ -1087,7 +1095,7 @@ class Unit(pygame.sprite.Sprite):
                         eval_string = eval(string)
                         for fff in eval_string:
                             if fff[2] == 'cherry':
-                                Fruit(fff[2], 'fruct/cherry.png', (fff[0], fff[1]), True)
+                                Fruit(fff[2], 'fruct/cherry.png', (fff[0], fff[1]), True, True)
                     counts += 1
                 flag_cherry = True
         elif [fruits.name for fruits in fruit_sprites].count('cherry') == 0 and flag_cherry and not flag_limon:
@@ -1098,7 +1106,7 @@ class Unit(pygame.sprite.Sprite):
                         eval_string = eval(string)
                         for fff in eval_string:
                             if fff[2] == 'limon':
-                                Fruit(fff[2], 'fruct/limon.png', (fff[0], fff[1]), True)
+                                Fruit(fff[2], 'fruct/limon.png', (fff[0], fff[1]), True, True)
                     counts += 1
                 flag_limon = True
         last_pos = self.rect.x, self.rect.y
@@ -1278,7 +1286,7 @@ class Enemy(pygame.sprite.Sprite):
 
 
 class Fruit(pygame.sprite.Sprite):
-    def __init__(self, name_person, name_sprite, event_pos, can_eat):
+    def __init__(self, name_person, name_sprite, event_pos, can_eat, not_eat):
         super().__init__(fruit_sprites)
         self.count = 0
         self.image = load_image(name_sprite, colorkeys=colorkey)
@@ -1288,6 +1296,7 @@ class Fruit(pygame.sprite.Sprite):
         self.eat_fruct.set_volume(0.3)
         self.rect.x, self.rect.y = [xx * board.cell_size for xx in possition(event_pos)]
         self.can_eat = can_eat
+        self.not_eat = not_eat
 
     def static_animation(self):  # банан двигается
         list_anim_right = list()
@@ -1308,9 +1317,11 @@ class Fruit(pygame.sprite.Sprite):
     def kill_fruit(self):
         if self.can_eat:
             fruit_sprites.remove(self)
-            sound = pygame.mixer.Sound('звук поедания фрукта.mpeg')
-            sound.set_volume(volum_effects)
-            sound.play()
+            if self.not_eat and not board.board[self.rect.y // 68][self.rect.x // 68] and \
+                    fruit_list[self.rect.y // 68][self.rect.x // 68]:
+                sound = pygame.mixer.Sound('звук поедания фрукта.mpeg')
+                sound.set_volume(volum_effects)
+                sound.play()
 
 
 class Ice(pygame.sprite.Sprite):
@@ -1384,7 +1395,7 @@ def start_level(level):
             elif counts == 4:
                 for f in eval_string:
                     if f[2] == 'banana':
-                        Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True)
+                        Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True, True)
             counts += 1
     return
 
@@ -1436,9 +1447,9 @@ if __name__ == '__main__':
     my_font = pygame.font.SysFont('Throne and Libert', 30)
     if flag_redact:
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
-        sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
-        sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
-        sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False)
+        sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, False)
+        sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False, False)
+        sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False, False)
         sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
         enemy_sprite = Enemy('vrag/front_vrag.png')
         enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
@@ -1574,9 +1585,12 @@ if __name__ == '__main__':
                             enemy_sprites = pygame.sprite.Group()
                             fruit_sprites = pygame.sprite.Group()
                             sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
-                            sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False)
-                            sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False)
-                            sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False)
+                            sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False,
+                                                  False)
+                            sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False,
+                                                  False)
+                            sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False,
+                                                 False)
                             sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
                             enemy_sprite = Enemy('vrag/front_vrag.png')
                             enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
@@ -1586,27 +1600,33 @@ if __name__ == '__main__':
                             and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
                         if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
                             fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'banana'
-                            Fruit('banana', 'fruct/banana.png', (event.pos[0], event.pos[1]), True)
+                            Fruit('banana', 'fruct/banana.png', (event.pos[0], event.pos[1]), True, True)
                         else:
                             for fruct in fruit_sprites:
                                 if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
-                                    fruct.kill_fruit()
                                     fruit_list[possition(event.pos)[1]][possition(event.pos)[0]] = None
+                                    fruct.kill_fruit()
+
                     elif flag == 'limon' and possition(event.pos)[1] != 10 \
                             and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
                         if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
                             fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'limon'
-                            Fruit('limon', 'fruct/limon.png', (event.pos[0], event.pos[1]), True)
+                            Fruit('limon', 'fruct/limon.png', (event.pos[0], event.pos[1]), True, True)
                         else:
                             for fruct in fruit_sprites:
                                 if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
-                                    fruct.kill_fruit()
                                     fruit_list[possition(event.pos)[1]][possition(event.pos)[0]] = None
+                                    fruct.kill_fruit()
                     elif flag == 'cherry' and possition(event.pos)[1] != 10 \
-                            and not fruit_list[event.pos[1] // 68][event.pos[0] // 68] \
                             and not board.board[event.pos[1] // 68][event.pos[0] // 68]:
-                        fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'cherry'
-                        Fruit('cherry', 'fruct/cherry.png', event.pos, True)
+                        if not fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
+                            fruit_list[event.pos[1] // 68][event.pos[0] // 68] = 'cherry'
+                            Fruit('cherry', 'fruct/cherry.png', (event.pos[0], event.pos[1]), True, True)
+                        else:
+                            for fruct in fruit_sprites:
+                                if possition(event.pos) == possition((fruct.rect.x, fruct.rect.y)):
+                                    fruit_list[possition(event.pos)[1]][possition(event.pos)[0]] = None
+                                    fruct.kill_fruit()
                     elif flag == 'ice':
                         if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
                                 or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
@@ -1615,8 +1635,10 @@ if __name__ == '__main__':
                                     if fruit_list[event.pos[1] // 68][event.pos[0] // 68]:
                                         for fruit in fruit_sprites:
                                             if possition(event.pos) == possition((fruit.rect.x, fruit.rect.y)):
+                                                board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
                                                 fruit.kill_fruit()
-                                        Ice('ice', 'fruct/banana_in_ice.png',
+                                        Ice('ice',
+                                            f'fruct/{fruit_list[event.pos[1] // 68][event.pos[0] // 68]}_in_ice.png',
                                             event.pos)  # нужно название фрукта вставить
                                         board.board[event.pos[1] // 68][event.pos[0] // 68] = 'ice'
                                     else:
@@ -1626,10 +1648,13 @@ if __name__ == '__main__':
                                     for ice in ice_sprites:
                                         if possition(event.pos) == possition((ice.rect.x, ice.rect.y)) \
                                                 and fruit_list[possition(event.pos)[1]][possition(event.pos)[0]]:
-                                            board.board[event.pos[1] // 68][event.pos[0] // 68] = None
                                             ice.kill_ice()
+                                            board.board[event.pos[1] // 68][event.pos[0] // 68] = None
+
                                             if fruit_list[possition(event.pos)[1]][possition(event.pos)[0]]:
-                                                Fruit('banana', 'fruct/banana.png', event.pos, True)
+                                                Fruit(fruit_list[event.pos[1] // 68][event.pos[0] // 68],
+                                                      f'fruct/{fruit_list[event.pos[1] // 68][event.pos[0] // 68]}.png',
+                                                      event.pos, True, True)
                                         elif possition(event.pos) == possition((ice.rect.x, ice.rect.y)):
                                             board.board[event.pos[1] // 68][event.pos[0] // 68] = None
                                             ice.kill_ice()
@@ -1684,7 +1709,9 @@ if __name__ == '__main__':
                                                                             ice_list[len(ice_list) - dlina_ice_list][
                                                                                 0]):
                         fruct.kill_fruit()
-                        sprite_ice = Ice('ice', 'fruct/banana_in_ice.png',
+                        chtoto = len(ice_list) - dlina_ice_list
+                        sprite_ice = Ice('ice',
+                                         f'fruct/{fruit_list[ice_list[chtoto][0]][ice_list[chtoto][1]]}_in_ice.png',
                                          (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
                                           ice_list[len(ice_list) - dlina_ice_list][0] * 68))
             else:
