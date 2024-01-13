@@ -166,7 +166,7 @@ def start_screen():
     fla = False
     flag_na_click = True
     flaagg = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14\
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14 \
         = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
@@ -1371,8 +1371,9 @@ class IronBlock(pygame.sprite.Sprite):
 
 
 def start_level(level):
-    global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites
+    global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites, score
     global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
+    score = 0
     ice_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
@@ -1400,6 +1401,60 @@ def start_level(level):
                         Fruit(ff[2], 'fruct/banana.png', (ff[0], ff[1]), True, True)
             counts += 1
     return
+
+
+def pause():
+    pygame.font.init()
+    fon = pygame.transform.scale(load_image('pause_fon.jpg'), (68 * 20, 68 * 10 + 80))
+    screen.blit(fon, (0, 0))
+    pauses = pygame.sprite.Group()
+    pausee = load_image("pause.png", colorkeys=(255, 255, 255))
+    paus = pygame.sprite.Sprite(pauses)
+    paus.image = pausee
+    paus.rect = paus.image.get_rect()
+    paus.rect.x = 0
+    paus.rect.y = 0
+    flag_1, flag_2 = True, True
+    while True:
+        pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        for event2 in pygame.event.get():
+            if event2.type == pygame.QUIT:
+                terminate()
+            elif event2.type == pygame.MOUSEMOTION:
+                if 865 > event2.pos[0] > 481 and 179 > event2.pos[1] > 93:
+                    pausee = load_image("pause_next.png", colorkeys=(255, 255, 255))
+                    paus.image = pausee
+                    if flag_1:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_1 = False
+                elif 865 > event2.pos[0] > 481 and 413 > event2.pos[1] > 327:
+                    pausee = load_image("pause_exit.png", colorkeys=(255, 255, 255))
+                    paus.image = pausee
+                    if flag_2:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_2 = False
+                else:
+                    pausee = load_image("pause.png", colorkeys=(255, 255, 255))
+                    paus.image = pausee
+                    flag_1, flag_2 = True, True
+            elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
+                if 865 > event2.pos[0] > 481 and 179 > event2.pos[1] > 93:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    return False
+                elif 865 > event2.pos[0] > 481 and 413 > event2.pos[1] > 327:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    return True
+        pauses.draw(screen)
+        pygame.display.flip()
+        clock.tick(fps)
 
 
 if __name__ == '__main__':
@@ -1471,6 +1526,7 @@ if __name__ == '__main__':
     flaag = True
     _enemy_ = None
     list_click = []
+    flag_na_music = True
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -1515,17 +1571,31 @@ if __name__ == '__main__':
                     pygame.mouse.set_visible(True)
                     cursor.rect.topleft = 1400, 800
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                pygame.mouse.set_visible(True)
-                start_screen()
-                flag = None
+                if flag_redact:
+                    pygame.mouse.set_visible(True)
+                    cursor.rect.topleft = 1400, 800
+                    flag = None
+                    flag_na_music = True
+                    start_screen()
+                else:
+                    pygame.mixer.music.pause()
+                    if pause():
+                        flag_na_music = True
+                        cursor.rect.topleft = 1400, 800
+                        pygame.mouse.set_visible(True)
+                        start_screen()
+                        flag = None
+                    else:
+                        pygame.mixer.music.unpause()
+                        flag_na_music = False
                 if flag_redact:
                     text1 = my_font.render('save', False, pygame.Color('red'))
                     text2 = my_font.render('refresh', False, pygame.Color('red'))
                     text3 = my_font.render('my_level', False, pygame.Color('red'))
                     sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
-                    sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, False)
-                    sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False, False)
-                    sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False, False)
+                    sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, True)
+                    sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False, True)
+                    sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False, True)
                     sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
                     enemy_sprite = Enemy('vrag/front_vrag.png')
                     enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
@@ -1542,19 +1612,20 @@ if __name__ == '__main__':
                     fruit_sprites = pygame.sprite.Group()
                     sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
                     sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False,
-                                          False)
+                                          True)
                     sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False,
-                                          False)
+                                          True)
                     sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False,
-                                         False)
+                                         True)
                     sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
                     enemy_sprite = Enemy('vrag/front_vrag.png')
                     enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
                 else:
                     text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
-                    pygame.mixer.music.load('level_music.mp3')
-                    pygame.mixer.music.play(-1)
-                    pygame.mixer.music.set_volume(volume)
+                    if flag_na_music:
+                        pygame.mixer.music.load('level_music.mp3')
+                        pygame.mixer.music.play(-1)
+                        pygame.mixer.music.set_volume(volume)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_redact:
                     if flag_of_list_click and possition(event.pos)[1] != 10:
