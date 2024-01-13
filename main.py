@@ -53,7 +53,7 @@ def number(volumm):
 
 
 def start_screen():
-    global volume, flag_redact, personalization, LEVEL, volum_effects
+    global volume, flag_redact, personalization, LEVEL, volum_effects, score
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     skin_now = open("volume.txt")
@@ -166,8 +166,8 @@ def start_screen():
     fla = False
     flag_na_click = True
     flaagg = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
-    flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14\
+        = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
     a = open('personalization.txt')
@@ -698,7 +698,7 @@ def game_lose():
 
 
 def game_win():
-    pass
+    print(123)
 
 
 def choose_level(volume_effects, volum):
@@ -1069,7 +1069,7 @@ class Unit(pygame.sprite.Sprite):
                 return move_last
 
     def animation(self, last_move):
-        global score, flag_cherry, flag_limon, text3
+        global score, flag_cherry, flag_limon, text4
         if self.count == 12:
             self.count = 0
         self.count += 1
@@ -1084,7 +1084,9 @@ class Unit(pygame.sprite.Sprite):
                     score += 2
                 elif fruits.name == 'limon':
                     score += 3
-                text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+                if flag_redact:
+                    score = 0
+                text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
             else:
                 fruits.static_animation()
         if [fruits.name for fruits in fruit_sprites].count('banana') == 0 and not flag_cherry:
@@ -1393,9 +1395,9 @@ def start_level(level):
                     enemy_1.set_posittion((ee[0] // cell_size, ee[1] // cell_size))
                     enemy_1.set_route(ee[2])
             elif counts == 4:
-                for f in eval_string:
-                    if f[2] == 'banana':
-                        Fruit(f[2], 'fruct/banana.png', (f[0], f[1]), True, True)
+                for ff in eval_string:
+                    if ff[2] == 'banana':
+                        Fruit(ff[2], 'fruct/banana.png', (ff[0], ff[1]), True, True)
             counts += 1
     return
 
@@ -1461,7 +1463,7 @@ if __name__ == '__main__':
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(volume)
     else:
-        text3 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+        text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
         pygame.mixer.music.load('level_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(volume)
@@ -1517,10 +1519,39 @@ if __name__ == '__main__':
                 start_screen()
                 flag = None
                 if flag_redact:
+                    text1 = my_font.render('save', False, pygame.Color('red'))
+                    text2 = my_font.render('refresh', False, pygame.Color('red'))
+                    text3 = my_font.render('my_level', False, pygame.Color('red'))
+                    sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+                    sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, False)
+                    sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False, False)
+                    sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False, False)
+                    sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
+                    enemy_sprite = Enemy('vrag/front_vrag.png')
+                    enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
+                    pygame.font.init()
                     pygame.mixer.music.load('music_redactor.mp3')
                     pygame.mixer.music.play(-1)
                     pygame.mixer.music.set_volume(volume)
+                    board.board = [[None] * board.width for _ in range(board.height)]
+                    fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
+                    sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
+                    ice_sprites = pygame.sprite.Group()
+                    iron_block_sprites = pygame.sprite.Group()
+                    enemy_sprites = pygame.sprite.Group()
+                    fruit_sprites = pygame.sprite.Group()
+                    sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+                    sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False,
+                                          False)
+                    sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False,
+                                          False)
+                    sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False,
+                                         False)
+                    sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
+                    enemy_sprite = Enemy('vrag/front_vrag.png')
+                    enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
                 else:
+                    text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
                     pygame.mixer.music.load('level_music.mp3')
                     pygame.mixer.music.play(-1)
                     pygame.mixer.music.set_volume(volume)
@@ -1780,7 +1811,7 @@ if __name__ == '__main__':
             screen.blit(text3, (16.7 * cell_size, int(10.8 * cell_size)))
         else:
             screen.blit(surface, rect)
-            screen.blit(text3, (15 * cell_size, 10 * cell_size))
+            screen.blit(text4, (15 * cell_size, 10 * cell_size))
         cursoro.draw(screen)
         clock.tick(fps)
         board.render(screen)
