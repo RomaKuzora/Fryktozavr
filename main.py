@@ -1335,7 +1335,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def go_go_zeppely(self):
         try:
-            if self.index == len(self.route):
+            if self.index == len(self.route) or self.index == -len(self.route):
                 self.index = 0
             xx = self.route[self.index][0] * cell_size - self.rect.x
             yy = self.route[self.index][1] * cell_size - self.rect.y
@@ -1475,7 +1475,7 @@ def start_level(level):
             elif counts == 3:
                 for ee in eval_string:
                     enemy_1 = Enemy('vrag/front_vrag.png')
-                    enemy_1.set_posittion((ee[0] // cell_size, ee[1] // cell_size))
+                    enemy_1.set_posittion((ee[2][0][0], ee[2][0][1]))
                     enemy_1.set_route(ee[2])
             elif counts == 4:
                 for pos_x, pos_y, fructs in eval_string:
