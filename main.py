@@ -1711,77 +1711,96 @@ if __name__ == '__main__':
                         pygame.mixer.music.play(-1)
                         pygame.mixer.music.set_volume(volume)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
-                if flag_redact:
-                    if flag_of_list_click and possition(event.pos)[1] < 10:
-                        try:
-                            if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block']:
-                                list_click.append(possition(event.pos))
-                                board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
-                                if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
-                                        list_click) > 1:
-                                    flag_of_list_click = False
-                                    _enemy_.set_route(list_click)
-                                    list_click = []
-                                    _enemy_ = None
-                                    for y in range(len(board.board)):
-                                        for x in range(len(board.board[y])):
-                                            if board.board[y][x] == 'route':
-                                                board.board[y][x] = None
-                        except Exception:
-                            pass
-                    else:
-                        if possition(event.pos) == (1, 10):
-                            flag = 'banana'
-                        elif possition(event.pos) == (0, 10):
-                            flag = 'ice'
-                        elif possition(event.pos) == (2, 10):
-                            flag = 'cherry'
-                        elif possition(event.pos) == (3, 10):
-                            flag = 'limon'
-                        elif possition(event.pos) == (4, 10):
-                            flag = 'block'
-                        elif possition(event.pos) == (5, 10):
-                            flag = 'enemy'
-                        elif possition(event.pos) == (18, 10):
-                            # level_list.append(
-                            #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
-                            with open(f'level_1.txt', 'w+') as level_file:
-                                hero = (sprite_hero.rect.x, sprite_hero.rect.y)
-                                ice = []
-                                for i in ice_sprites:
-                                    if i != sprite_ice:
-                                        ice.append((i.rect.x, i.rect.y))
-                                block = []
-                                for b in iron_block_sprites:
-                                    if b != sprite_iron_block:
-                                        block.append((b.rect.x, b.rect.y))
-                                enemy = []
-                                for e in enemy_sprites:
-                                    if e != enemy_sprite:
-                                        enemy.append((e.rect.x, e.rect.y, e.route))
-                                fruit = []
-                                for f in fruit_sprites:
-                                    if f != sprite_cherry and f != sprite_banana and f != sprite_limon:
-                                        fruit.append((f.rect.x, f.rect.y, f.name))
-                                level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
-                        elif possition(event.pos) == (19, 10):
-                            board.board = [[None] * board.width for _ in range(board.height)]
-                            fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
-                            sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
-                            ice_sprites = pygame.sprite.Group()
-                            iron_block_sprites = pygame.sprite.Group()
-                            enemy_sprites = pygame.sprite.Group()
-                            fruit_sprites = pygame.sprite.Group()
-                            sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
-                            sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False,
-                                                  False)
-                            sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False,
-                                                  False)
-                            sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False,
-                                                 False)
-                            sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
-                            enemy_sprite = Enemy('vrag/front_vrag.png')
-                            enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
+                if flag_of_list_click and possition(event.pos)[1] < 10:
+                    try:
+                        if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block', 'route']:
+                            if list_click:
+                                move_enemy = (possition(event.pos)[0] - list_click[-1][0]), (
+                                        possition(event.pos)[1] - list_click[-1][1])
+                                if move_enemy in move_map.values():
+                                    list_click.append(possition(event.pos))
+                                    board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                                    if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
+                                            list_click) > 1:
+                                        flag_of_list_click = False
+                                        _enemy_.set_route(list_click)
+                                        list_click = []
+                                        _enemy_ = None
+                                        for y in range(len(board.board)):
+                                            for x in range(len(board.board[y])):
+                                                if board.board[y][x] == 'route':
+                                                    board.board[y][x] = None
+                            else:
+                                move_enemy = (_enemy_.rect.x // cell_size - possition(event.pos)[0],
+                                              _enemy_.rect.y // cell_size - possition(event.pos)[1])
+                                if move_enemy in move_map.values():
+                                    list_click.append(possition(event.pos))
+                                    board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                                    if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
+                                            list_click) > 1:
+                                        flag_of_list_click = False
+                                        _enemy_.set_route(list_click)
+                                        list_click = []
+                                        _enemy_ = None
+                                        for y in range(len(board.board)):
+                                            for x in range(len(board.board[y])):
+                                                if board.board[y][x] == 'route':
+                                                    board.board[y][x] = None
+                    except Exception:
+                        pass
+                else:
+                    if possition(event.pos) == (1, 10):
+                        flag = 'banana'
+                    elif possition(event.pos) == (0, 10):
+                        flag = 'ice'
+                    elif possition(event.pos) == (2, 10):
+                        flag = 'cherry'
+                    elif possition(event.pos) == (3, 10):
+                        flag = 'limon'
+                    elif possition(event.pos) == (4, 10):
+                        flag = 'block'
+                    elif possition(event.pos) == (5, 10):
+                        flag = 'enemy'
+                    elif possition(event.pos) == (18, 10):
+                        # level_list.append(
+                        #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
+                        with open(f'level_1.txt', 'w+') as level_file:
+                            hero = (sprite_hero.rect.x, sprite_hero.rect.y)
+                            ice = []
+                            for i in ice_sprites:
+                                if i != sprite_ice:
+                                    ice.append((i.rect.x, i.rect.y))
+                            block = []
+                            for b in iron_block_sprites:
+                                if b != sprite_iron_block:
+                                    block.append((b.rect.x, b.rect.y))
+                            enemy = []
+                            for e in enemy_sprites:
+                                if e != enemy_sprite:
+                                    enemy.append((e.rect.x, e.rect.y, e.route))
+                            fruit = []
+                            for f in fruit_sprites:
+                                if f != sprite_cherry and f != sprite_banana and f != sprite_limon:
+                                    fruit.append((f.rect.x, f.rect.y, f.name))
+                            level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
+                    elif possition(event.pos) == (19, 10):
+                        board.board = [[None] * board.width for _ in range(board.height)]
+                        fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
+                        sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
+                        ice_sprites = pygame.sprite.Group()
+                        iron_block_sprites = pygame.sprite.Group()
+                        enemy_sprites = pygame.sprite.Group()
+                        fruit_sprites = pygame.sprite.Group()
+                        sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+                        sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False,
+                                              False)
+                        sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False,
+                                              False)
+                        sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False,
+                                             False)
+                        sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
+                        enemy_sprite = Enemy('vrag/front_vrag.png')
+                        enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[2]:
                 if flag_redact:
                     if flag == 'banana' and possition(event.pos)[1] != 10 \
