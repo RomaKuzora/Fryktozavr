@@ -1712,7 +1712,7 @@ if __name__ == '__main__':
                         pygame.mixer.music.set_volume(volume)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_redact:
-                    if flag_of_list_click and possition(event.pos)[1] != 10:
+                    if flag_of_list_click and possition(event.pos)[1] < 10:
                         try:
                             if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block']:
                                 list_click.append(possition(event.pos))
