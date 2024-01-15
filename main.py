@@ -694,7 +694,48 @@ def start_screen():
 
 
 def game_lose():
-    pass
+    pygame.font.init()
+    fon = pygame.transform.scale(load_image('start_windiws/lose.png'), (68 * 20, 68 * 10 + 80))
+    screen.blit(fon, (0, 0))
+    flag_1, flag_2 = True, True
+    while True:
+        pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        for event2 in pygame.event.get():
+            if event2.type == pygame.QUIT:
+                terminate()
+            elif event2.type == pygame.MOUSEMOTION:
+                if 996 > event2.pos[0] > 382 and 328 > event2.pos[1] > 180:
+                    fon = pygame.transform.scale(load_image('start_windiws/lose_repeat.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_1:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_1 = False
+                elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
+                    fon = pygame.transform.scale(load_image('start_windiws/lose_exit.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_2:
+                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sound.set_volume(volum_effects)
+                        sound.play()
+                    flag_2 = False
+                else:
+                    fon = pygame.transform.scale(load_image('start_windiws/lose.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    flag_1, flag_2, flag_3 = True, True, True
+            elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
+                if 996 > event2.pos[0] > 382 and 328 > event2.pos[1] > 180:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
+                    sound = pygame.mixer.Sound('zvuk_click.mp3')
+                    sound.set_volume(volum_effects)
+                    sound.play()
+                    return True
+        pygame.display.flip()
+        clock.tick(fps)
 
 
 def game_win():
@@ -750,6 +791,7 @@ def game_win():
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
+                    return True
         pygame.display.flip()
         clock.tick(fps)
 
@@ -1585,6 +1627,9 @@ if __name__ == '__main__':
     cursor = pygame.sprite.Sprite(cursoro)
     cursor.image = cursor_image
     cursor.rect = cursor.image.get_rect()
+    text1 = str()
+    text2 = str()
+    text3 = str()
     my_font = pygame.font.SysFont('Throne and Libert', 30)
     if flag_redact:
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
@@ -1611,6 +1656,7 @@ if __name__ == '__main__':
     _enemy_ = None
     list_click = []
     flag_na_music = True
+    flag_na_vihod = False
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -1976,7 +2022,52 @@ if __name__ == '__main__':
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
                     pygame.mixer.music.stop()
-                    game_lose()
+                    flag_na_vihod = game_lose()
+        if flag_na_vihod:
+            pygame.mouse.set_visible(True)
+            cursor.rect.topleft = 1400, 800
+            flag = None
+            flag_na_music = True
+            start_screen()
+            flag_na_vihod = False
+            if flag_redact:
+                text1 = my_font.render('save', False, pygame.Color('red'))
+                text2 = my_font.render('refresh', False, pygame.Color('red'))
+                text3 = my_font.render('my_level', False, pygame.Color('red'))
+                sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+                sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, True)
+                sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False, True)
+                sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False, True)
+                sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
+                enemy_sprite = Enemy('vrag/front_vrag.png')
+                enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
+                pygame.font.init()
+                pygame.mixer.music.load('music_redactor.mp3')
+                pygame.mixer.music.play(-1)
+                pygame.mixer.music.set_volume(volume)
+                board.board = [[None] * board.width for _ in range(board.height)]
+                fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
+                sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
+                ice_sprites = pygame.sprite.Group()
+                iron_block_sprites = pygame.sprite.Group()
+                enemy_sprites = pygame.sprite.Group()
+                fruit_sprites = pygame.sprite.Group()
+                sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
+                sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False,
+                                      True)
+                sprite_cherry = Fruit('cherry', 'fruct/cherry.png', (cell_size * 2, cell_size * 10), False,
+                                      True)
+                sprite_limon = Fruit('limon', 'fruct/limon.png', (cell_size * 3, cell_size * 10), False,
+                                     True)
+                sprite_iron_block = IronBlock('block/block.png', (cell_size * 4, cell_size * 10))
+                enemy_sprite = Enemy('vrag/front_vrag.png')
+                enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
+            else:
+                text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+                if flag_na_music:
+                    pygame.mixer.music.load('level_music.mp3')
+                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.set_volume(volume)
         screen.fill((255, 255, 255))
         if flag_redact:
             enemy_sprite.animation((0, 1), go=False)
