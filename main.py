@@ -1714,17 +1714,19 @@ if __name__ == '__main__':
                 if flag_redact:
                     if flag_of_list_click and possition(event.pos)[1] != 10:
                         try:
-                            list_click.append(possition(event.pos))
-                            board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
-                            if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)):
-                                flag_of_list_click = False
-                                _enemy_.set_route(list_click)
-                                list_click = []
-                                _enemy_ = None
-                                for y in range(len(board.board)):
-                                    for x in range(len(board.board[y])):
-                                        if board.board[y][x] == 'route':
-                                            board.board[y][x] = None
+                            if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block']:
+                                list_click.append(possition(event.pos))
+                                board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                                if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
+                                        list_click) > 1:
+                                    flag_of_list_click = False
+                                    _enemy_.set_route(list_click)
+                                    list_click = []
+                                    _enemy_ = None
+                                    for y in range(len(board.board)):
+                                        for x in range(len(board.board[y])):
+                                            if board.board[y][x] == 'route':
+                                                board.board[y][x] = None
                         except Exception:
                             pass
                     else:
