@@ -709,7 +709,8 @@ def game_win():
                 terminate()
             elif event2.type == pygame.MOUSEMOTION:
                 if 986 > event2.pos[0] > 373 and 194 > event2.pos[1] > 46:
-                    fon = pygame.transform.scale(load_image('start_windiws/menu_prodolsit.png'), (68 * 20, 68 * 10 + 80))
+                    fon = pygame.transform.scale(load_image('start_windiws/menu_prodolsit.png'),
+                                                 (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_1:
                         sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
@@ -1142,27 +1143,56 @@ class Unit(pygame.sprite.Sprite):
             else:
                 fruits.static_animation()
         if [fruits.name for fruits in fruit_sprites].count('banana') == 0 and not flag_cherry:
-            with open(LEVEL, 'r') as level_files:
-                counts = 0
-                for string in level_files:
-                    if counts == 4:
-                        eval_string = eval(string)
-                        for fff in eval_string:
-                            if fff[2] == 'cherry':
-                                Fruit(fff[2], 'fruct/cherry.png', (fff[0], fff[1]), True, True)
-                    counts += 1
+            flag_fruit = False
+            if not flag_fruit:
+                for fruits in fruit_list:
+                    if flag_fruit:
+                        break
+                    for item in fruits:
+                        if item:
+                            flag_fruit = True
+                            break
+                        else:
+                            flag_fruit = False
+
+            if not flag_fruit:
+                with open(LEVEL, 'r') as level_files:
+                    counts = 0
+                    for string in level_files:
+                        if counts == 4:
+                            eval_string = eval(string)
+                            for pos_x, pos_y, fructs in eval_string:
+                                if fructs == 'cherry':
+                                    Fruit(fructs, 'fruct/cherry.png', (pos_x, pos_y), True, True)
+                                    fruit_list[pos_y // 68][pos_x // 68] = fructs
+                        counts += 1
                 flag_cherry = True
-        elif [fruits.name for fruits in fruit_sprites].count('cherry') == 0 and flag_cherry and not flag_limon:
-            with open(LEVEL, 'r') as level_files:
-                counts = 0
-                for string in level_files:
-                    if counts == 4:
-                        eval_string = eval(string)
-                        for fff in eval_string:
-                            if fff[2] == 'limon':
-                                Fruit(fff[2], 'fruct/limon.png', (fff[0], fff[1]), True, True)
-                    counts += 1
-                flag_limon = True
+        elif [fruits.name for fruits in fruit_sprites].count('cherry') == 0 and flag_cherry \
+                and not flag_limon:
+            flag_fruit = False
+            if not flag_fruit:
+                for fruits in fruit_list:
+                    if flag_fruit:
+                        break
+                    for item in fruits:
+                        if item:
+                            flag_fruit = True
+                            break
+                        else:
+                            flag_fruit = False
+
+            if not flag_fruit:
+                with open(LEVEL, 'r') as level_files:
+                    counts = 0
+                    for string in level_files:
+                        if counts == 4:
+                            eval_string = eval(string)
+                            for pos_x, pos_y, fructs in eval_string:
+                                if fructs == 'limon':
+                                    Fruit(fructs, 'fruct/limon.png', (pos_x, pos_y), True, True)
+                                    fruit_list[pos_y // 68][pos_x // 68] = fructs
+                        counts += 1
+                    flag_limon = True
         last_pos = self.rect.x, self.rect.y
         flag1, flag2 = True, True
         speeda = speed
@@ -1423,7 +1453,7 @@ class IronBlock(pygame.sprite.Sprite):
 
 
 def start_level(level):
-    global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites, score
+    global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites, score, fruit_list
     global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
     score = 0
     ice_sprites = pygame.sprite.Group()
@@ -1448,9 +1478,10 @@ def start_level(level):
                     enemy_1.set_posittion((ee[0] // cell_size, ee[1] // cell_size))
                     enemy_1.set_route(ee[2])
             elif counts == 4:
-                for ff in eval_string:
-                    if ff[2] == 'banana':
-                        Fruit(ff[2], 'fruct/banana.png', (ff[0], ff[1]), True, True)
+                for pos_x, pos_y, fructs in eval_string:
+                    if fructs == 'banana':
+                        Fruit(fructs, 'fruct/banana.png', (pos_x, pos_y), True, True)
+                        fruit_list[pos_y // 68][pos_x // 68] = fructs
             counts += 1
     return
 
@@ -1533,13 +1564,14 @@ if __name__ == '__main__':
     surface = load_image('pole.png')
     rect = surface.get_rect(center=(wight // 2, height // 2))
 
+    fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
+
     fps = 60
     v = 120
     speed = v // fps
     personalization = 'default_dino'
     start_screen()
 
-    fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
     smotrit = (1, 0)
     smotrit_y = (1, 0)
     smotrit_x = (1, 0)
