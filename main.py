@@ -1,6 +1,7 @@
 import sys
 import os
 import pygame
+import moviepy.editor
 
 flag_redact = False
 score = 0
@@ -55,8 +56,6 @@ def number(volumm):
 
 def start_screen():
     global volume, flag_redact, personalization, LEVEL, volum_effects, score
-    fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
-    screen.blit(fon, (0, 0))
     skin_now = open("volume.txt")
     volum = 0.5
     volum_effects = 0
@@ -66,6 +65,13 @@ def start_screen():
         volume = float(ii[1])
         volum_effects = float(ii[2])
     skin_now.close()
+    aaaa = 0
+    if aaaa == 1:
+        video = moviepy.editor.VideoFileClip("tizer.mp4")
+        vidos = video.volumex(volum)
+        vidos.preview()
+    fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
+    screen.blit(fon, (0, 0))
     pygame.mixer.music.load('Start_menu_music.mp3')
     pygame.mixer.music.play(-1)
     pygame.mixer.music.set_volume(volum)
@@ -1816,7 +1822,7 @@ if __name__ == '__main__':
                     elif possition(event.pos) == (18, 10):
                         # level_list.append(
                         #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
-                        with open(f'level_1.txt', 'w+') as level_file:
+                        with open(f'level_5.txt', 'w+') as level_file:
                             hero = (sprite_hero.rect.x, sprite_hero.rect.y)
                             ice = []
                             for i in ice_sprites:
