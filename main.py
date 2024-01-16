@@ -7,6 +7,7 @@ score = 0
 LEVEL = None
 flag_cherry = False
 flag_limon = False
+SCORE_FOR_WIN = 0
 
 
 def terminate():
@@ -1497,6 +1498,7 @@ class IronBlock(pygame.sprite.Sprite):
 def start_level(level):
     global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites, score, fruit_list
     global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
+    global SCORE_FOR_WIN
     score = 0
     ice_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
@@ -1524,7 +1526,10 @@ def start_level(level):
                     if fructs == 'banana':
                         Fruit(fructs, 'fruct/banana.png', (pos_x, pos_y), True, True)
                         fruit_list[pos_y // 68][pos_x // 68] = fructs
+            elif counts == 5:
+                SCORE_FOR_WIN = eval_string
             counts += 1
+
     return
 
 
@@ -1759,7 +1764,8 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_of_list_click and possition(event.pos)[1] < 10:
                     try:
-                        if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block', 'route']:
+                        if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block',
+                                                                                                 'route']:
                             if list_click:
                                 move_enemy = (possition(event.pos)[0] - list_click[-1][0]), (
                                         possition(event.pos)[1] - list_click[-1][1])
@@ -1828,7 +1834,15 @@ if __name__ == '__main__':
                             for f in fruit_sprites:
                                 if f != sprite_cherry and f != sprite_banana and f != sprite_limon:
                                     fruit.append((f.rect.x, f.rect.y, f.name))
-                            level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}')
+                            score_for_win = 0
+                            for x in fruit_sprites:
+                                if x.name == 'banana' and x != sprite_banana:
+                                    score_for_win += 1
+                                elif x.name == 'cherry' and x != sprite_cherry:
+                                    score_for_win += 2
+                                elif x.name == 'limon' and x != sprite_limon:
+                                    score_for_win += 3
+                            level_file.write(f'{hero}\n{ice}\n{block}\n{enemy}\n{fruit}\n{score_for_win}')
                     elif possition(event.pos) == (19, 10):
                         board.board = [[None] * board.width for _ in range(board.height)]
                         fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
@@ -2023,6 +2037,9 @@ if __name__ == '__main__':
                 if enemy.rect.colliderect(sprite_hero):
                     pygame.mixer.music.stop()
                     flag_na_vihod = game_lose()
+        if not flag_redact:
+            if score == SCORE_FOR_WIN:
+                game_win()
         if flag_na_vihod:
             pygame.mouse.set_visible(True)
             cursor.rect.topleft = 1400, 800
