@@ -734,7 +734,7 @@ def game_lose():
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    return True
+                    return 'exit'
         pygame.display.flip()
         clock.tick(fps)
 
@@ -792,7 +792,7 @@ def game_win():
                     sound = pygame.mixer.Sound('zvuk_click.mp3')
                     sound.set_volume(volum_effects)
                     sound.play()
-                    return True
+                    return 'exit'
         pygame.display.flip()
         clock.tick(fps)
 
@@ -2036,10 +2036,14 @@ if __name__ == '__main__':
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
                     pygame.mixer.music.stop()
-                    flag_na_vihod = game_lose()
+                    a = game_lose()
+                    if a == 'exit':
+                        flag_na_vihod = True
         if not flag_redact:
             if score == SCORE_FOR_WIN:
-                game_win()
+                a = game_win()
+                if a == 'exit':
+                    flag_na_vihod = True
         if flag_na_vihod:
             pygame.mouse.set_visible(True)
             cursor.rect.topleft = 1400, 800
