@@ -701,6 +701,8 @@ def start_screen():
 
 
 def game_lose():
+    board.board = [[None] * board.width for _ in range(board.height)]
+    sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
     pygame.font.init()
     fon = pygame.transform.scale(load_image('start_windiws/lose.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
@@ -1974,6 +1976,7 @@ if __name__ == '__main__':
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
             if fruit_list[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]]:
+
                 for fruct in fruit_sprites:
                     if fruit_list[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list)
                                                                                         - dlina_ice_list][1]] \
@@ -1987,15 +1990,56 @@ if __name__ == '__main__':
                                          f'fruct/{fruit_list[ice_list[chtoto][0]][ice_list[chtoto][1]]}_in_ice.png',
                                          (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
                                           ice_list[len(ice_list) - dlina_ice_list][0] * 68))
+                        for enemy in enemy_sprites:
+                            for ices in ice_sprites:
+                                try:
+                                    if possition((ices.rect.x, ices.rect.y)) == (
+                                            ice_list[len(ice_list)
+                                                     - dlina_ice_list][1],
+                                            ice_list[
+                                                len(ice_list) - dlina_ice_list][
+                                                0]) and enemy.rect.colliderect(ices):
+                                        ices.kill_ice()
+                                        board.board[ice_list[len(ice_list) - dlina_ice_list][0]][
+                                            ice_list[len(ice_list) - dlina_ice_list][1]] \
+                                            = None
+                                        Fruit(fructs,
+                                              f'fruct/{fruit_list[ice_list[chtoto][0]][ice_list[chtoto][1]]}.png',
+                                              (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
+                                               ice_list[len(ice_list) - dlina_ice_list][0] * 68), True, True)
+                                        break
+                                except IndexError:
+                                    pass
+
             else:
-                sprite_ice = Ice('ice', 'ice/ice.png', (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
-                                                        ice_list[len(ice_list) - dlina_ice_list][0] * 68))
+                sprite_ice = Ice('ice', 'ice/ice.png',
+                                 (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
+                                  ice_list[len(ice_list) - dlina_ice_list][0] * 68))
+                for enemy in enemy_sprites:
+                    for ices in ice_sprites:
+                        try:
+                            if possition((ices.rect.x, ices.rect.y)) == (
+                                    ice_list[len(ice_list)
+                                             - dlina_ice_list][1],
+                                    ice_list[
+                                        len(ice_list) - dlina_ice_list][
+                                        0]) and enemy.rect.colliderect(ices):
+                                ices.kill_ice()
+                                board.board[ice_list[len(ice_list) - dlina_ice_list][0]][
+                                    ice_list[len(ice_list) - dlina_ice_list][1]] \
+                                    = None
+                                count = dlina_ice_list = 0
+                                break
+                        except IndexError:
+                            pass
+
             for ice in ice_sprites:
                 if sprite_ice.rect.colliderect(ice) and sprite_ice is not ice:  # столкновение льда
                     dlina_ice_list = 1
                     break
-            dlina_ice_list -= 1
-        if count != 0:
+            if dlina_ice_list != 0:
+                dlina_ice_list -= 1
+        if count != 0:  # надо што-то сделать
             move = None
             sprite_hero.spawn_ice_dino(smotrit)
             speed = 0
