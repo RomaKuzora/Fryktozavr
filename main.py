@@ -54,22 +54,65 @@ def number(volumm):
     return num1, num2
 
 
+def skip_video(volumess_effects, volum_skip):
+    pygame.font.init()
+    fon = pygame.transform.scale(load_image('start_windiws/skip.png'), (68 * 20, 68 * 10 + 80))
+    screen.blit(fon, (0, 0))
+    flag_1, flag_2 = True, True
+    pygame.mixer.music.load('skip_menu_music.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(volum_skip)
+    while True:
+        pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
+        for event2 in pygame.event.get():
+            if event2.type == pygame.QUIT:
+                terminate()
+            elif event2.type == pygame.MOUSEMOTION:
+                if 1050 < event2.pos[0] < 1348 and 559 < event2.pos[1] < 640:
+                    fon = pygame.transform.scale(load_image('start_windiws/skip_next.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_1:
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volumess_effects)
+                        sounds.play()
+                    flag_1 = False
+                elif 1050 < event2.pos[0] < 1348 and 664 < event2.pos[1] < 744:
+                    fon = pygame.transform.scale(load_image('start_windiws/skip_more.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    if flag_2:
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volumess_effects)
+                        sounds.play()
+                    flag_2 = False
+                else:
+                    fon = pygame.transform.scale(load_image('start_windiws/skip.png'), (68 * 20, 68 * 10 + 80))
+                    screen.blit(fon, (0, 0))
+                    flag_1, flag_2, flag_3 = True, True, True
+            elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
+                if 1050 < event2.pos[0] < 1348 and 559 < event2.pos[1] < 640:
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volumess_effects)
+                    sounds.play()
+                    skip_txt = open('skip.txt', 'w')
+                    skip_txt.write("1")
+                    skip_txt.close()
+                    pygame.mixer.music.stop()
+                    return
+                elif 1050 < event2.pos[0] < 1348 and 664 < event2.pos[1] < 744:
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volumess_effects)
+                    sounds.play()
+                    skip_txt = open('skip.txt', 'w')
+                    skip_txt.write("0")
+                    skip_txt.close()
+                    pygame.mixer.music.stop()
+                    return
+        pygame.display.flip()
+        clock.tick(fps)
+
+
 def start_screen():
-    global volume, flag_redact, personalization, LEVEL, volum_effects, score
-    skin_now = open("volume.txt")
-    volum = 0.5
-    volum_effects = 0
-    for ii in skin_now:
-        ii = ii.split(';')
-        volum = float(ii[0])
-        volume = float(ii[1])
-        volum_effects = float(ii[2])
-    skin_now.close()
-    aaaa = 0
-    if aaaa == 1:
-        video = moviepy.editor.VideoFileClip("tizer.mp4")
-        vidos = video.volumex(volum)
-        vidos.preview()
+    global volume, flag_redact, personalization, LEVEL, volum_effects, score, volum
     fon = pygame.transform.scale(load_image('start_windiws/start_okno.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     pygame.mixer.music.load('Start_menu_music.mp3')
@@ -173,12 +216,12 @@ def start_screen():
     fla = False
     flag_na_click = True
     flaagg = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14 \
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14\
         = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
-    a = open('personalization.txt')
-    skin_now = a.read()
+    person = open('personalization.txt')
+    skin_now = person.read()
     ff = 0
     dd = 0
     if skin_now == 'default_dino':
@@ -199,7 +242,7 @@ def start_screen():
                 dd = dinos_list[len_dino - 1]
             except IndexError:
                 dd = dinos_list[-1]
-    a.close()
+    person.close()
     dino = pygame.sprite.Sprite(all_sett)
     dino.image = din
     dino.rect = dino.image.get_rect()
@@ -300,57 +343,57 @@ def start_screen():
                             setting = load_image("start_windiws/settings_close.png", colorkeys=(255, 255, 255))
                             settings.image = setting
                             if flag_5:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_5 = False
                         elif 550 > event1.pos[0] > 495 and 260 > event1.pos[1] > 240:
                             minus1 = load_image("start_windiws/minus_pick.png", colorkeys=(255, 255, 255))
                             minus_1.image = minus1
                             if flag_6:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_6 = False
                         elif 850 > event1.pos[0] > 800 and 270 > event1.pos[1] > 215:
                             plus1 = load_image("start_windiws/plus_pick.png", colorkeys=(255, 255, 255))
                             plus_1.image = plus1
                             if flag_7:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_7 = False
                         elif 550 > event1.pos[0] > 495 and 370 > event1.pos[1] > 355:
                             minus2 = load_image("start_windiws/minus_pick.png", colorkeys=(255, 255, 255))
                             minus_2.image = minus2
                             if flag_8:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_8 = False
                         elif 850 > event1.pos[0] > 800 and 390 > event1.pos[1] > 335:
                             plus2 = load_image("start_windiws/plus_pick.png", colorkeys=(255, 255, 255))
                             plus_2.image = plus2
                             if flag_9:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_9 = False
                         elif 550 > event1.pos[0] > 495 and 490 > event1.pos[1] > 475:
                             minus3 = load_image("start_windiws/minus_pick.png", colorkeys=(255, 255, 255))
                             minus_3.image = minus3
                             if flag_10:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_10 = False
                         elif 850 > event1.pos[0] > 800 and 510 > event1.pos[1] > 455:
                             plus3 = load_image("start_windiws/plus_pick.png", colorkeys=(255, 255, 255))
                             plus_3.image = plus3
                             if flag_11:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_11 = False
                         else:
                             minus1 = load_image("start_windiws/minus.png", colorkeys=(255, 255, 255))
@@ -372,55 +415,55 @@ def start_screen():
                     if event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1030 > event1.pos[0] > 980 and 150 > \
                             event1.pos[1] > 100:
                         flaa = False
-                        sound = pygame.mixer.Sound('zvuk_settings_close.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_settings_close.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         break
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 550 > event1.pos[0] > 495 \
                             and 260 > event1.pos[1] > 240:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         if volum > 0:
                             volum -= 0.1
                             volum = round(volum, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
                             and 270 > event1.pos[1] > 215:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         if volum < 1:
                             volum += 0.1
                             volum = round(volum, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 550 > event1.pos[0] > 495 \
                             and 370 > event1.pos[1] > 355:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         if volume > 0:
                             volume -= 0.1
                             volume = round(volume, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
                             and 390 > event1.pos[1] > 335:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         if volume < 1:
                             volume += 0.1
                             volume = round(volume, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 550 > event1.pos[0] > 495 \
                             and 490 > event1.pos[1] > 475:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         if volum_effects > 0:
                             volum_effects -= 0.1
                             volum_effects = round(volum_effects, 1)
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 850 > event1.pos[0] > 800 \
                             and 510 > event1.pos[1] > 455:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         if volum_effects < 1:
                             volum_effects += 0.1
                             volum_effects = round(volum_effects, 1)
@@ -445,25 +488,25 @@ def start_screen():
                             personal = load_image("personal/personal_close.png", colorkeys=(255, 255, 255))
                             perso.image = personal
                             if flag_12:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_12 = False
                         elif 525 > event1.pos[0] > 475 and 340 > event1.pos[1] > 240:
                             lef = load_image("personal/left_pick.png", colorkeys=(255, 255, 255))
                             left.image = lef
                             if flag_13:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_13 = False
                         elif 930 > event1.pos[0] > 880 and 340 > event1.pos[1] > 240:
                             rig = load_image("personal/right_pick.png", colorkeys=(255, 255, 255))
                             right.image = rig
                             if flag_14:
-                                sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                                sound.set_volume(volum_effects)
-                                sound.play()
+                                sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                                sounds.set_volume(volum_effects)
+                                sounds.play()
                                 flag_14 = False
                         else:
                             flag_12, flag_13, flag_14 = True, True, True
@@ -475,9 +518,9 @@ def start_screen():
                             perso.image = personal
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 1055 > event1.pos[0] > 1005 \
                             and 150 > event1.pos[1] > 100:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         perso.rect.y = - 750
                         left.rect.y = -410
                         right.rect.y = -410
@@ -487,26 +530,27 @@ def start_screen():
                         dino3.rect.x = -40
                         dino3.rect.y -= 1020
                         fla = False
-                        a = open('personalization.txt')
-                        personalization = a.read()
+                        personnn = open('personalization.txt')
+                        personalization = personnn.read()
+                        personnn.close()
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 525 > event1.pos[0] > 475 \
                             and 340 > event1.pos[1] > 240 and flag_na_click:
                         flag_na_click = False
                         dino2.rect.x = 820
                         dino2.rect.y = 230
                         flaaag = True
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0] and 930 > event1.pos[0] > 880 \
                             and 340 > event1.pos[1] > 240 and flag_na_click:
                         dino3.rect.x = 420
                         dino3.rect.y = 230
                         flaagg = True
                         flag_na_click = False
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                 if flaaag and dino2.rect.x != 620:
                     dino.rect.x -= 20
                     dino2.rect.x -= 20
@@ -519,14 +563,14 @@ def start_screen():
                     dino2.rect.y -= 1020
                     dino3.rect.x = -40
                     dino3.rect.y -= 1020
-                    a = open('personalization.txt', 'w')
+                    person = open('personalization.txt', 'w')
                     if flaaag:
-                        a.write(ff)
+                        person.write(ff)
                     elif flaagg:
-                        a.write(dd)
-                    a.close()
-                    a = open('personalization.txt')
-                    skin_now = a.read()
+                        person.write(dd)
+                    person.close()
+                    personn = open('personalization.txt')
+                    skin_now = personn.read()
                     ff = 0
                     flag_na_click = True
                     pasg2 = load_image("personal/dinod.png", colorkeys=(255, 255, 255))
@@ -553,7 +597,7 @@ def start_screen():
                                 dd = dinos_list[ii - 1]
                             except IndexError:
                                 dd = dinos_list[-1]
-                    a.close()
+                    personn.close()
                     din2 = load_image("personal/dinop.png", colorkeys=(255, 255, 255))
                     if ff == 'default_dino':
                         din2 = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
@@ -604,17 +648,17 @@ def start_screen():
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_play.png'),
                                                      (68 * 20, 68 * 10 + 80))
                         if flag_1:
-                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                            sound.set_volume(volum_effects)
-                            sound.play()
+                            sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sounds.set_volume(volum_effects)
+                            sounds.play()
                         flag_1, flag_2, flag_3, flag_4 = False, True, True, True
                         screen.blit(fon, (0, 0))
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
                         count_pashalka = 0
                         if flag_2:
-                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                            sound.set_volume(volum_effects)
-                            sound.play()
+                            sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sounds.set_volume(volum_effects)
+                            sounds.play()
                         flag_1, flag_2, flag_3, flag_4 = True, False, True, True
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_redactor.png'),
                                                      (68 * 20, 68 * 10 + 80))
@@ -622,9 +666,9 @@ def start_screen():
                     elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400 and count_pashalka != 10:
                         count_pashalka = 0
                         if flag_3:
-                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                            sound.set_volume(volum_effects)
-                            sound.play()
+                            sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sounds.set_volume(volum_effects)
+                            sounds.play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, False, True
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_person.png'),
                                                      (68 * 20, 68 * 10 + 80))
@@ -632,9 +676,9 @@ def start_screen():
                     elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441 and count_pashalka != 10:
                         count_pashalka = 0
                         if flag_4:
-                            sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                            sound.set_volume(volum_effects)
-                            sound.play()
+                            sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                            sounds.set_volume(volum_effects)
+                            sounds.play()
                         flag_1, flag_2, flag_3, flag_4 = True, True, True, False
                         fon = pygame.transform.scale(load_image('start_windiws/start_okno_setting.png'),
                                                      (68 * 20, 68 * 10 + 80))
@@ -648,39 +692,39 @@ def start_screen():
                         count_pashalka = 0
                 elif event1.type == pygame.MOUSEBUTTONDOWN and pressed1[0]:
                     if 519 < event1.pos[0] < 838 and 126 < event1.pos[1] < 217 and count_pashalka != 10:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         pygame.mixer.music.stop()
-                        a = open('personalization.txt')
-                        personalization = a.read()
-                        a.close()
+                        persom = open('personalization.txt')
+                        personalization = persom.read()
+                        persom.close()
                         flag_redact = False
                         level = choose_level(volum_effects, volum)
                         LEVEL = level
                         start_level(level)
                         return
                     elif 470 < event1.pos[0] < 894 and 236 < event1.pos[1] < 323 and count_pashalka != 10:
-                        sound = pygame.mixer.Sound('zvuk_click.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
-                        a = open('personalization.txt')
-                        personalization = a.read()
-                        a.close()
+                        sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
+                        per = open('personalization.txt')
+                        personalization = per.read()
+                        per.close()
                         pygame.mixer.music.stop()
                         flag_redact = True
                         return  # начинаем игру
                     elif 449 < event1.pos[0] < 938 and 342 < event1.pos[1] < 400 and count_pashalka != 10:
-                        sound = pygame.mixer.Sound('zvuk_settings.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_settings.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                         fla = True
                     elif 981 < event1.pos[0] < 1036 and 386 < event1.pos[1] < 441 \
                             and flaa is False and count_pashalka != 10:
                         if flaa is False:
-                            sound = pygame.mixer.Sound('zvuk_settings.mp3')
-                            sound.set_volume(volum_effects)
-                            sound.play()
+                            sounds = pygame.mixer.Sound('zvuk_settings.mp3')
+                            sounds.set_volume(volum_effects)
+                            sounds.play()
                             flaa = True
                     elif 500 < event1.pos[0] < 864 and 30 < event1.pos[1] < 90 and count_pashalka != 10:
                         count_pashalka += 1
@@ -717,17 +761,17 @@ def game_lose():
                     fon = pygame.transform.scale(load_image('start_windiws/lose_repeat.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_1:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_1 = False
                 elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
                     fon = pygame.transform.scale(load_image('start_windiws/lose_exit.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_2:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_2 = False
                 else:
                     fon = pygame.transform.scale(load_image('start_windiws/lose.png'), (68 * 20, 68 * 10 + 80))
@@ -735,13 +779,13 @@ def game_lose():
                     flag_1, flag_2, flag_3 = True, True, True
             elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
                 if 996 > event2.pos[0] > 382 and 328 > event2.pos[1] > 180:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                 elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                     return 'exit'
         pygame.display.flip()
         clock.tick(fps)
@@ -763,25 +807,25 @@ def game_win():
                                                  (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_1:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_1 = False
                 elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
                     fon = pygame.transform.scale(load_image('start_windiws/menu_repeat.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_2:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_2 = False
                 elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
                     fon = pygame.transform.scale(load_image('start_windiws/menu_exit.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_3:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_3 = False
                 else:
                     fon = pygame.transform.scale(load_image('start_windiws/menu.png'), (68 * 20, 68 * 10 + 80))
@@ -789,17 +833,17 @@ def game_win():
                     flag_1, flag_2, flag_3 = True, True, True
             elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
                 if 986 > event2.pos[0] > 373 and 194 > event2.pos[1] > 46:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                 elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                 elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                     return 'exit'
         pygame.display.flip()
         clock.tick(fps)
@@ -824,81 +868,81 @@ def choose_level(volume_effects, volum):
                     fon = pygame.transform.scale(load_image('start_windiws/level1.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_1:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_1 = False
                 elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
                     fon = pygame.transform.scale(load_image('start_windiws/level2.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_2:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_2 = False
                 elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
                     fon = pygame.transform.scale(load_image('start_windiws/level3.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_3:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_3 = False
                 elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
                     fon = pygame.transform.scale(load_image('start_windiws/level4.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_4:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_4 = False
                 elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
                     fon = pygame.transform.scale(load_image('start_windiws/level5.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_5:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_5 = False
                 elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
                     fon = pygame.transform.scale(load_image('start_windiws/level6.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_6:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_6 = False
                 elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
                     fon = pygame.transform.scale(load_image('start_windiws/level7.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_7:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_7 = False
                 elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
                     fon = pygame.transform.scale(load_image('start_windiws/level8.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_8:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_8 = False
                 elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
                     fon = pygame.transform.scale(load_image('start_windiws/level9.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_9:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_9 = False
                 elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
                     fon = pygame.transform.scale(load_image('start_windiws/level10.png'), (68 * 20, 68 * 10 + 80))
                     screen.blit(fon, (0, 0))
                     if flag_10:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volume_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volume_effects)
+                        sounds.play()
                         flag_10 = False
                 else:
                     fon = pygame.transform.scale(load_image('start_windiws/level.png'), (68 * 20, 68 * 10 + 80))
@@ -907,54 +951,54 @@ def choose_level(volume_effects, volum):
                         = True, True, True, True, True, True, True, True, True, True
             elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
                 if 272 > event2.pos[0] > 113 and 290 > event2.pos[1] > 113:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_1.txt'
                 elif 360 < event2.pos[0] < 528 and 290 > event2.pos[1] > 113:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_2.txt'
                 elif 600 < event2.pos[0] < 768 and 290 > event2.pos[1] > 113:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_3.txt'
                 elif 840 < event2.pos[0] < 1008 and 290 > event2.pos[1] > 113:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_4.txt'
                 elif 1080 < event2.pos[0] < 1248 and 290 > event2.pos[1] > 113:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_5.txt'
                 elif 120 < event2.pos[0] < 288 and 450 < event2.pos[1] < 618:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_6.txt'
                 elif 360 < event2.pos[0] < 528 and 450 < event2.pos[1] < 618:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_7.txt'
                 elif 600 < event2.pos[0] < 768 and 450 < event2.pos[1] < 618:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_8.txt'
                 elif 840 < event2.pos[0] < 1008 and 450 < event2.pos[1] < 618:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_9.txt'
                 elif 1080 < event2.pos[0] < 1248 and 450 < event2.pos[1] < 618:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volume_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volume_effects)
+                    sounds.play()
                     return 'level_10.txt'
             elif event2.type == pygame.KEYDOWN and event2.key == pygame.K_ESCAPE:
                 start_screen()
@@ -985,21 +1029,21 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 ice_list.append((yy, ii))  # запоминаем на каих координатах ставим  лёд
             elif board.board[yy][ii] == 'ice' and break_ice_flag or \
                     board.board[yy][ii - 1] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][ii]:
+                for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[yy][ii]:
                         board.board[yy][ii] = None
-                        ices.kill_ice()
-                    if (ii - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][ii - 1]:
+                        icess.kill_ice()
+                    if (ii - 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[yy][ii - 1]:
                         board.board[yy][ii - 1] = None
-                        ices.kill_ice()
-                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][ii]:
+                        icess.kill_ice()
+                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and fruit_list[yy][ii]:
                         board.board[yy][ii] = None
-                        ices.kill_ice()
+                        icess.kill_ice()
                         Fruit(fruit_list[yy][ii], f'fruct/{fruit_list[yy][ii]}_in_ice.png',
                               (ii * 68, yy * 68), True, True)
-                    if (ii - 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][ii - 1]:
+                    if (ii - 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[yy][ii - 1]:
                         board.board[yy][ii - 1] = None
-                        ices.kill_ice()
+                        icess.kill_ice()
                         Fruit(fruit_list[yy][ii - 1], f'fruct/{fruit_list[yy][ii - 1]}_in_ice.png',
                               ((ii - 1) * 68, yy * 68), True, True)
 
@@ -1018,22 +1062,22 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 ice_list.append((yy, ii))  # запоминаем на каих координатах ставим  лёд
             elif board.board[yy][ii] == 'ice' and break_ice_flag or \
                     board.board[yy][ii + 1] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[yy][ii]:
+                for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[yy][ii]:
                         board.board[yy][ii] = None
-                        ices.kill_ice()
-                    if (ii + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[yy][ii + 1]:
+                        icess.kill_ice()
+                    if (ii + 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[yy][ii + 1]:
                         board.board[yy][ii + 1] = None
-                        ices.kill_ice()
-                    if (ii, yy) == possition((ices.rect.x, ices.rect.y)) and fruit_list[yy][ii]:
+                        icess.kill_ice()
+                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and fruit_list[yy][ii]:
                         board.board[yy][ii] = None
-                        ices.kill_ice()
+                        icess.kill_ice()
                         Fruit(fruit_list[yy][ii], f'fruct/{fruit_list[yy][ii]}_in_ice.png',
                               (ii * 68, yy * 68), True, True)
 
-                    if (ii + 1, yy) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[yy][ii + 1]:
+                    if (ii + 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[yy][ii + 1]:
                         board.board[yy][ii + 1] = None
-                        ices.kill_ice()
+                        icess.kill_ice()
                         Fruit(fruit_list[yy][ii + 1], f'fruct/{fruit_list[yy][ii + 1]}_in_ice.png',
                               ((ii + 1) * 68, yy * 68), True, True)
 
@@ -1052,21 +1096,21 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                 ice_list.append((ii, xx))  # запоминаем на каих координатах ставим  лёд
             elif board.board[ii][xx] == 'ice' and break_ice_flag or \
                     board.board[ii + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
-                for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[ii][xx]:
+                for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                    if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[ii][xx]:
                         board.board[ii][xx] = None
-                        ices.kill_ice()
-                    if (xx, ii + 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[ii][xx]:
+                        icess.kill_ice()
+                    if (xx, ii + 1) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[ii][xx]:
                         board.board[ii + 1][xx] = None
-                        ices.kill_ice()
-                    if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and fruit_list[ii][xx]:
+                        icess.kill_ice()
+                    if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and fruit_list[ii][xx]:
                         board.board[ii][xx] = None
-                        ices.kill_ice()
+                        icess.kill_ice()
                         Fruit(fruit_list[ii][xx], f'fruct/{fruit_list[ii][xx]}_in_ice.png',
                               (xx * 68, ii * 68), True, True)
-                    if (xx, ii + 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[ii][xx]:
+                    if (xx, ii + 1) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[ii][xx]:
                         board.board[ii + 1][xx] = None
-                        ices.kill_ice()
+                        icess.kill_ice()
                         Fruit(fruit_list[ii + 1][xx], f'fruct/{fruit_list[ii + 1][xx]}_in_ice.png',
                               (xx * 68, (ii + 1) * 68), True, True)
 
@@ -1088,21 +1132,21 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
                     ice_list.append((ii, xx))  # запоминаем на каих координатах ставим  лёд
                 elif board.board[ii][xx] == 'ice' and break_ice_flag or \
                         board.board[ii - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
-                    for ices in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                        if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and not fruit_list[ii][xx]:
+                    for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
+                        if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[ii][xx]:
                             board.board[ii][xx] = None
-                            ices.kill_ice()
-                        if (xx, ii - 1) == possition((ices.rect.x, ices.rect.y)) and move and not fruit_list[ii][xx]:
+                            icess.kill_ice()
+                        if (xx, ii - 1) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[ii][xx]:
                             board.board[ii - 1][xx] = None
-                            ices.kill_ice()
-                        if (xx, ii) == possition((ices.rect.x, ices.rect.y)) and fruit_list[ii][xx]:
+                            icess.kill_ice()
+                        if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and fruit_list[ii][xx]:
                             board.board[ii][xx] = None
-                            ices.kill_ice()
+                            icess.kill_ice()
                             Fruit(fruit_list[ii][xx], f'fruct/{fruit_list[ii][xx]}_in_ice.png',
                                   (xx * 68, ii * 68), True, False)
-                        if (xx, ii - 1) == possition((ices.rect.x, ices.rect.y)) and move and fruit_list[ii][xx]:
+                        if (xx, ii - 1) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[ii][xx]:
                             board.board[ii + 1][xx] = None
-                            ices.kill_ice()
+                            icess.kill_ice()
                             Fruit(fruit_list[ii + 1][xx], f'fruct/{fruit_list[ii + 1][xx]}_in_ice.png',
                                   (xx * 68, (ii - 1) * 68), True, False)
             except IndexError:
@@ -1336,6 +1380,16 @@ class Unit(pygame.sprite.Sprite):
         elif last_move[1] == -1:
             self.image = load_image(f'{personalization}/back_anim/back_break_or_place_ice.png', colorkeys=colorkey)
 
+    def death(self, last_move):
+        if last_move[0] == 1:
+            self.image = load_image(f'{personalization}/right_anim/right_dino_umer.png', colorkeys=colorkey)
+        elif last_move[0] == -1:
+            self.image = load_image(f'{personalization}/left_anim/left_dino_umer.png', colorkeys=colorkey)
+        elif last_move[1] == 1:
+            self.image = load_image(f'{personalization}/front_anim/front_dino_umer.png', colorkeys=colorkey)
+        elif last_move[1] == -1:
+            self.image = load_image(f'{personalization}/back_anim/back_stoit_1.png', colorkeys=colorkey)
+
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, name_sprite):
@@ -1454,9 +1508,9 @@ class Fruit(pygame.sprite.Sprite):
             fruit_sprites.remove(self)
             if self.not_eat and not board.board[self.rect.y // 68][self.rect.x // 68] and \
                     fruit_list[self.rect.y // 68][self.rect.x // 68]:
-                sound = pygame.mixer.Sound('звук поедания фрукта.mpeg')
-                sound.set_volume(volum_effects)
-                sound.play()
+                sounds = pygame.mixer.Sound('звук поедания фрукта.mpeg')
+                sounds.set_volume(volum_effects)
+                sounds.play()
 
 
 class Ice(pygame.sprite.Sprite):
@@ -1563,17 +1617,17 @@ def pause():
                     pausee = load_image("pause_next.png", colorkeys=(255, 255, 255))
                     paus.image = pausee
                     if flag_1:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_1 = False
                 elif 865 > event2.pos[0] > 481 and 413 > event2.pos[1] > 327:
                     pausee = load_image("pause_exit.png", colorkeys=(255, 255, 255))
                     paus.image = pausee
                     if flag_2:
-                        sound = pygame.mixer.Sound('zvuk_navedenie.mp3')
-                        sound.set_volume(volum_effects)
-                        sound.play()
+                        sounds = pygame.mixer.Sound('zvuk_navedenie.mp3')
+                        sounds.set_volume(volum_effects)
+                        sounds.play()
                     flag_2 = False
                 else:
                     pausee = load_image("pause.png", colorkeys=(255, 255, 255))
@@ -1581,14 +1635,14 @@ def pause():
                     flag_1, flag_2 = True, True
             elif event2.type == pygame.MOUSEBUTTONDOWN and pressed3:
                 if 865 > event2.pos[0] > 481 and 179 > event2.pos[1] > 93:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                     return False
                 elif 865 > event2.pos[0] > 481 and 413 > event2.pos[1] > 327:
-                    sound = pygame.mixer.Sound('zvuk_click.mp3')
-                    sound.set_volume(volum_effects)
-                    sound.play()
+                    sounds = pygame.mixer.Sound('zvuk_click.mp3')
+                    sounds.set_volume(volum_effects)
+                    sounds.play()
                     return True
         pauses.draw(screen)
         pygame.display.flip()
@@ -1606,6 +1660,23 @@ if __name__ == '__main__':
     running = True
     volume = 0.5
     volum_effects = 0.5
+    volum = 0.5
+    fps = 60
+    clock = pygame.time.Clock()
+    skin_now = open("volume.txt")
+    for ii in skin_now:
+        ii = ii.split(';')
+        volum = float(ii[0])
+        volume = float(ii[1])
+        volum_effects = float(ii[2])
+    skin_now.close()
+    aaaa = open('skip.txt')
+    if aaaa.read() == "1":
+        video = moviepy.editor.VideoFileClip("tizer.mp4")
+        vidos = video.volumex(volume)
+        vidos.preview()
+        skip_video(volum_effects, volume)
+    aaaa.close()
     all_sprites = pygame.sprite.Group()
     cursoro = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'default_dino/right_anim/right_stoit_1.png')
@@ -1614,14 +1685,11 @@ if __name__ == '__main__':
     fruit_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
-    clock = pygame.time.Clock()
 
     surface = load_image('pole.png')
     rect = surface.get_rect(center=(wight // 2, height // 2))
 
     fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
-
-    fps = 60
     v = 120
     speed = v // fps
     personalization = 'default_dino'
@@ -1640,10 +1708,11 @@ if __name__ == '__main__':
     cursor = pygame.sprite.Sprite(cursoro)
     cursor.image = cursor_image
     cursor.rect = cursor.image.get_rect()
-    text1 = str()
-    text2 = str()
-    text3 = str()
     my_font = pygame.font.SysFont('Throne and Libert', 30)
+    text1 = my_font.render('save', False, pygame.Color('red'))
+    text2 = my_font.render('refresh', False, pygame.Color('red'))
+    text3 = my_font.render('my_level', False, pygame.Color('red'))
+    text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
     if flag_redact:
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
         sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, False)
@@ -1670,6 +1739,8 @@ if __name__ == '__main__':
     list_click = []
     flag_na_music = True
     flag_na_vihod = False
+    flag_check = False
+    count_for_end = 0
     while running:
         keys = pygame.key.get_pressed()
         move = sprite_hero.get_move()
@@ -1972,6 +2043,11 @@ if __name__ == '__main__':
                     shagg = 0
                 spawn_ice(smotrit)
                 count = dlina_ice_list = len(ice_list)
+        if count_for_end != 0:
+            move = None
+            sprite_hero.death(smotrit)
+            speed = 0
+            count_for_end -= 1
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
                 = 'ice'  # тоже самое что и board.board[y][i] или board.board[i][y] в spawn_ice
@@ -2003,7 +2079,7 @@ if __name__ == '__main__':
                                         board.board[ice_list[len(ice_list) - dlina_ice_list][0]][
                                             ice_list[len(ice_list) - dlina_ice_list][1]] \
                                             = None
-                                        Fruit(fructs,
+                                        Fruit(fruct,
                                               f'fruct/{fruit_list[ice_list[chtoto][0]][ice_list[chtoto][1]]}.png',
                                               (ice_list[len(ice_list) - dlina_ice_list][1] * 68,
                                                ice_list[len(ice_list) - dlina_ice_list][0] * 68), True, True)
@@ -2046,36 +2122,37 @@ if __name__ == '__main__':
             count -= 1
         else:
             speed = v // fps
-        if move:
-            if count != 0:
-                sprite_hero.spawn_ice_dino(smotrit)
+        if count_for_end == 0:
+            if move:
+                if count != 0:
+                    sprite_hero.spawn_ice_dino(smotrit)
+                else:
+                    last_pos_dino, flaag = sprite_hero.animation(move)
+                smotrit = move
+                if move[0] != 0:
+                    smotrit_x = move
+                if move[1] != 0:
+                    smotrit_y = move
             else:
-                last_pos_dino, flaag = sprite_hero.animation(move)
-            smotrit = move
-            if move[0] != 0:
-                smotrit_x = move
-            if move[1] != 0:
-                smotrit_y = move
-        else:
-            x = sprite_hero.rect.x // cell_size
-            y = sprite_hero.rect.y // cell_size
-            if sprite_hero.rect.x % cell_size != 0:
-                if sprite_hero.rect.x % cell_size == speed // 2:
-                    speed = 1
-                last_pos_dino, flaag = sprite_hero.animation(smotrit_x)
-                flag_of_move = True
-            elif sprite_hero.rect.y % cell_size != 0:
-                if sprite_hero.rect.x % cell_size == 1:
-                    speed = 1
-                last_pos_dino, flaag = sprite_hero.animation(smotrit_y)
-                flag_of_move = True
-            else:
-                speed = v // fps
-                flag_of_move = False
-            if count != 0:
-                sprite_hero.spawn_ice_dino(smotrit)
-            else:
-                sprite_hero.static_animation(smotrit)
+                x = sprite_hero.rect.x // cell_size
+                y = sprite_hero.rect.y // cell_size
+                if sprite_hero.rect.x % cell_size != 0:
+                    if sprite_hero.rect.x % cell_size == speed // 2:
+                        speed = 1
+                    last_pos_dino, flaag = sprite_hero.animation(smotrit_x)
+                    flag_of_move = True
+                elif sprite_hero.rect.y % cell_size != 0:
+                    if sprite_hero.rect.x % cell_size == 1:
+                        speed = 1
+                    last_pos_dino, flaag = sprite_hero.animation(smotrit_y)
+                    flag_of_move = True
+                else:
+                    speed = v // fps
+                    flag_of_move = False
+                if count != 0:
+                    sprite_hero.spawn_ice_dino(smotrit)
+                else:
+                    sprite_hero.static_animation(smotrit)
         for enemy in enemy_sprites:
             if flag_redact:
                 if enemy != enemy_sprite:
@@ -2086,9 +2163,16 @@ if __name__ == '__main__':
                 enemy.go_go_zeppely()
                 if enemy.rect.colliderect(sprite_hero):
                     pygame.mixer.music.stop()
-                    a = game_lose()
-                    if a == 'exit':
-                        flag_na_vihod = True
+                    count_for_end = 50
+                    flag_check = 'lose'
+        if count_for_end == 1 and flag_check == 'lose':
+            a = game_lose()
+            if a == 'exit':
+                flag_na_vihod = True
+        if count_for_end == 49 and flag_check == 'lose':
+            sound = pygame.mixer.Sound('zvuk_lose.mp3')
+            sound.set_volume(volum_effects)
+            sound.play()
         if not flag_redact:
             if score == SCORE_FOR_WIN:
                 a = game_win()
