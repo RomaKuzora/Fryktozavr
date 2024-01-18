@@ -1224,8 +1224,6 @@ class Unit(pygame.sprite.Sprite):
 
         for fruits in fruit_sprites:
             if self.rect.colliderect(fruits):
-                fruits.kill_fruit()
-                fruit_list[fruits.rect.y // 68][fruits.rect.x // 68] = None
                 if fruits.name == 'banana':
                     score += 1
                 elif fruits.name == 'cherry':
@@ -1235,6 +1233,8 @@ class Unit(pygame.sprite.Sprite):
                 if flag_redact:
                     score = 0
                 text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+                fruits.kill_fruit()
+                fruit_list[fruits.rect.y // 68][fruits.rect.x // 68] = None
             else:
                 fruits.static_animation()
         if [fruits.name for fruits in fruit_sprites].count('banana') == 0 and not flag_cherry:
@@ -2025,11 +2025,18 @@ if __name__ == '__main__':
                         if (event.pos[0] // cell_size) != (sprite_hero.rect.x // cell_size) \
                                 or (event.pos[1] // cell_size) != (sprite_hero.rect.y // cell_size):
                             try:
-                                if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
-                                    enemy_ = Enemy('vrag/front_vrag.png')
-                                    enemy_.set_posittion(possition(event.pos))
-                                    _enemy_ = enemy_
-                                    flag_of_list_click = True
+                                c = True
+                                for enemy in enemy_sprites:
+                                    if event.pos[1] // 68 == (enemy.rect.y // 68) and \
+                                            event.pos[0] // 68 == (enemy.rect.x // 68):
+                                        enemy_sprites.remove(enemy)
+                                        c = False
+                                if c:
+                                    if board.board[event.pos[1] // 68][event.pos[0] // 68] != 'block':
+                                        enemy_ = Enemy('vrag/front_vrag.png')
+                                        enemy_.set_posittion(possition(event.pos))
+                                        _enemy_ = enemy_
+                                        flag_of_list_click = True
                             except IndexError:
                                 pass
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and count == 0:  # Спавн льда на пробел
