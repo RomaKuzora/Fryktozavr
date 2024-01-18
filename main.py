@@ -216,7 +216,7 @@ def start_screen():
     fla = False
     flag_na_click = True
     flaagg = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14\
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14 \
         = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
@@ -746,6 +746,7 @@ def start_screen():
 
 def game_lose():
     board.board = [[None] * board.width for _ in range(board.height)]
+    global flag_cherry
     sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
     pygame.font.init()
     fon = pygame.transform.scale(load_image('start_windiws/lose.png'), (68 * 20, 68 * 10 + 80))
@@ -782,6 +783,9 @@ def game_lose():
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
+                    start_level(LEVEL)
+                    flag_cherry = False
+                    return
                 elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
@@ -795,7 +799,9 @@ def game_win():
     pygame.font.init()
     fon = pygame.transform.scale(load_image('start_windiws/menu.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
+    global LEVEL, score
     flag_1, flag_2, flag_3 = True, True, True
+    screen.blit(text4, (15 * cell_size, 10 * cell_size))
     while True:
         pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
         for event2 in pygame.event.get():
@@ -836,15 +842,24 @@ def game_win():
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
+                    print(str(int(LEVEL[-5]) + 1))
+                    if LEVEL[-5] != 0:
+                        magic_aaaaa = str(int(LEVEL[-5]) + 1)
+                        start_level(f'level_{magic_aaaaa}.txt')
+                    return
                 elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
+                    start_level(LEVEL)
+                    score = 0
+                    return
                 elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
                     return 'exit'
+        screen.blit(text4, (15 * cell_size, 10 * cell_size))
         pygame.display.flip()
         clock.tick(fps)
 
@@ -1000,12 +1015,6 @@ def choose_level(volume_effects, volum):
                     sounds.set_volume(volume_effects)
                     sounds.play()
                     return 'level_10.txt'
-            elif event2.type == pygame.KEYDOWN and event2.key == pygame.K_ESCAPE:
-                start_screen()
-                pygame.mixer.music.load('music_redactor.mp3')
-                pygame.mixer.music.play(-1)
-                pygame.mixer.music.set_volume(volume)
-                return
         pygame.display.flip()
         clock.tick(fps)
 
@@ -1015,140 +1024,150 @@ def spawn_ice(last_move):  # перенес функцию т.к. она соз�
     xx = sprite_hero.rect.x // board.cell_size  # смотрим на какой клетке стоял дино
     yy = sprite_hero.rect.y // board.cell_size
     if last_move[0] == 1:  # определяем куда смотрел дино последний раз
-        for ii in range(xx + shagg + 1, 20):
+        for coords in range(xx + shagg + 1, 20):
             if board.board[yy][xx + shagg + 1] == 'ice' or \
                     board.board[yy][xx + shagg] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and (not board.board[yy][ii] and not board.board[yy][ii - 1]) \
-                    or not break_ice_flag and board.board[yy][ii] == 'ice' \
-                    or board.board[yy][ii] == 'block' or (move and board.board[yy][ii - 1] == 'block'):
+            if break_ice_flag and (not board.board[yy][coords] and not board.board[yy][coords - 1]) \
+                    or not break_ice_flag and board.board[yy][coords] == 'ice' \
+                    or board.board[yy][coords] == 'block' or (move and board.board[yy][coords - 1] == 'block'):
                 break
-            if not break_ice_flag and not (move and board.board[yy][ii - 1] == 'block'
-                                           or board.board[yy][ii] == 'block'):  # убрал спавн лишнего спрайта
-                ice_list.append((yy, ii))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[yy][ii] == 'ice' and break_ice_flag or \
-                    board.board[yy][ii - 1] == 'ice' and break_ice_flag:  # проверка на ломание
+            if not break_ice_flag and not (move and board.board[yy][coords - 1] == 'block'
+                                           or board.board[yy][coords] == 'block'):  # убрал спавн лишнего спрайта
+                ice_list.append((yy, coords))  # запоминаем на каих координатах ставим  лёд
+            elif board.board[yy][coords] == 'ice' and break_ice_flag or \
+                    board.board[yy][coords - 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[yy][ii]:
-                        board.board[yy][ii] = None
+                    if (coords, yy) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[yy][coords]:
+                        board.board[yy][coords] = None
                         icess.kill_ice()
-                    if (ii - 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[yy][ii - 1]:
-                        board.board[yy][ii - 1] = None
+                    if (coords - 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and \
+                            not fruit_list[yy][coords - 1]:
+                        board.board[yy][coords - 1] = None
                         icess.kill_ice()
-                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and fruit_list[yy][ii]:
-                        board.board[yy][ii] = None
+                    if (coords, yy) == possition((icess.rect.x, icess.rect.y)) and fruit_list[yy][coords]:
+                        board.board[yy][coords] = None
                         icess.kill_ice()
-                        Fruit(fruit_list[yy][ii], f'fruct/{fruit_list[yy][ii]}_in_ice.png',
-                              (ii * 68, yy * 68), True, True)
-                    if (ii - 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[yy][ii - 1]:
-                        board.board[yy][ii - 1] = None
+                        Fruit(fruit_list[yy][coords], f'fruct/{fruit_list[yy][coords]}_in_ice.png',
+                              (coords * 68, yy * 68), True, True)
+                    if (coords - 1, yy) == possition((icess.rect.x, icess.rect.y)) and \
+                            move and fruit_list[yy][coords - 1]:
+                        board.board[yy][coords - 1] = None
                         icess.kill_ice()
-                        Fruit(fruit_list[yy][ii - 1], f'fruct/{fruit_list[yy][ii - 1]}_in_ice.png',
-                              ((ii - 1) * 68, yy * 68), True, True)
+                        Fruit(fruit_list[yy][coords - 1], f'fruct/{fruit_list[yy][coords - 1]}_in_ice.png',
+                              ((coords - 1) * 68, yy * 68), True, True)
 
     elif last_move[0] == -1:
-        for ii in range(xx - 1, -1, -1):
+        for coords in range(xx - 1, -1, -1):
             if board.board[yy][xx - 1] == 'ice' or \
                     board.board[yy][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and (not board.board[yy][ii] and not board.board[yy][ii + 1]) \
-                    or not break_ice_flag and board.board[yy][ii] == 'ice' \
-                    or board.board[yy][ii] == 'block' or (move and board.board[yy][ii + 1] == 'block'):
+            if break_ice_flag and (not board.board[yy][coords] and not board.board[yy][coords + 1]) \
+                    or not break_ice_flag and board.board[yy][coords] == 'ice' \
+                    or board.board[yy][coords] == 'block' or (move and board.board[yy][coords + 1] == 'block'):
                 break
-            if not break_ice_flag and not (move and board.board[yy][ii + 1] == 'block'
-                                           or board.board[yy][ii] == 'block'):  # убрал спавн лишнего спрайта
-                ice_list.append((yy, ii))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[yy][ii] == 'ice' and break_ice_flag or \
-                    board.board[yy][ii + 1] == 'ice' and break_ice_flag:  # проверка на ломание
+            if not break_ice_flag and not (move and board.board[yy][coords + 1] == 'block'
+                                           or board.board[yy][coords] == 'block'):  # убрал спавн лишнего спрайта
+                ice_list.append((yy, coords))  # запоминаем на каих координатах ставим  лёд
+            elif board.board[yy][coords] == 'ice' and break_ice_flag or \
+                    board.board[yy][coords + 1] == 'ice' and break_ice_flag:  # проверка на ломание
                 for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[yy][ii]:
-                        board.board[yy][ii] = None
+                    if (coords, yy) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[yy][coords]:
+                        board.board[yy][coords] = None
                         icess.kill_ice()
-                    if (ii + 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[yy][ii + 1]:
-                        board.board[yy][ii + 1] = None
+                    if (coords + 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and \
+                            not fruit_list[yy][coords + 1]:
+                        board.board[yy][coords + 1] = None
                         icess.kill_ice()
-                    if (ii, yy) == possition((icess.rect.x, icess.rect.y)) and fruit_list[yy][ii]:
-                        board.board[yy][ii] = None
+                    if (coords, yy) == possition((icess.rect.x, icess.rect.y)) and fruit_list[yy][coords]:
+                        board.board[yy][coords] = None
                         icess.kill_ice()
-                        Fruit(fruit_list[yy][ii], f'fruct/{fruit_list[yy][ii]}_in_ice.png',
-                              (ii * 68, yy * 68), True, True)
+                        Fruit(fruit_list[yy][coords], f'fruct/{fruit_list[yy][coords]}_in_ice.png',
+                              (coords * 68, yy * 68), True, True)
 
-                    if (ii + 1, yy) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[yy][ii + 1]:
-                        board.board[yy][ii + 1] = None
+                    if (coords + 1, yy) == possition((icess.rect.x, icess.rect.y)) and \
+                            move and fruit_list[yy][coords + 1]:
+                        board.board[yy][coords + 1] = None
                         icess.kill_ice()
-                        Fruit(fruit_list[yy][ii + 1], f'fruct/{fruit_list[yy][ii + 1]}_in_ice.png',
-                              ((ii + 1) * 68, yy * 68), True, True)
+                        Fruit(fruit_list[yy][coords + 1], f'fruct/{fruit_list[yy][coords + 1]}_in_ice.png',
+                              ((coords + 1) * 68, yy * 68), True, True)
 
     elif last_move[1] == -1:
-        for ii in range(yy - 1, -1, -1):
+        for coords in range(yy - 1, -1, -1):
             if board.board[yy - 1][xx] == 'ice' or \
                     board.board[yy][xx] == 'ice':  # проверка что хотим ломать
                 break_ice_flag = True
             # проверка столкновения льда и столкновения ломания (жесть какая-то)
-            if break_ice_flag and (not board.board[ii][xx] and not board.board[ii + 1][xx]) \
-                    or not break_ice_flag and board.board[ii][xx] == 'ice' \
-                    or board.board[ii][xx] == 'block' or (move and board.board[ii + 1][xx] == 'block'):
+            if break_ice_flag and (not board.board[coords][xx] and not board.board[coords + 1][xx]) \
+                    or not break_ice_flag and board.board[coords][xx] == 'ice' \
+                    or board.board[coords][xx] == 'block' or (move and board.board[coords + 1][xx] == 'block'):
                 break
-            if not break_ice_flag and not (move and board.board[ii][xx] == 'block'
-                                           or board.board[ii][xx] == 'block'):  # убрал спавн лишнего спрайта
-                ice_list.append((ii, xx))  # запоминаем на каих координатах ставим  лёд
-            elif board.board[ii][xx] == 'ice' and break_ice_flag or \
-                    board.board[ii + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+            if not break_ice_flag and not (move and board.board[coords][xx] == 'block'
+                                           or board.board[coords][xx] == 'block'):  # убрал спавн лишнего спрайта
+                ice_list.append((coords, xx))  # запоминаем на каих координатах ставим  лёд
+            elif board.board[coords][xx] == 'ice' and break_ice_flag or \
+                    board.board[coords + 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                 for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                    if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[ii][xx]:
-                        board.board[ii][xx] = None
+                    if (xx, coords) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[coords][xx]:
+                        board.board[coords][xx] = None
                         icess.kill_ice()
-                    if (xx, ii + 1) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[ii][xx]:
-                        board.board[ii + 1][xx] = None
+                    if (xx, coords + 1) == possition((icess.rect.x, icess.rect.y)) and \
+                            move and not fruit_list[coords][xx]:
+                        board.board[coords + 1][xx] = None
                         icess.kill_ice()
-                    if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and fruit_list[ii][xx]:
-                        board.board[ii][xx] = None
+                    if (xx, coords) == possition((icess.rect.x, icess.rect.y)) and\
+                            fruit_list[coords][xx] is not None:
+                        board.board[coords][xx] = None
                         icess.kill_ice()
-                        Fruit(fruit_list[ii][xx], f'fruct/{fruit_list[ii][xx]}_in_ice.png',
-                              (xx * 68, ii * 68), True, True)
-                    if (xx, ii + 1) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[ii][xx]:
-                        board.board[ii + 1][xx] = None
+                        Fruit(fruit_list[coords][xx], f'fruct/{fruit_list[coords][xx]}_in_ice.png',
+                              (xx * 68, coords * 68), True, True)
+                    if (xx, coords + 1) == possition((icess.rect.x, icess.rect.y)) and\
+                            move and fruit_list[coords + 1][xx] is not None:
+                        board.board[coords + 1][xx] = None
                         icess.kill_ice()
-                        Fruit(fruit_list[ii + 1][xx], f'fruct/{fruit_list[ii + 1][xx]}_in_ice.png',
-                              (xx * 68, (ii + 1) * 68), True, True)
+                        Fruit(fruit_list[coords + 1][xx], f'fruct/{fruit_list[coords + 1][xx]}_in_ice.png',
+                              (xx * 68, (coords + 1) * 68), True, True)
 
     elif last_move[1] == 1:
-        for ii in range(yy + shagg + 1, 12):
+        for coords in range(yy + shagg + 1, 12):
             if yy == 9 or yy == 8 and move:
                 break
             if board.board[yy + shagg + 1][xx] == 'ice' or \
-                    board.board[yy + shagg][xx] == 'ice':  # проверка что хотим ломать
+                    board.board[yy + shagg][xx] == 'ice' and not break_ice_flag:  # проверка что хотим ломать
                 break_ice_flag = True
             try:
                 # проверка столкновения льда и столкновения ломания (жесть какая-то)
-                if break_ice_flag and (not board.board[ii][xx] and not board.board[ii - 1][xx]) \
-                        or not break_ice_flag and board.board[ii][xx] == 'ice' \
-                        or board.board[ii][xx] == 'block' or (move and board.board[ii - 1][xx] == 'block'):
+                if break_ice_flag and (board.board[coords][xx] is None and board.board[coords - 1][xx] is None) \
+                        or not break_ice_flag and board.board[coords][xx] == 'ice' \
+                        or board.board[coords][xx] == 'block' or (move and board.board[coords - 1][xx] == 'block'):
                     break
-                if not break_ice_flag and not (move and board.board[ii][xx] == 'block'
-                                               or board.board[ii][xx] == 'block'):  # убрал спавн лишнего спрайта
-                    ice_list.append((ii, xx))  # запоминаем на каих координатах ставим  лёд
-                elif board.board[ii][xx] == 'ice' and break_ice_flag or \
-                        board.board[ii - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
+                if not break_ice_flag and not (move and board.board[coords][xx] == 'block'
+                                               or board.board[coords][xx] == 'block'):  # убрал спавн лишнего спрайта
+                    ice_list.append((coords, xx))  # запоминаем на каих координатах ставим  лёд
+                elif board.board[coords][xx] == 'ice' and break_ice_flag or \
+                        board.board[coords - 1][xx] == 'ice' and break_ice_flag:  # проверка на ломание
                     for icess in ice_sprites:  # проверки на фрукты и лед перед идущим и стоящим героем
-                        if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[ii][xx]:
-                            board.board[ii][xx] = None
+                        if (xx, coords) == possition((icess.rect.x, icess.rect.y)) and not fruit_list[coords][xx]:
+                            board.board[coords][xx] = None
                             icess.kill_ice()
-                        if (xx, ii - 1) == possition((icess.rect.x, icess.rect.y)) and move and not fruit_list[ii][xx]:
-                            board.board[ii - 1][xx] = None
+                        if (xx, coords - 1) == possition((icess.rect.x, icess.rect.y)) and \
+                                move and not fruit_list[coords][xx]:
+                            board.board[coords - 1][xx] = None
                             icess.kill_ice()
-                        if (xx, ii) == possition((icess.rect.x, icess.rect.y)) and fruit_list[ii][xx]:
-                            board.board[ii][xx] = None
+                        if (xx, coords) == possition((icess.rect.x, icess.rect.y))\
+                                and fruit_list[coords][xx] is not None:
+                            board.board[coords][xx] = None
                             icess.kill_ice()
-                            Fruit(fruit_list[ii][xx], f'fruct/{fruit_list[ii][xx]}_in_ice.png',
-                                  (xx * 68, ii * 68), True, False)
-                        if (xx, ii - 1) == possition((icess.rect.x, icess.rect.y)) and move and fruit_list[ii][xx]:
-                            board.board[ii + 1][xx] = None
+                            Fruit(fruit_list[coords][xx], f'fruct/{fruit_list[coords][xx]}_in_ice.png',
+                                  (xx * 68, coords * 68), True, False)
+                        if (xx, coords - 1) == possition((icess.rect.x, icess.rect.y)) and \
+                                move and fruit_list[coords + 1][xx] is not None:
+                            board.board[coords + 1][xx] = None
                             icess.kill_ice()
-                            Fruit(fruit_list[ii + 1][xx], f'fruct/{fruit_list[ii + 1][xx]}_in_ice.png',
-                                  (xx * 68, (ii - 1) * 68), True, False)
+                            Fruit(fruit_list[coords + 1][xx], f'fruct/{fruit_list[coords + 1][xx]}_in_ice.png',
+                                  (xx * 68, (coords - 1) * 68), True, False)
             except IndexError:
                 pass
 
@@ -1249,8 +1268,8 @@ class Unit(pygame.sprite.Sprite):
                             break
                         else:
                             flag_fruit = False
-
-            if not flag_fruit:
+                flag_cherry = False
+            if not flag_fruit and score != SCORE_FOR_WIN:
                 with open(LEVEL, 'r') as level_files:
                     counts = 0
                     for string in level_files:
@@ -1262,6 +1281,7 @@ class Unit(pygame.sprite.Sprite):
                                     fruit_list[pos_y // 68][pos_x // 68] = fructs
                         counts += 1
                 flag_cherry = True
+                flag_limon = False
         elif [fruits.name for fruits in fruit_sprites].count('cherry') == 0 and flag_cherry \
                 and not flag_limon:
             flag_fruit = False
@@ -1287,7 +1307,7 @@ class Unit(pygame.sprite.Sprite):
                                     Fruit(fructs, 'fruct/limon.png', (pos_x, pos_y), True, True)
                                     fruit_list[pos_y // 68][pos_x // 68] = fructs
                         counts += 1
-                    flag_limon = True
+                flag_cherry = False
         last_pos = self.rect.x, self.rect.y
         flag1, flag2 = True, True
         speeda = speed
@@ -1501,7 +1521,10 @@ class Fruit(pygame.sprite.Sprite):
         elif self.name == 'limon':
             list_anim_right = [load_image('fruct/limon.png', colorkeys=colorkey),
                                load_image('fruct/limon_2.png', colorkeys=colorkey)]
-        self.image = list_anim_right[self.count // 12 - 1]
+        try:
+            self.image = list_anim_right[self.count // 12 - 1]
+        except IndexError:
+            pass
 
     def kill_fruit(self):
         if self.can_eat:
@@ -1562,6 +1585,8 @@ def start_level(level):
     global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
     global SCORE_FOR_WIN
     score = 0
+    board.board = [[None] * board.width for _ in range(board.height)]
+    fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
     ice_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
@@ -2201,7 +2226,7 @@ if __name__ == '__main__':
             sound.set_volume(volum_effects)
             sound.play()
         if not flag_redact:
-            if score == SCORE_FOR_WIN and flag_win is False:
+            if score >= SCORE_FOR_WIN and flag_win is False:
                 pygame.mixer.music.stop()
                 flag_check = 'win'
                 count_for_end = 50
