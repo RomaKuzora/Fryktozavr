@@ -1680,21 +1680,17 @@ if __name__ == '__main__':
     all_sprites = pygame.sprite.Group()
     cursoro = pygame.sprite.Group()
     sprite_hero = Unit('hero', 'default_dino/right_anim/right_stoit_1.png')
-
     ice_sprites = pygame.sprite.Group()
     fruit_sprites = pygame.sprite.Group()
     iron_block_sprites = pygame.sprite.Group()
     enemy_sprites = pygame.sprite.Group()
-
     surface = load_image('pole.png')
     rect = surface.get_rect(center=(wight // 2, height // 2))
-
     fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
     v = 120
     speed = v // fps
     personalization = 'default_dino'
     start_screen()
-
     smotrit = (1, 0)
     smotrit_y = (1, 0)
     smotrit_x = (1, 0)
@@ -1740,6 +1736,7 @@ if __name__ == '__main__':
     flag_na_music = True
     flag_na_vihod = False
     flag_check = False
+    flag_win = False
     count_for_end = 0
     while running:
         keys = pygame.key.get_pressed()
@@ -1895,7 +1892,7 @@ if __name__ == '__main__':
                     elif possition(event.pos) == (18, 10):
                         # level_list.append(
                         #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
-                        with open(f'level_5.txt', 'w+') as level_file:
+                        with open(f'level_10.txt', 'w+') as level_file:
                             hero = (sprite_hero.rect.x, sprite_hero.rect.y)
                             ice = []
                             for i in ice_sprites:
@@ -2050,10 +2047,12 @@ if __name__ == '__main__':
                     shagg = 0
                 spawn_ice(smotrit)
                 count = dlina_ice_list = len(ice_list)
-        if count_for_end != 0:
+        if count_for_end != 0 and flag_check == 'lose':
             move = None
             sprite_hero.death(smotrit)
             speed = 0
+            count_for_end -= 1
+        if count_for_end != 0 and flag_check == 'win':
             count_for_end -= 1
         if dlina_ice_list != 0:
             board.board[ice_list[len(ice_list) - dlina_ice_list][0]][ice_list[len(ice_list) - dlina_ice_list][1]] \
@@ -2176,15 +2175,26 @@ if __name__ == '__main__':
             a = game_lose()
             if a == 'exit':
                 flag_na_vihod = True
+        if count_for_end == 1 and flag_check == 'win':
+            a = game_win()
+            if a == 'exit':
+                flag_na_vihod = True
+        if count_for_end == 49 and flag_check == 'win':
+            sound = pygame.mixer.Sound('zvuk_win.mp3')
+            sound.set_volume(volum_effects)
+            sound.play()
         if count_for_end == 49 and flag_check == 'lose':
             sound = pygame.mixer.Sound('zvuk_lose.mp3')
             sound.set_volume(volum_effects)
             sound.play()
         if not flag_redact:
-            if score == SCORE_FOR_WIN:
-                a = game_win()
-                if a == 'exit':
-                    flag_na_vihod = True
+            if score == SCORE_FOR_WIN and flag_win is False:
+                pygame.mixer.music.stop()
+                flag_check = 'win'
+                count_for_end = 50
+                flag_win = True
+        if count_for_end == 0:
+            flag_win = False
         if flag_na_vihod:
             pygame.mouse.set_visible(True)
             cursor.rect.topleft = 1400, 800
