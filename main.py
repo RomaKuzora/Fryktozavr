@@ -1832,6 +1832,7 @@ if __name__ == '__main__':
                     enemy_sprite = Enemy('vrag/front_vrag.png')
                     enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
                 else:
+                    score = 0
                     text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
                     if flag_na_music:
                         pygame.mixer.music.load('level_music.mp3')
@@ -1889,10 +1890,22 @@ if __name__ == '__main__':
                         flag = 'block'
                     elif possition(event.pos) == (5, 10):
                         flag = 'enemy'
+                    elif possition(event.pos) == (17, 10):
+                        LEVEL = 'level_11.txt'
+                        flag_redact = False
+                        pygame.mixer.music.unpause()
+                        pygame.mixer.music.load('level_music.mp3')
+                        pygame.mixer.music.play(-1)
+                        pygame.mixer.music.set_volume(volume)
+                        start_level('level_11.txt')
+                        pygame.mouse.set_visible(True)
+                        cursor.rect.topleft = 1400, 800
+                        flag = None
+                        flag_na_music = True
                     elif possition(event.pos) == (18, 10):
                         # level_list.append(
                         #   [sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites])
-                        with open(f'level_10.txt', 'w+') as level_file:
+                        with open(f'level_11.txt', 'w+') as level_file:
                             hero = (sprite_hero.rect.x, sprite_hero.rect.y)
                             ice = []
                             for i in ice_sprites:

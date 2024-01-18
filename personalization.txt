@@ -1,1 +1,1 @@
-red_dino
+default_dino
