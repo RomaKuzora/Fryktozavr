@@ -216,8 +216,8 @@ def start_screen():
     fla = False
     flag_na_click = True
     flaagg = False
-    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, flag_14 \
-        = True, True, True, True, True, True, True, True, True, True, True, True, True, True
+    flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10, flag_11, flag_12, flag_13, \
+        flag_14 = True, True, True, True, True, True, True, True, True, True, True, True, True, True
     din = load_image(f"personal/dinod.png", colorkeys=(255, 255, 255))
     dinos_list = ['default_dino', 'pink_dino', 'purple_dino', 'red_dino']
     person = open('personalization.txt')
@@ -319,11 +319,11 @@ def start_screen():
                 num_6.rect.y += 25
             else:
                 skin_now = open("volume.txt")
-                for ii in skin_now:
-                    ii = ii.split(';')
-                    volum = float(ii[0])
-                    volume = float(ii[1])
-                    volum_effects = float(ii[2])
+                for iii in skin_now:
+                    iii = iii.split(';')
+                    volum = float(iii[0])
+                    volume = float(iii[1])
+                    volum_effects = float(iii[2])
                 skin_now.close()
                 num1, num2 = number(volum)
                 num_1.image = num1
@@ -587,14 +587,14 @@ def start_screen():
                         din = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
                         pasg2 = load_image(f"personal/dinor.png", colorkeys=(255, 255, 255))
                     pash2.image = pasg2
-                    for ii in range(len(dinos_list)):
-                        if dinos_list[ii] == skin_now:
+                    for iii in range(len(dinos_list)):
+                        if dinos_list[iii] == skin_now:
                             try:
-                                ff = dinos_list[ii + 1]
+                                ff = dinos_list[iii + 1]
                             except IndexError:
                                 ff = dinos_list[0]
                             try:
-                                dd = dinos_list[ii - 1]
+                                dd = dinos_list[iii - 1]
                             except IndexError:
                                 dd = dinos_list[-1]
                     personn.close()
@@ -785,6 +785,9 @@ def game_lose():
                     sounds.play()
                     start_level(LEVEL)
                     flag_cherry = False
+                    pygame.mixer.music.load('level_music.mp3')
+                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.set_volume(volume)
                     return
                 elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
@@ -842,16 +845,27 @@ def game_win():
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
-                    print(str(int(LEVEL[-5]) + 1))
-                    if LEVEL[-5] != 0:
-                        magic_aaaaa = str(int(LEVEL[-5]) + 1)
-                        start_level(f'level_{magic_aaaaa}.txt')
+                    if LEVEL[-5] != '0':
+                        if LEVEL[-6] != '1':
+                            magic_aaaaa = str(int(LEVEL[-5]) + 1)
+                            LEVEL = f'level_{magic_aaaaa}.txt'
+                            start_level(f'level_{magic_aaaaa}.txt')
+                            pygame.mixer.music.load('level_music.mp3')
+                            pygame.mixer.music.play(-1)
+                            pygame.mixer.music.set_volume(volume)
+                        else:
+                            start_level(LEVEL)
+                    else:
+                        start_level(LEVEL)
                     return
                 elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
                     start_level(LEVEL)
+                    pygame.mixer.music.load('level_music.mp3')
+                    pygame.mixer.music.play(-1)
+                    pygame.mixer.music.set_volume(volume)
                     score = 0
                     return
                 elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
@@ -864,13 +878,13 @@ def game_win():
         clock.tick(fps)
 
 
-def choose_level(volume_effects, volum):
+def choose_level(volume_effects, volummm):
     pygame.font.init()
     flag_1, flag_2, flag_3, flag_4, flag_5, flag_6, flag_7, flag_8, flag_9, flag_10 \
         = True, True, True, True, True, True, True, True, True, True
     pygame.mixer.music.load('zvuk_level.mp3')
     pygame.mixer.music.play(-1)
-    pygame.mixer.music.set_volume(volum)
+    pygame.mixer.music.set_volume(volummm)
     fon = pygame.transform.scale(load_image('start_windiws/level.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
     while True:
@@ -1598,8 +1612,8 @@ def start_level(level):
             if counts == 0:
                 sprite_hero.rect.x, sprite_hero.rect.y = eval_string
             elif counts == 1:
-                for ii in eval_string:
-                    Ice('ice', 'ice/ice.png', ii)
+                for iii in eval_string:
+                    Ice('ice', 'ice/ice.png', iii)
             elif counts == 2:
                 for bb in eval_string:
                     IronBlock('block/block.png', bb)
@@ -1688,13 +1702,13 @@ if __name__ == '__main__':
     volum = 0.5
     fps = 60
     clock = pygame.time.Clock()
-    skin_now = open("volume.txt")
-    for ii in skin_now:
+    vo_magic = open("volume.txt")
+    for ii in vo_magic:
         ii = ii.split(';')
         volum = float(ii[0])
         volume = float(ii[1])
         volum_effects = float(ii[2])
-    skin_now.close()
+    vo_magic.close()
     aaaa = open('skip.txt')
     if aaaa.read() == "1":
         video = moviepy.editor.VideoFileClip("tizer.mp4")
