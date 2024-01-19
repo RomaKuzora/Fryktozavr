@@ -746,7 +746,7 @@ def start_screen():
 
 def game_lose():
     board.board = [[None] * board.width for _ in range(board.height)]
-    global flag_cherry
+    global flag_cherry, timer, score, text4
     sprite_hero.rect.x, sprite_hero.rect.y = 0, 0
     pygame.font.init()
     fon = pygame.transform.scale(load_image('start_windiws/lose.png'), (68 * 20, 68 * 10 + 80))
@@ -788,11 +788,16 @@ def game_lose():
                     pygame.mixer.music.load('level_music.mp3')
                     pygame.mixer.music.play(-1)
                     pygame.mixer.music.set_volume(volume)
+                    timer = 0
+                    score = 0
+                    screen.blit(text4, (15 * cell_size, 10 * cell_size))
                     return
                 elif 996 > event2.pos[0] > 382 and 569 > event2.pos[1] > 421:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
+                    timer = 0
+                    score = 0
                     return 'exit'
         pygame.display.flip()
         clock.tick(fps)
@@ -802,9 +807,8 @@ def game_win():
     pygame.font.init()
     fon = pygame.transform.scale(load_image('start_windiws/menu.png'), (68 * 20, 68 * 10 + 80))
     screen.blit(fon, (0, 0))
-    global LEVEL, score
+    global LEVEL, score, flag_cherry, timer
     flag_1, flag_2, flag_3 = True, True, True
-    screen.blit(text4, (15 * cell_size, 10 * cell_size))
     while True:
         pressed3 = pygame.mouse.get_pressed()  # проверка какая кнопка мыши нажата
         for event2 in pygame.event.get():
@@ -857,6 +861,7 @@ def game_win():
                             start_level(LEVEL)
                     else:
                         start_level(LEVEL)
+                    timer = 0
                     return
                 elif 986 > event2.pos[0] > 373 and 385 > event2.pos[1] > 237:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
@@ -867,12 +872,18 @@ def game_win():
                     pygame.mixer.music.play(-1)
                     pygame.mixer.music.set_volume(volume)
                     score = 0
+                    flag_cherry = False
+                    timer = 0
                     return
                 elif 986 > event2.pos[0] > 373 and 578 > event2.pos[1] > 430:
                     sounds = pygame.mixer.Sound('zvuk_click.mp3')
                     sounds.set_volume(volum_effects)
                     sounds.play()
+                    timer = 0
+                    flag_cherry = False
                     return 'exit'
+        screen.blit(my_font_time.render(f'{str(round(timer, 2) // 3600)}', True, pygame.Color('orange')),
+                    (610, 665))
         screen.blit(text4, (15 * cell_size, 10 * cell_size))
         pygame.display.flip()
         clock.tick(fps)
@@ -1250,7 +1261,7 @@ class Unit(pygame.sprite.Sprite):
                 return move_last
 
     def animation(self, last_move):
-        global score, flag_cherry, flag_limon, text4
+        global score, flag_cherry, flag_limon, text4, text5
         if self.count == 12:
             self.count = 0
         self.count += 1
@@ -1266,6 +1277,7 @@ class Unit(pygame.sprite.Sprite):
                 if flag_redact:
                     score = 0
                 text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+                text5 = my_font.render(f'Время: {str(round(timer, 2) // 3600)}', True, pygame.Color('orange'))
                 fruits.kill_fruit()
                 fruit_list[fruits.rect.y // 68][fruits.rect.x // 68] = None
             else:
@@ -1702,6 +1714,8 @@ if __name__ == '__main__':
     volum = 0.5
     fps = 60
     clock = pygame.time.Clock()
+    timer = 0
+
     vo_magic = open("volume.txt")
     for ii in vo_magic:
         ii = ii.split(';')
@@ -1743,11 +1757,14 @@ if __name__ == '__main__':
     cursor = pygame.sprite.Sprite(cursoro)
     cursor.image = cursor_image
     cursor.rect = cursor.image.get_rect()
+    my_font_time = pygame.font.SysFont('Throne and Libert', 80)
     my_font = pygame.font.SysFont('Throne and Libert', 30)
     text1 = my_font.render('save', False, pygame.Color('red'))
     text2 = my_font.render('refresh', False, pygame.Color('red'))
     text3 = my_font.render('my_level', False, pygame.Color('red'))
+    score = 0
     text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+    text5 = my_font.render(f'Время: {str(round(timer, 2) // 3600)}', True, pygame.Color('orange'))
     if flag_redact:
         sprite_ice = Ice('ice', 'ice/ice.png', (0, cell_size * 10))
         sprite_banana = Fruit('banana', 'fruct/banana.png', (cell_size, cell_size * 10), False, False)
@@ -1764,7 +1781,9 @@ if __name__ == '__main__':
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(volume)
     else:
+        score = 0
         text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+        text5 = my_font.render(f'Время: {str(round(timer, 2) // 3600)}', True, pygame.Color('orange'))
         pygame.mixer.music.load('level_music.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(volume)
@@ -1873,49 +1892,47 @@ if __name__ == '__main__':
                 else:
                     score = 0
                     text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+                    text5 = my_font.render(f'Время: {str(round(timer, 2) // 3600)}', True, pygame.Color('orange'))
                     if flag_na_music:
                         pygame.mixer.music.load('level_music.mp3')
                         pygame.mixer.music.play(-1)
                         pygame.mixer.music.set_volume(volume)
             if event.type == pygame.MOUSEBUTTONDOWN and pressed[0]:
                 if flag_of_list_click and possition(event.pos)[1] < 10:
-                    try:
-                        if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block',
-                                                                                                 'route']:
-                            if list_click:
-                                move_enemy = (possition(event.pos)[0] - list_click[-1][0]), (
-                                        possition(event.pos)[1] - list_click[-1][1])
-                                if move_enemy in move_map.values():
-                                    list_click.append(possition(event.pos))
-                                    board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
-                                    if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
-                                            list_click) > 1:
-                                        flag_of_list_click = False
-                                        _enemy_.set_route(list_click)
-                                        list_click = []
-                                        _enemy_ = None
-                                        for y in range(len(board.board)):
-                                            for x in range(len(board.board[y])):
-                                                if board.board[y][x] == 'route':
-                                                    board.board[y][x] = None
-                            else:
-                                move_enemy = (_enemy_.rect.x // cell_size - possition(event.pos)[0],
-                                              _enemy_.rect.y // cell_size - possition(event.pos)[1])
-                                if move_enemy in move_map.values():
-                                    list_click.append(possition(event.pos))
-                                    board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
-                                    if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
-                                            list_click) > 1:
-                                        flag_of_list_click = False
-                                        _enemy_.set_route(list_click)
-                                        list_click = []
-                                        _enemy_ = None
-                                        for y in range(len(board.board)):
-                                            for x in range(len(board.board[y])):
-                                                if board.board[y][x] == 'route':
-                                                    board.board[y][x] = None
-                    except Exception:
-                        pass
+                    if board.board[possition(event.pos)[1]][possition(event.pos)[0]] not in ['ice', 'block',
+                                                                                             'route']:
+                        if list_click:
+                            move_enemy = (possition(event.pos)[0] - list_click[-1][0]), (
+                                    possition(event.pos)[1] - list_click[-1][1])
+                            if move_enemy in move_map.values():
+                                list_click.append(possition(event.pos))
+                                board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                                if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
+                                        list_click) > 1:
+                                    flag_of_list_click = False
+                                    _enemy_.set_route(list_click)
+                                    list_click = []
+                                    _enemy_ = None
+                                    for y in range(len(board.board)):
+                                        for x in range(len(board.board[y])):
+                                            if board.board[y][x] == 'route':
+                                                board.board[y][x] = None
+                        else:
+                            move_enemy = (_enemy_.rect.x // cell_size - possition(event.pos)[0],
+                                          _enemy_.rect.y // cell_size - possition(event.pos)[1])
+                            if move_enemy in move_map.values():
+                                list_click.append(possition(event.pos))
+                                board.board[possition(event.pos)[1]][possition(event.pos)[0]] = 'route'
+                                if possition(event.pos) == possition((_enemy_.rect.x, _enemy_.rect.y)) and len(
+                                        list_click) > 1:
+                                    flag_of_list_click = False
+                                    _enemy_.set_route(list_click)
+                                    list_click = []
+                                    _enemy_ = None
+                                    for y in range(len(board.board)):
+                                        for x in range(len(board.board[y])):
+                                            if board.board[y][x] == 'route':
+                                                board.board[y][x] = None
                 else:
                     if possition(event.pos) == (1, 10):
                         flag = 'banana'
@@ -2287,7 +2304,9 @@ if __name__ == '__main__':
                 enemy_sprite = Enemy('vrag/front_vrag.png')
                 enemy_sprite.rect.x, enemy_sprite.rect.y = cell_size * 5, cell_size * 10
             else:
+                score = 0
                 text4 = my_font.render(f'Очки: {score}', False, pygame.Color('red'))
+                text5 = my_font.render(f'Время: {str(round(timer, 2) // 3600)}', True, pygame.Color('orange'))
                 if flag_na_music:
                     pygame.mixer.music.load('level_music.mp3')
                     pygame.mixer.music.play(-1)
@@ -2302,8 +2321,11 @@ if __name__ == '__main__':
             screen.blit(load_image('my_level.png'), (17 * cell_size, 10 * cell_size))
             screen.blit(text3, (16.7 * cell_size, int(10.8 * cell_size)))
         else:
+            timer += fps
             screen.blit(surface, rect)
             screen.blit(text4, (15 * cell_size, 10 * cell_size))
+            text5 = my_font.render(f'Время: {str(round(timer, 2) // 3600)}', True, pygame.Color('orange'))
+            screen.blit(text5, (17 * cell_size, 10 * cell_size))
         cursoro.draw(screen)
         clock.tick(fps)
         board.render(screen)
