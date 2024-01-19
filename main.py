@@ -9,6 +9,7 @@ LEVEL = None
 flag_cherry = False
 flag_limon = False
 SCORE_FOR_WIN = 0
+timer = 0
 
 
 def terminate():
@@ -1610,6 +1611,8 @@ def start_level(level):
     global sprite_hero, ice_sprites, iron_block_sprites, enemy_sprites, fruit_sprites, score, fruit_list
     global sprite_ice, sprite_iron_block, sprite_banana, sprite_cherry, enemy_sprite
     global SCORE_FOR_WIN
+    global timer
+    timer = 0
     score = 0
     board.board = [[None] * board.width for _ in range(board.height)]
     fruit_list = [[None] * (wight // 68) for _ in range(height // 68 - 1)]
@@ -1714,7 +1717,6 @@ if __name__ == '__main__':
     volum = 0.5
     fps = 60
     clock = pygame.time.Clock()
-    timer = 0
 
     vo_magic = open("volume.txt")
     for ii in vo_magic:
